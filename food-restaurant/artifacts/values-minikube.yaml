@@ -1,0 +1,24 @@
+environment: minikube
+profilesActive: k8s
+
+hpaMinReplicas: 1
+hpaMaxReplicas: 1
+
+resourcesLimitsRequestsCpu: 250m
+resourcesLimitsRequestsMemory: 1024Mi
+resourcesLimitsCpu: 500m
+resourcesLimitsMemory: 2048Mi
+
+namespace: default
+
+maxSurge: 1
+maxUnavailable: 0
+
+service:
+  type: ClusterIP
+  port: 8080
+
+database:
+  tablename: db_k8s_restaurant
+  username: restaurant_k8s_user
+  password: restaurant_k8s_passwd

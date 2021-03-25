@@ -1,0 +1,45 @@
+server:
+  port: 8181
+  shutdown: graceful
+  use-forward-headers: true
+  forward-headers-strategy: framework
+
+info:
+  app:
+    group: ${group}
+    name: ${name}
+    description: ${description}
+    version: ${version}
+  javaVendor: \${java.specification.vendor}
+
+application:
+  async:
+    corePoolSize: 100
+  swagger:
+    apis:
+      path: /api/.*
+      base-package: com.food.restaurant.entrypoint.rest
+
+spring:
+  application:
+    name: \${info.app.name}
+    description: \${info.app.description}
+    version: \${info.app.version}
+  thymeleaf:
+    enabled: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_restaurant?useSSL=false
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: restaurant_user
+    password: restaurant_passwd
+    type: com.zaxxer.hikari.HikariDataSource
+    initialization-mode: never
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      minimumIdle: 5
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048

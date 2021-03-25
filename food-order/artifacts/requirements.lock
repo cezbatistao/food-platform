@@ -1,0 +1,6 @@
+dependencies:
+- name: kafka-topic-creator
+  repository: https://hypertrace-helm-charts.storage.googleapis.com
+  version: 0.1.0
+digest: sha256:c958819a4f7b6b243cda130bd2cfac17957d3c905f625d5ac0edb6cc44eeb967
+generated: "2022-12-23T15:49:44.812314345-03:00"

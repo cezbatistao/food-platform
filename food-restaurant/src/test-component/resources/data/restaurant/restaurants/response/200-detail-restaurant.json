@@ -1,0 +1,28 @@
+{
+  "data": {
+    "uuid": "23e0211c-19ea-47ee-b98e-77e023e1a95f",
+    "name": "Bráz Pizzaria",
+    "category": {
+      "uuid": "0eda194c-827c-4254-ada8-214115310fc6",
+      "code": "pizza",
+      "description": "Pizzaria"
+    },
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwwg9Nscz6dkUtIpPUB0u1tAxfZmJcmcfGTA&usqp=CAU",
+    "description": "Pizzaria reúne ingredientes clássicos e sofisticados e muito burburinho e aconchego frente aos fornos à lenha.",
+    "address": "Av. Nome da outra avenida, 789",
+    "itens": [
+      {
+        "uuid": "8dc970ae-9543-11eb-a8b3-0242ac130003",
+        "name": "NAPOLITANA",
+        "description": "Molho de tomate, alho cru fatiado, parmesão e folhas frescas de manjericão",
+        "value": "43.99"
+      },
+      {
+        "uuid": "81af3f42-9543-11eb-a8b3-0242ac130003",
+        "name": "CALABRESA",
+        "description": "Calabresa artesanal em fatias, cebola e azeitonas pretas",
+        "value": "41.99"
+      }
+    ]
+  }
+}

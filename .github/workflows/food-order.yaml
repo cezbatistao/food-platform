@@ -1,0 +1,72 @@
+name: Publish food-order
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'food-order/**'
+      - '!food-order/artifacts/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'food-gateway/**'
+      - '!food-gateway/artifacts/**'
+  workflow_dispatch:
+
+jobs:
+
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    env:
+      VERSION: ${{ github.run_number }}
+      SHA_VERSION: ${{ github.sha }}
+
+    steps:
+
+      - uses: actions/checkout@v3
+      - name: Set up Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.17.13'
+
+      - name: Prepare project
+        working-directory: ./food-order
+        run: make init-app
+
+      - name: Run tests
+        working-directory: ./food-order
+        run: |
+          make test-mockgen
+          make test-generate-report
+
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: '**food-order/junit-*.xml'
+
+      # - name: Build application
+      #   working-directory: ./food-order
+      #   run: make build
+
+      - name: Build docker image
+        working-directory: ./food-order
+        run: VERSION_APP=$VERSION make build-dockerfile
+
+      - name: Docker hub login
+        working-directory: ./food-order
+        run: |
+          docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+
+      - name: Tag and push docker image
+        working-directory: ./food-order
+        run: VERSION_APP=$VERSION make build-push
+
+      - name: Docker hub logout
+        working-directory: ./food-order
+        run: |
+          docker logout

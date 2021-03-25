@@ -1,0 +1,39 @@
+environment: minikube
+profilesActive: k8s
+
+hpaMinReplicas: 1
+hpaMaxReplicas: 1
+
+resourcesLimitsRequestsCpu: 250m
+resourcesLimitsRequestsMemory: 1024Mi
+resourcesLimitsCpu: 500m
+resourcesLimitsMemory: 2048Mi
+
+namespace: default
+
+maxSurge: 1
+maxUnavailable: 0
+
+service:
+  type: ClusterIP
+  port: 8080
+
+database:
+  tablename: db_order_k8s
+  username: postgresuser-k8s
+  password: postgrespasswd-k8s
+
+kafka-topic-creator:
+  kafka:
+    topics:
+      - name: order-created-event
+        replicationFactor: 1
+        partitions: 1
+      - name: order-processing-event
+        replicationFactor: 1
+        partitions: 1
+      - name: order-cancelled-event
+        replicationFactor: 1
+        partitions: 1
+  zookeeper:
+    address: 192.168.49.2:30181

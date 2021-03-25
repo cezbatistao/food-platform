@@ -1,0 +1,85 @@
+name: Publish food-restaurant
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'food-restaurant/**'
+      - '!food-restaurant/artifacts/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'food-gateway/**'
+      - '!food-gateway/artifacts/**'
+  workflow_dispatch:
+
+jobs:
+
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    env:
+      VERSION: ${{ github.run_number }}
+      SHA_VERSION: ${{ github.sha }}
+
+    steps:
+
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Run tests
+        working-directory: ./food-restaurant
+        run: ./gradlew clean test
+
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: '**food-restaurant/build/test-results/test/TEST-*.xml'
+
+      - name: Run integration tests
+        working-directory: ./food-restaurant
+        run: ./gradlew componentTest
+
+      - name: Build application
+        working-directory: ./food-restaurant
+        run: ./gradlew clean build -x test -x componentTest -Pbuild.number=$VERSION
+
+      - name: Build docker image
+        working-directory: ./food-restaurant
+        run: ./gradlew docker -Pbuild.number=$VERSION
+
+      - name: Docker hub login
+        working-directory: ./food-restaurant
+        run: |
+          docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+
+      - name: Tag docker image
+        working-directory: ./food-restaurant
+        run: ./gradlew dockerTagDockerHub -Pbuild.number=$VERSION
+
+      - name: Push docker image
+        working-directory: ./food-restaurant
+        run: ./gradlew dockerPushDockerHub -Pbuild.number=$VERSION
+
+      - name: Docker hub logout
+        working-directory: ./food-restaurant
+        run: |
+          docker logout
+
+      # - name: "Publish HTML test result"
+      #   uses: peaceiris/actions-gh-pages@v3.7.3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: './food-restaurant/build/reports/tests/test'
+      #     destination_dir: './food-restaurant/spock_report'
+      #     keep_files: true
+      #     user_name: cezbatistao
+      #     user_email: ${{ secrets.GITHUB_EMAIL }}

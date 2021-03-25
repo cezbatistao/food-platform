@@ -1,0 +1,7 @@
+.gradle
+build/
+
+.vscode/
+.DS_Store
+
+.tool-versions

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: food-ui-webapp
+spec:
+  selector:
+    matchLabels:
+      app: food-ui-webapp
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: food-ui-webapp
+    spec:
+      containers:
+      - name: food-ui-webapp
+        image: cezbatistao/food-ui-webapp:1.0.0-0
+        env:
+        - name: PROXY_ENV
+          value: k8s
+        - name: ENVIRONMENT_APP
+          value: k8s
+        imagePullPolicy: Always

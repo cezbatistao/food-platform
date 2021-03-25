@@ -1,0 +1,71 @@
+@import 'react-notifications-component/dist/theme.css';
+
+$neutral-100: #FFFFFF;
+$green-notification: #51a351;
+$yellow-notification: #ec9900;
+$red-notification: #ec2200;
+$grey-bold-disable: #444142;
+$grey-bold: #333333;
+
+.notification__item .notification__content {
+    background-color: $neutral-100;
+}
+
+.notification__item--danger {
+    border-left: 10px solid $red-notification;
+}
+
+.notification__item--warning {
+  border-left: 10px solid $yellow-notification;
+}
+
+.notification__item--success {
+    border-left: 10px solid $green-notification;
+}
+
+.animated.notification__item.notification__success.n-child::before {
+    content: none;
+}
+
+.notification__item .notification__close {
+    background-color: $neutral-100;
+    top: 35px;
+}
+
+.notification__item .notification__title {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-family: "Roboto";
+    font-weight: bold;
+    font-size: 18px;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.9px;
+    color: $grey-bold;
+}
+
+.notification__item .notification__message {
+    max-width: calc(100% - 15px);
+    word-wrap: break-word;
+    font-family: "Roboto";
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.8px;
+    color: $grey-bold;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.notification__item .notification__close:after {
+    content: "\D7";
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: $grey-bold;
+    font-size: 36px;
+    left: 50%;
+    top: -50%;
+}

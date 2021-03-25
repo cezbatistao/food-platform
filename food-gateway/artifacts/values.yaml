@@ -1,0 +1,20 @@
+service:
+  type: ClusterIP
+  port: 8080
+
+image:
+  repository: cezbatistao/food-gateway
+  tag: latest
+  pullPolicy: IfNotPresent
+  livenessProbe:
+    path: /actuator/health
+    failureThreshold: 6
+    initialDelaySeconds: 40
+    periodSeconds: 30
+    timeoutSeconds: 2
+  readinessProbe:
+    path: /actuator/health
+    failureThreshold: 6
+    initialDelaySeconds: 40
+    periodSeconds: 30
+    timeoutSeconds: 2

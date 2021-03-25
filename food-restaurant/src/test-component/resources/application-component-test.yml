@@ -1,0 +1,10 @@
+group: "com.food"
+name: "food-restaurant"
+description: "Component testes"
+version: "1.0.0"
+
+spring:
+  datasource:
+    url: ${spring.datasource.component-test.restaurant.url.container}
+    username: ${spring.datasource.component-test.restaurant.username.container}
+    password: ${spring.datasource.component-test.restaurant.password.container}

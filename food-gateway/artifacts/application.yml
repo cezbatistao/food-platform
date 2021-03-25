@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+info:
+  app:
+    version: {{ .Values.image.tag }}
+
+application:
+  food-platform:
+    restaurant-app:
+      url: http://food-restaurant-svc:8080
+    order-app:
+      url: http://food-order-svc:8080

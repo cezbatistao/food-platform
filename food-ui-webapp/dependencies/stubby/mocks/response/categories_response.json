@@ -1,0 +1,29 @@
+{
+  "data": [
+      {
+          "uuid": "0eda194c-827c-4254-ada8-214115310fc6",
+          "code": "pizza",
+          "description": "Pizzaria"
+      },
+      {
+          "uuid": "cc0cd1b9-4217-498d-8da8-661de03b86e5",
+          "code": "hamburguer",
+          "description": "Hambúrguer"
+      },
+      {
+          "uuid": "577a9962-e9b7-46a9-abc8-211e42f6f1aa",
+          "code": "japonesa",
+          "description": "Japonesa"
+      },
+      {
+          "uuid": "67e92973-f1ff-4cc3-b2c0-6485939ae442",
+          "code": "vegetariana",
+          "description": "Vegetariana"
+      },
+      {
+          "uuid": "2358fb2d-f0dc-4a00-8b55-6fbbce158e91",
+          "code": "brasileira",
+          "description": "Brasileira"
+      }
+  ]
+}

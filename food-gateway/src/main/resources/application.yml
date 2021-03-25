@@ -1,0 +1,60 @@
+server:
+  port: 9090
+  shutdown: graceful
+
+application:
+  food-platform:
+    restaurant-app:
+      url: http://localhost:8181
+    order-app:
+      url: http://localhost:8088
+
+info:
+  app:
+    group: ${group}
+    name: ${name}
+    description: ${description}
+    version: ${version}
+    environment: \${spring.profiles.active}
+  javaVendor: \${java.specification.vendor}
+
+spring:
+  application:
+    name: \${info.app.name}
+    description: \${info.app.description}
+    version: \${info.app.version}
+  cloud:
+    gateway:
+      routes:
+        - id: food-restaurant
+          uri: \${application.food-platform.restaurant-app.url}
+          predicates:
+            - Path=/food/restaurant/**
+          filters:
+            - RewritePath=/food/restaurant/(?<path>.*), /\$\\{path}
+        - id: food-order
+          uri: \${application.food-platform.order-app.url}
+          predicates:
+            - Path=/food/order/**
+          filters:
+            - RewritePath=/food/order/(?<path>.*), /\$\\{path}
+        - id: openapi
+          uri: http://localhost:\${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /\$\\{path}/v3/api-docs
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: food-restaurant
+        url: /v3/api-docs/food/restaurant
+      - name: food-order
+        url: /v3/api-docs/food/order
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,gateway,metrics
