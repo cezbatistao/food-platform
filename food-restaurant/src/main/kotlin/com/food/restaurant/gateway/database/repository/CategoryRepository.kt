@@ -7,7 +7,6 @@ import org.simpleflatmapper.jdbc.spring.SqlParameterSourceFactory
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import org.springframework.stereotype.Repository
 
-
 @Repository
 class CategoryRepository(
         private val jdbcTemplate: NamedParameterJdbcOperations
