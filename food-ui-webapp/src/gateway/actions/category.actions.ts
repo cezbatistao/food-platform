@@ -7,7 +7,10 @@ import { GET_CATEGORIES_LOADING,
   CategoryActionTypes, 
 } from '../types';
 import Category from '../../domain/Category';
-import { getAllCategories, ICategory } from '../providers/RestaurantProvider';
+import { 
+  getAllCategories, 
+  CategoryResponse 
+} from '../providers/RestaurantProvider';
 
 const getCategoriesLoading: ActionCreator<
   CategoryActionTypes
@@ -55,9 +58,12 @@ export const getCategories = (): ThunkAction<
       return dispatch(getCategoriesFailure());
     } 
     
-    const categoriesEntity: ICategory[] = response;
-    const categories = categoriesEntity.map(categoryEntity => {
-      return new Category(categoryEntity.code, categoryEntity.description);
+    const categoriesResponse: CategoryResponse[] = response;
+    const categories = categoriesResponse.map(categoryResponse => {
+      return new Category(
+        categoryResponse.code, 
+        categoryResponse.description
+      );
     });
 
     return dispatch(getCategoriesSuccess(categories));

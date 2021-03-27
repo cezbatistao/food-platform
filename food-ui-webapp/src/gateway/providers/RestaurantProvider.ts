@@ -1,13 +1,13 @@
 import { AxiosResponse } from 'axios';
 import { axios } from './Api';
 
-export interface ICategory { // TODO change to CategoryEntity
+export interface CategoryResponse {
   id: number;
   code: string;
   description: string;
 }
 
-export interface IRestaurant { // TODO change to RestaurantEntity
+export interface RestaurantResponse {
   id: string;
   name: string;
   logo: string;
@@ -16,7 +16,7 @@ export interface IRestaurant { // TODO change to RestaurantEntity
 }
 
 export const getAllCategories = async (): Promise< // change to fetchCategories
-  ICategory[]
+  CategoryResponse[]
 > => {
   // try {
   //   const response: AxiosResponse = await axios({
@@ -41,13 +41,13 @@ export const getAllCategories = async (): Promise< // change to fetchCategories
     }
   });
 
-  const AxiosResponse: AxiosResponse<ICategory[]> = response?.data;
+  const AxiosResponse: AxiosResponse<CategoryResponse[]> = response?.data;
   return AxiosResponse?.data;
 }
 
 export const fetchRestaurantsByCategory = async (
   category: string
-): Promise<IRestaurant[]> => {
+): Promise<RestaurantResponse[]> => {
   const response: AxiosResponse = await axios({
     url: 'http://localhost:8882/api/v1/restaurants', 
     method: 'get', 
@@ -59,6 +59,6 @@ export const fetchRestaurantsByCategory = async (
     }
   });
 
-  const AxiosResponse: AxiosResponse<IRestaurant[]> = response?.data;
+  const AxiosResponse: AxiosResponse<RestaurantResponse[]> = response?.data;
   return AxiosResponse?.data;
 }

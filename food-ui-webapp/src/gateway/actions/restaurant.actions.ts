@@ -8,7 +8,10 @@ import {
   RestaurantActionTypes, 
 } from '../types';
 import Restaurant from '../../domain/Restaurant';
-import { fetchRestaurantsByCategory, IRestaurant } from '../providers/RestaurantProvider';
+import { 
+  fetchRestaurantsByCategory, 
+  RestaurantResponse 
+} from '../providers/RestaurantProvider';
 
 const getRestaurantsByCategoryLoading: ActionCreator<
   RestaurantActionTypes
@@ -55,14 +58,14 @@ export const getRestaurantsByCategory = (category: string): ThunkAction<
       return dispatch(getRestaurantsByCategoryFailure());
     }
     
-    const restaurantsEntity: IRestaurant[] = response; // IRestaurant to Restaurant
-    const restaurants = restaurantsEntity.map(restaurantEntity => {
+    const restaurantsResponse: RestaurantResponse[] = response;
+    const restaurants = restaurantsResponse.map(restaurantResponse => {
       return new Restaurant(
-        restaurantEntity.id, 
-        restaurantEntity.name,
-        restaurantEntity.logo,
-        restaurantEntity.description,
-        restaurantEntity.address
+        restaurantResponse.id, 
+        restaurantResponse.name,
+        restaurantResponse.logo,
+        restaurantResponse.description,
+        restaurantResponse.address
       );
     });
 
