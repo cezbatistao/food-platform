@@ -2,19 +2,22 @@ package com.food.restaurant.entrypoint.rest
 
 import com.food.restaurant.entrypoint.rest.json.ErrorResponse
 import com.food.restaurant.entrypoint.rest.json.error.ErrorDetailResponse
+import com.food.restaurant.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 
+@ControllerAdvice
 class CustomExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     @ResponseBody
     fun processException(ex: Exception): ResponseEntity<ErrorResponse> {
-//        log.error("An unexpected error occured: {}", ex.message, ex)
+        logger.error("An unexpected error occured: {}", ex.message, ex)
         return this.buildErrorReponse(HttpStatus.INTERNAL_SERVER_ERROR, "9999", ex)
     }
 
