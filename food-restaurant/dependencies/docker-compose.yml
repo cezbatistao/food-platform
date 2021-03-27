@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=db_restaurant
+      - MYSQL_ROOT_PASSWORD=root_passwd
+      - MYSQL_USER=restaurant_user
+      - MYSQL_PASSWORD=restaurant_passwd
+    volumes:
+      - mysql-datavolume:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mysql
+    ports:
+      - 80:80
+    environment:
+      - PMA_ARBITRARY=1
+
+volumes:
+  mysql-datavolume:

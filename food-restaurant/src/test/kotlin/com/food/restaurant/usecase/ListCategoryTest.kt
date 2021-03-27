@@ -42,7 +42,7 @@ class ListCategoryTest {
                 Category(1, "pizza", "Pizzaria"),
                 Category(2, "hamburguer", "Hambúrguer"),
                 Category(3, "vegetariana", "Vegetariana")
-        )
+        ) // TODO change to fixture!
         whenever(categoryGateway.list()).thenReturn(categoriesRecord)
 
         // when

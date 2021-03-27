@@ -1,6 +1,6 @@
-package com.food.restaurant.domain
+package com.food.restaurant.gateway.database.model
 
-data class Category(
+class CategoryModel(
         val id: Long?,
         val code: String,
         val description: String
