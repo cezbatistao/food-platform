@@ -6,7 +6,7 @@ import Main from './components/main/Main';
 import './App.scss';
 import Notification from './components/notification/Notification';
 
-const App: React.FC = (): JSX.Element => {
+const App = () => {
   return (
     <>
       <Notification />

@@ -1,9 +1,8 @@
-import { useSelector } from 'react-redux';
-
 import Grid from '@material-ui/core/Grid';
 
-import RestaurantCard from './RestaurantCard';
+import { useSelector } from 'react-redux';
 
+import RestaurantCard from './RestaurantCard';
 import { RootState } from '../../gateway';
 import Restaurant from '../../domain/Restaurant';
 

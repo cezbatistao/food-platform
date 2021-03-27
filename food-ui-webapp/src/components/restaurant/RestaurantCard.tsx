@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { red } from '@material-ui/core/colors';
 
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
@@ -9,9 +10,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CardContent from '@material-ui/core/CardContent';
 
-import { red } from '@material-ui/core/colors';
-import Restaurant from '../../domain/Restaurant';
 import { useSelector } from 'react-redux';
+
+import Restaurant from '../../domain/Restaurant';
 import { RootState } from '../../gateway';
 
 const useStyles = makeStyles((theme) => ({

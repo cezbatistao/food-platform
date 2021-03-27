@@ -1,12 +1,10 @@
-import React from 'react';
-
 import { makeStyles } from '@material-ui/core/styles';
+import orange from '@material-ui/core/colors/orange';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Fastfood, ShoppingBasket } from '@material-ui/icons';
-
-import orange from '@material-ui/core/colors/orange';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Header: React.FC = (): JSX.Element => {
+const Header = () => {
   
   const classes = useStyles();
 

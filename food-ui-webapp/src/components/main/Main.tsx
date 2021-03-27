@@ -1,10 +1,9 @@
+import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
-import { makeStyles } from '@material-ui/core/styles';
-
-import clsx from 'clsx';
 
 import RestaurantList from '../restaurant/RestaurantList';
 import RestaurantCategory from '../restaurant/RestaurantCategory';
