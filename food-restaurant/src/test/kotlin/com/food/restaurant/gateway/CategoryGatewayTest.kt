@@ -1,5 +1,6 @@
 package com.food.restaurant.gateway
 
+import br.com.six2six.fixturefactory.Fixture
 import com.food.restaurant.config.AbstractRepositoryIT
 import com.food.restaurant.domain.Category
 import com.food.restaurant.gateway.database.model.CategoryModel
@@ -29,21 +30,18 @@ class CategoryGatewayTest: AbstractRepositoryIT() {
     @Test
     fun `should return a list of categories`() {
         // given
-        val categoriesModel = listOf(
-                CategoryModel("pizza", "Pizzaria"),
-                CategoryModel("hamburguer", "Hambúrguer"),
-                CategoryModel("vegetariana", "Vegetariana")
-        ) // TODO change to fixture!
-        this.categoryRepository.saveAll(categoriesModel)
+        val categoriesMock: List<CategoryModel> = Fixture.from(CategoryModel::class.java).gimme(
+                3,"category pizza", "category hamburguer", "category vegetariana")
+        this.categoryRepository.saveAll(categoriesMock)
 
         // when
         val categories: List<Category> = categoryGateway.list()
 
         // then
         Assertions.assertNotNull(categories)
-        Assertions.assertEquals(categoriesModel.size, categories.size)
+        Assertions.assertEquals(categoriesMock.size, categories.size)
 
-        categoriesModel.forEach { categoryModel ->
+        categoriesMock.forEach { categoryModel ->
             val category: Category = categories.find { it.code == categoryModel.code }!!
             Assertions.assertNotNull(category.id)
             Assertions.assertEquals(categoryModel.description, category.description)
