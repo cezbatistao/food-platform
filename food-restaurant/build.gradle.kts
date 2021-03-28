@@ -10,20 +10,11 @@ plugins {
 
 group = "com.food"
 version = "0.0.1-SNAPSHOT"
+description = "Restaurant microservice description"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
-}
-
-springBoot {
-	buildInfo {
-		properties {
-			additional = mapOf(
-					"description" to "Restaurant microservice description"
-			)
-		}
-	}
 }
 
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
@@ -81,4 +72,10 @@ tasks.test {
 tasks.asciidoctor {
 	inputs.dir(snippetsDir)
 	dependsOn(tasks.test)
+}
+
+tasks.processResources {
+	filesMatching("**/application.yml") {
+		expand(project.properties)
+	}
 }

@@ -3,10 +3,11 @@ server:
 
 info:
   app:
-    name: TODO
-    description: TODO
-    version: TODO
-  javaVendor: ${java.specification.vendor}
+    group: ${group}
+    name: ${name}
+    description: ${description}
+    version: ${version}
+  javaVendor: \${java.specification.vendor}
 
 application:
   async:
