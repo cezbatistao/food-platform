@@ -26,6 +26,7 @@ dependencies {
 	val springfoxVersion = "3.0.0"
 	val springmockkVersion = "3.0.1"
 	val mockitoKotlinVersion = "2.2.0"
+	val fixtureFactoryVersion = "3.1.0"
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
@@ -49,7 +50,7 @@ dependencies {
 	testImplementation("com.ninja-squad:springmockk:$springmockkVersion")
 	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
 	testImplementation("org.testcontainers:mysql")
-	testImplementation("br.com.six2six:fixture-factory:3.1.0")
+	testImplementation("br.com.six2six:fixture-factory:$fixtureFactoryVersion")
 }
 
 dependencyManagement {
