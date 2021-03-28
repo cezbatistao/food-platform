@@ -1,5 +1,6 @@
 package com.food.restaurant.entrypoint.rest
 
+import br.com.six2six.fixturefactory.Fixture
 import com.food.restaurant.config.AbstractControllerIT
 import com.food.restaurant.domain.Category
 import com.food.restaurant.usecase.ListCategory
@@ -8,19 +9,17 @@ import io.mockk.every
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
-
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
+
 @WebMvcTest(CategoryController::class)
 class CategoryControllerTest: AbstractControllerIT() {
 
-//    @Autowired
     lateinit var mockMvc: MockMvc
 
     @MockkBean
@@ -50,11 +49,10 @@ class CategoryControllerTest: AbstractControllerIT() {
     @Test
     fun `should return a list of categories on payload`() {
         // given
-        every { listCategory.execute() } returns listOf(
-                Category(1, "pizza", "Pizzaria"),
-                Category(2, "hamburguer", "Hambúrguer"),
-                Category(3, "vegetariana", "Vegetariana")
-        ) // TODO change to fixture!
+        val categories: List<Category> = Fixture.from(Category::class.java).gimme(
+                3,"category pizza", "category hamburguer", "category vegetariana")
+
+        every { listCategory.execute() } returns categories
 
         // when
         val result: ResultActions = mockMvc.perform(

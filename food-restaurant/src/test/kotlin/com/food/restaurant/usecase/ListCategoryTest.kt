@@ -1,5 +1,6 @@
 package com.food.restaurant.usecase
 
+import br.com.six2six.fixturefactory.Fixture
 import com.food.restaurant.domain.Category
 import com.food.restaurant.gateway.CategoryGateway
 import com.nhaarman.mockitokotlin2.mock
@@ -38,19 +39,16 @@ class ListCategoryTest {
     @Test
     fun `should return a list when gateway have records`() {
         // given
-        val categoriesRecord = listOf(
-                Category(1, "pizza", "Pizzaria"),
-                Category(2, "hamburguer", "Hambúrguer"),
-                Category(3, "vegetariana", "Vegetariana")
-        ) // TODO change to fixture!
-        whenever(categoryGateway.list()).thenReturn(categoriesRecord)
+        val categoriesMock: List<Category> = Fixture.from(Category::class.java).gimme(
+                3,"category pizza", "category hamburguer", "category vegetariana")
+        whenever(categoryGateway.list()).thenReturn(categoriesMock)
 
         // when
-        val categories:List<Category> = listCategory.execute()
+        val categories: List<Category> = listCategory.execute()
 
         // then
         Assertions.assertNotNull(categories)
-        Assertions.assertEquals(categoriesRecord.size, categories.size)
-        Assertions.assertEquals(categoriesRecord, categories)
+        Assertions.assertEquals(categoriesMock.size, categories.size)
+        Assertions.assertEquals(categoriesMock, categories)
     }
 }
