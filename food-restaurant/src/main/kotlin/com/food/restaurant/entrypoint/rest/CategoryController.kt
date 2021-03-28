@@ -1,5 +1,6 @@
 package com.food.restaurant.entrypoint.rest
 
+import com.food.restaurant.domain.Category
 import com.food.restaurant.entrypoint.rest.json.CategoryResponse
 import com.food.restaurant.entrypoint.rest.json.DataResponse
 import com.food.restaurant.usecase.ListCategory
@@ -28,11 +29,14 @@ class CategoryController(
             produces = arrayOf(APPLICATION_JSON_VALUE)
     )
     fun list(): ResponseEntity<DataResponse<List<CategoryResponse>>> {
-        val categoriesRecord = listOf(
-                CategoryResponse(1, "pizza", "Pizzaria"),
-                CategoryResponse(2, "hamburguer", "Hambúrguer"),
-                CategoryResponse(3, "vegetariana", "Vegetariana")
-        ) // TODO change to fixture!
-        return ResponseEntity.ok().body(DataResponse(categoriesRecord));
+        val categories: List<Category> = this.listCategory.execute()
+        val categoriesResponse = categories.map {
+            CategoryResponse(
+                    it.id!!,
+                    it.code,
+                    it.description
+            )
+        }
+        return ResponseEntity.ok().body(DataResponse(categoriesResponse));
     }
 }
