@@ -24,6 +24,8 @@ extra["testcontainersVersion"] = "1.15.2"
 dependencies {
 	val sfmSpringjdbcVersion = "8.2.3"
 	val springfoxVersion = "3.0.0"
+	val springmockkVersion = "3.0.1"
+	val mockitoKotlinVersion = "2.2.0"
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
@@ -44,8 +46,8 @@ dependencies {
 	testImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("com.ninja-squad:springmockk:3.0.1")
-	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+	testImplementation("com.ninja-squad:springmockk:$springmockkVersion")
+	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
 	testImplementation("org.testcontainers:mysql")
 	testImplementation("br.com.six2six:fixture-factory:3.1.0")
 }
