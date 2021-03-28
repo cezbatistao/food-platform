@@ -1,12 +1,12 @@
 server:
   port: 8181
 
-#info:
-#  app:
-#    name: @project.name@
-#    description: @project.description@
-#    version: @project.version@
-#  javaVendor: ${java.specification.vendor}
+info:
+  app:
+    name: TODO
+    description: TODO
+    version: TODO
+  javaVendor: ${java.specification.vendor}
 
 application:
   async:

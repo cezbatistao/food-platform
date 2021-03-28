@@ -16,6 +16,16 @@ repositories {
 	mavenCentral()
 }
 
+springBoot {
+	buildInfo {
+		properties {
+			additional = mapOf(
+					"description" to "Restaurant microservice description"
+			)
+		}
+	}
+}
+
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
 extra["springCloudVersion"] = "2020.0.2"
 extra["testcontainersVersion"] = "1.15.2"
@@ -27,6 +37,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.simpleflatmapper:sfm-springjdbc:8.2.3")
+	implementation("io.springfox:springfox-swagger2:3.0.0")
+	implementation("io.springfox:springfox-swagger-ui:3.0.0")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
