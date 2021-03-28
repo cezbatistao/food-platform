@@ -1,16 +1,19 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.com.google.common.collect.ImmutableMap
 
 plugins {
 	id("org.springframework.boot") version "2.4.4"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("org.asciidoctor.convert") version "1.5.8"
+	id("com.palantir.docker") version "0.26.0"
 	kotlin("jvm") version "1.4.31"
 	kotlin("plugin.spring") version "1.4.31"
+	`maven-publish`
 	jacoco
 }
 
 group = "com.food"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0-${extra["build.number"]}"
 description = "Restaurant microservice description"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -22,6 +25,8 @@ jacoco {
 	toolVersion = "0.8.6"
 	reportsDirectory.set(file("$buildDir/customJacocoReportDir"))
 }
+
+apply(plugin = "com.palantir.docker")
 
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
 extra["springCloudVersion"] = "2020.0.2"
@@ -127,5 +132,28 @@ tasks.asciidoctor {
 tasks.processResources {
 	filesMatching("**/application.yml") {
 		expand(project.properties)
+	}
+}
+
+tasks.bootJar {
+	archiveFileName.set("app.jar")
+}
+
+docker {
+	name = "${project.name}:".plus(version)
+	tag("DockerHub", "cezbatistao/${project.name}:".plus(version))
+	buildArgs(ImmutableMap.of("name", "${project.name}"))
+	copySpec.from("build").into("build")
+	pull(true)
+	setDockerfile(file("Dockerfile"))
+	noCache(true)
+}
+
+publishing {
+	publications {
+		create<MavenPublication>("dockerPublication") {
+			from(components["docker"])
+			artifactId = project.name + "-docker"
+		}
 	}
 }
