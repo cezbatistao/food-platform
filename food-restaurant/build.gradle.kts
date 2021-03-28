@@ -41,10 +41,10 @@ dependencies {
 	testImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("com.ninja-squad:springmockk:3.0.1")
 	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 	testImplementation("org.testcontainers:mysql")
 	testImplementation("br.com.six2six:fixture-factory:3.1.0")
-
 }
 
 dependencyManagement {

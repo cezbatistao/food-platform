@@ -20,22 +20,22 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 class SwaggerConfig {
 
     @Value("\${info.app.name}")
-    private val applicationName: String? = null
+    private lateinit var applicationName: String
 
     @Value("\${info.app.description}")
-    private val applicationDescription: String? = null
+    private lateinit var applicationDescription: String
 
     @Value("\${info.app.version}")
-    private val applicationVersion: String? = null
+    private lateinit var applicationVersion: String
 
     @Value("\${application.swagger.apis.base-package}")
-    private val apisBasePackage: String? = null
+    private lateinit var apisBasePackage: String
 
     @Value("\${application.swagger.apis.path}")
-    private val apisPath: String? = null
+    private lateinit var apisPath: String
 
     @Bean
-    fun documentation(): Docket? {
+    fun documentation(): Docket {
         return Docket(SWAGGER_2)
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
@@ -46,14 +46,14 @@ class SwaggerConfig {
     }
 
     @Bean
-    fun uiConfig(): UiConfiguration? {
+    fun uiConfig(): UiConfiguration {
         return UiConfigurationBuilder.builder()
                 .displayRequestDuration(true)
                 .validatorUrl(null as String?)
                 .build()
     }
 
-    private fun apiInfo(): ApiInfo? {
+    private fun apiInfo(): ApiInfo {
         return ApiInfoBuilder()
                 .title(applicationName)
                 .description(applicationDescription)

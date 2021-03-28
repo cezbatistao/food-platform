@@ -32,7 +32,7 @@ abstract class AbstractRepositoryIT {
 
             mysqlContainer.start()
 
-            FixtureFactoryLoader.loadTemplates("com.food.restaurant")
+            FixtureFactoryLoader.loadTemplates("com.food.restaurant.templates")
 
             System.setProperty("spring.datasource.restaurant.url.container", mysqlContainer.getJdbcUrl())
             System.setProperty("spring.datasource.restaurant.username.container", mysqlContainer.getUsername())
