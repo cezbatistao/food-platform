@@ -24,6 +24,7 @@ extra["testcontainersVersion"] = "1.15.2"
 dependencies {
 	val sfmSpringjdbcVersion = "8.2.3"
 	val springfoxVersion = "3.0.0"
+
 	val springmockkVersion = "3.0.1"
 	val mockitoKotlinVersion = "2.2.0"
 	val fixtureFactoryVersion = "3.1.0"
@@ -40,8 +41,11 @@ dependencies {
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 	runtimeOnly("mysql:mysql-connector-java")
+	
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
 	testImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
