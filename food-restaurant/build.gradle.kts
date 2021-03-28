@@ -22,14 +22,17 @@ extra["springCloudVersion"] = "2020.0.2"
 extra["testcontainersVersion"] = "1.15.2"
 
 dependencies {
+	val sfmSpringjdbcVersion = "8.2.3"
+	val springfoxVersion = "3.0.0"
+
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-hateoas")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.simpleflatmapper:sfm-springjdbc:8.2.3")
-	implementation("io.springfox:springfox-swagger2:3.0.0")
-	implementation("io.springfox:springfox-swagger-ui:3.0.0")
+	implementation("org.simpleflatmapper:sfm-springjdbc:$sfmSpringjdbcVersion")
+	implementation("io.springfox:springfox-swagger2:$springfoxVersion")
+	implementation("io.springfox:springfox-swagger-ui:$springfoxVersion")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
