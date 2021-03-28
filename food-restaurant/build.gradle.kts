@@ -6,6 +6,7 @@ plugins {
 	id("org.asciidoctor.convert") version "1.5.8"
 	kotlin("jvm") version "1.4.31"
 	kotlin("plugin.spring") version "1.4.31"
+	jacoco
 }
 
 group = "com.food"
@@ -15,6 +16,11 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
+}
+
+jacoco {
+	toolVersion = "0.8.6"
+	reportsDirectory.set(file("$buildDir/customJacocoReportDir"))
 }
 
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
@@ -75,6 +81,42 @@ tasks.withType<Test> {
 
 tasks.test {
 	outputs.dir(snippetsDir)
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+	reports {
+		xml.isEnabled = false
+		csv.isEnabled = false
+		html.isEnabled = true
+		html.destination = file("$buildDir/reports/coverage")
+	}
+	dependsOn(tasks.test) // tests are required to run before generating the report
+}
+
+tasks.withType<JacocoCoverageVerification> {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.map {
+			fileTree(it).apply {
+				exclude("**/config/**")
+				exclude("**/domain/**")
+				exclude("**/model/**")
+				exclude("**/RestaurantApplicationKt.class")
+			}
+		}))
+	}
+}
+tasks.withType<JacocoReport> {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.map {
+			fileTree(it).apply {
+				exclude("**/config/**")
+				exclude("**/domain/**")
+				exclude("**/model/**")
+				exclude("**/RestaurantApplicationKt.class")
+			}
+		}))
+	}
 }
 
 tasks.asciidoctor {
