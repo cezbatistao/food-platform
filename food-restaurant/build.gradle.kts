@@ -20,23 +20,21 @@ repositories {
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
 extra["springCloudVersion"] = "2020.0.2"
 extra["testcontainersVersion"] = "1.15.2"
+extra["sfmSpringjdbcVersion"] = "8.2.3"
+extra["springfoxVersion"] = "3.0.0"
+extra["springmockkVersion"] = "3.0.1"
+extra["mockitoKotlinVersion"] = "2.2.0"
+extra["fixtureFactoryVersion"] = "3.1.0"
 
 dependencies {
-	val sfmSpringjdbcVersion = "8.2.3"
-	val springfoxVersion = "3.0.0"
-
-	val springmockkVersion = "3.0.1"
-	val mockitoKotlinVersion = "2.2.0"
-	val fixtureFactoryVersion = "3.1.0"
-
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-hateoas")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.simpleflatmapper:sfm-springjdbc:$sfmSpringjdbcVersion")
-	implementation("io.springfox:springfox-swagger2:$springfoxVersion")
-	implementation("io.springfox:springfox-swagger-ui:$springfoxVersion")
+	implementation("org.simpleflatmapper:sfm-springjdbc:${property("sfmSpringjdbcVersion")}")
+	implementation("io.springfox:springfox-swagger2:${property("springfoxVersion")}")
+	implementation("io.springfox:springfox-swagger-ui:${property("springfoxVersion")}")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -51,10 +49,10 @@ dependencies {
 	testImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("com.ninja-squad:springmockk:$springmockkVersion")
-	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
+	testImplementation("com.ninja-squad:springmockk:${property("springmockkVersion")}")
+	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${property("mockitoKotlinVersion")}")
 	testImplementation("org.testcontainers:mysql")
-	testImplementation("br.com.six2six:fixture-factory:$fixtureFactoryVersion")
+	testImplementation("br.com.six2six:fixture-factory:${property("fixtureFactoryVersion")}")
 }
 
 dependencyManagement {
