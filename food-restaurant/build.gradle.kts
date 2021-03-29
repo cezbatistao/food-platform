@@ -8,7 +8,6 @@ plugins {
 	id("com.palantir.docker") version "0.26.0"
 	kotlin("jvm") version "1.4.31"
 	kotlin("plugin.spring") version "1.4.31"
-	`maven-publish`
 	jacoco
 }
 
@@ -152,13 +151,4 @@ docker {
 	pull(true)
 	setDockerfile(file("Dockerfile"))
 	noCache(true)
-}
-
-publishing {
-	publications {
-		create<MavenPublication>("dockerPublication") {
-			from(components["docker"])
-			artifactId = project.name + "-docker"
-		}
-	}
 }

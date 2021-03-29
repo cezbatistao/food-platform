@@ -1,6 +1,14 @@
 server:
   port: 9090
 
+info:
+  app:
+    group: ${group}
+    name: ${name}
+    description: ${description}
+    version: ${version}
+  javaVendor: \${java.specification.vendor}
+
 spring:
   application:
     name: food-gateway
@@ -12,10 +20,10 @@ spring:
           predicates:
             - Path=/restaurant/**
           filters:
-            - RewritePath=/restaurant/(?<path>.*), /$\{path}
+            - RewritePath=/restaurant/(?<path>.*), /\$\\{path}
 
 management:
   endpoints:
     web:
       exposure:
-        include: gateway,metrics
+        include: info,health,gateway,metrics

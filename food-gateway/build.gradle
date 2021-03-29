@@ -1,12 +1,14 @@
 plugins {
 	id 'org.springframework.boot' version '2.4.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'com.palantir.docker' version '0.26.0'
 	id 'java'
 }
 
 group = 'com.food'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+version = "1.0.0-${ext['build.number']}"
+description = "Gateway from food platform"
+sourceCompatibility = '8'
 
 repositories {
 	mavenCentral()
@@ -34,4 +36,24 @@ dependencyManagement {
 
 test {
 	useJUnitPlatform()
+}
+
+processResources {
+	filesMatching("**/application.yml") {
+		expand(project.properties)
+	}
+}
+
+bootJar {
+	archiveFileName = "app.jar"
+}
+
+docker {
+	name "${project.name}:${version}"
+	tag 'DockerHub', "cezbatistao/${project.name}:${version}"
+	buildArgs(['name': "${project.name}"])
+	copySpec.from("build").into("build")
+	pull true
+	dockerfile file("Dockerfile")
+	noCache true
 }
