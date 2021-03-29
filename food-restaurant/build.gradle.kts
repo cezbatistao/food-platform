@@ -37,12 +37,17 @@ extra["springmockkVersion"] = "3.0.1"
 extra["mockitoKotlinVersion"] = "2.2.0"
 extra["fixtureFactoryVersion"] = "3.1.0"
 
+configurations {
+	implementation.get().exclude(module= "spring-boot-starter-tomcat")
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-hateoas")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-undertow")
 	implementation("org.simpleflatmapper:sfm-springjdbc:${property("sfmSpringjdbcVersion")}")
 	implementation("io.springfox:springfox-swagger2:${property("springfoxVersion")}")
 	implementation("io.springfox:springfox-swagger-ui:${property("springfoxVersion")}")
