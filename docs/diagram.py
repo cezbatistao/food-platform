@@ -55,4 +55,4 @@ with Diagram("Food Platform Architecture", show=False):
     gateway    >> restaurantSvc
     orderApp   >> reviewSvc
     orderApp   >> restaurantSvc
-    reviewApps >> ratingSvc
+    reviewApp2 >> ratingSvc
