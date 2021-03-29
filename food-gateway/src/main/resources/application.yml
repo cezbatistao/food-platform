@@ -1,0 +1,21 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: food-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: food-restaurant-app
+          uri: http://localhost:8181
+          predicates:
+            - Path=/restaurant/**
+          filters:
+            - RewritePath=/restaurant/(?<path>.*), /$\{path}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway,metrics
