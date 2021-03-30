@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.context.junit4.SpringRunner
 import org.testcontainers.containers.MySQLContainer
 
@@ -14,7 +15,10 @@ import org.testcontainers.containers.MySQLContainer
         DatabaseTestConfiguration::class, DatabaseConfiguration::class
 ))
 @ActiveProfiles("it")
-// TODO adding clean all tables before each test
+@Sql(
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+        scripts = arrayOf("classpath:/db/clean-db.sql")
+)
 abstract class AbstractRepositoryIT {
 
     internal class SpecifiedMySQLContainer(val image: String) : MySQLContainer<SpecifiedMySQLContainer>(image)
