@@ -1,5 +1,7 @@
 server:
   port: 9090
+  servlet:
+    context-path: /food
 
 info:
   app:
@@ -18,9 +20,9 @@ spring:
         - id: food-restaurant-app
           uri: http://localhost:8181
           predicates:
-            - Path=/restaurant/**
+            - Path=/food/restaurant/**
           filters:
-            - RewritePath=/restaurant/(?<path>.*), /\$\\{path}
+            - RewritePath=/food/restaurant/(?<path>.*), /\$\\{path}
 
 management:
   endpoints:
