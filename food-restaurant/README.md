@@ -1,16 +1,16 @@
 # Restaurant App
 
-## application
+## Application
 
 Describe microservice here...
 
 ### Code template
 
-We are using
-TODO
+We are using  
+**TODO**
 
 ### IntelliJ plugin
-TODO
+**TODO**
 
 #### Run tests and code coverage
 ```
@@ -18,10 +18,18 @@ TODO
 ```
 
 #### Run components tests
-TODO
+**TODO**
 
 #### Setup application
-TODO
+Go on folder `dependencies/`
+```
+docker-compose up -d --build
+```
+\
+To turn off
+```bash
+docker-compose down
+```
 
 #### Start application
 ```
@@ -32,14 +40,20 @@ Open [`http://localhost:8181/swagger-ui/`](http://localhost:8081/swagger-ui/) to
 
 * default port restaurant app is `8181`
 
-## docker
+## Docker
 
-### build image
+### Build image
 ```
 ./gradlew clean build docker -x test
 ```
+* Needs execute command from: _Setup application_
 
-### publish image
+### Run image
+```
+docker run -p 8181:8181 --net=host cezbatistao/food-restaurant:1.0.0-local
+```
+
+### Publish image
 ```
 ./gradlew dockerTagDockerHub
 ```
