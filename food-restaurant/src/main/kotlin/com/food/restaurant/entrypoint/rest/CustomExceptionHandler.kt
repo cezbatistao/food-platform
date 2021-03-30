@@ -1,5 +1,6 @@
 package com.food.restaurant.entrypoint.rest
 
+import com.food.restaurant.domain.exception.EntityNotFoundException
 import com.food.restaurant.entrypoint.rest.json.ErrorResponse
 import com.food.restaurant.entrypoint.rest.json.error.ErrorDetailResponse
 import com.food.restaurant.logger
@@ -10,9 +11,31 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
+import javax.validation.ConstraintViolation
+import javax.validation.ConstraintViolationException
+
 
 @ControllerAdvice
 class CustomExceptionHandler {
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    @ResponseBody
+    fun processException(ex: ConstraintViolationException): ResponseEntity<ErrorResponse> {
+        logger.warn("An not found entity occured: {}", ex.message, ex)
+
+        val constraintViolation: ConstraintViolation<*> = ex.constraintViolations.iterator().next()
+        val propertyName: String = constraintViolation.propertyPath.toString()
+        val message = constraintViolation.message
+
+        return this.buildErrorReponse(HttpStatus.BAD_REQUEST, "0001", "Parameter ${propertyName} ${message}")
+    }
+
+    @ExceptionHandler(EntityNotFoundException::class)
+    @ResponseBody
+    fun processException(ex: EntityNotFoundException): ResponseEntity<ErrorResponse> {
+        logger.warn("An not found entity occured: {}", ex.message, ex)
+        return this.buildErrorReponse(HttpStatus.NOT_FOUND, ex.code, ex.message!!)
+    }
 
     @ExceptionHandler(Exception::class)
     @ResponseBody

@@ -1,6 +1,7 @@
 package com.food.restaurant.usecase
 
 import br.com.six2six.fixturefactory.Fixture
+import com.food.restaurant.config.AbstractUnitTest
 import com.food.restaurant.domain.Category
 import com.food.restaurant.gateway.CategoryGateway
 import com.nhaarman.mockitokotlin2.mock
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.reset
 
-class ListCategoryTest {
+class ListCategoryTest: AbstractUnitTest() {
 
     var categoryGateway: CategoryGateway = mock()
 
