@@ -6,6 +6,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Fastfood, ShoppingBasket } from '@material-ui/icons';
 
+import { Config } from '../../config';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -31,7 +33,7 @@ const Header = () => {
         <Toolbar>
           <Fastfood className={classes.menuButton} />
           <Typography variant="h6" className={classes.title}>
-            Food Platform
+            Food Platform - {Config.environment_app}
           </Typography>
           <ShoppingBasket />
         </Toolbar>
