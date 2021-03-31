@@ -1,5 +1,5 @@
 - request:
-    url: ^/api/v1/categories$
+    url: ^/food/restaurant/api/v1/categories$
     method: GET
   response:
     status: 200
@@ -9,7 +9,7 @@
     file: mocks/response/restaurant_categories_response.json
 
 - request:
-    url: ^/api/v1/restaurants$
+    url: ^/food/restaurant/api/v1/restaurants$
     method: GET
     query:
       category: "pizza"
@@ -20,7 +20,7 @@
       Access-Control-Allow-Origin: "*"
     file: mocks/response/restaurants_response.json
 - request:
-    url: ^/api/v1/restaurants$
+    url: ^/food/restaurant/api/v1/restaurants$
     method: GET
     query:
       category: "([a-zA-Z]+)"

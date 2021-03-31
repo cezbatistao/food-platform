@@ -9,5 +9,6 @@ services:
     command: stubby -d /mocks/init.yml -s 8882 -t 7443 -a 8889 -w
     ports:
       - 8882:8882
+      - 9090:8882
       - 7443:7443
       - 8889:8889
