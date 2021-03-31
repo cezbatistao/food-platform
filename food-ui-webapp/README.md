@@ -57,7 +57,7 @@ docker build -t food-ui-webapp:1.0.0-[VERSION APP] .
 
 ### Run image
 ```
-docker run -p 8080:8080 -e PROXY_ENV=hml cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
+docker run -p 8080:8080 --net=host -e PROXY_ENV=hml cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
 ```
 
 ### Publish image
