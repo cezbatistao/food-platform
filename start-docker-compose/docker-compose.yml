@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=db_restaurant
+      - MYSQL_ROOT_PASSWORD=root_passwd
+      - MYSQL_USER=restaurant_user
+      - MYSQL_PASSWORD=restaurant_passwd
+    volumes:
+      - mysql-all-datavolume:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mysql
+    ports:
+      - 80:80
+    environment:
+      - PMA_ARBITRARY=1
+  food-restaurant:
+    image: cezbatistao/food-restaurant:1.0.0-0
+    depends_on:
+      - mysql
+    ports:
+      - "8181:8181"
+  food-gateway:
+    image: cezbatistao/food-gateway:1.0.0-0
+    depends_on:
+      - food-restaurant
+    ports:
+      - "9090:9090"
+  food-ui-webapp:
+    image: cezbatistao/food-ui-webapp:1.0.0-0
+    depends_on:
+      - food-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - PROXY_ENV=hml
+
+volumes:
+  mysql-all-datavolume:
