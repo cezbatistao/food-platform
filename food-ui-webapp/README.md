@@ -50,10 +50,10 @@ npm run build
 ## Docker
 
 ### Build image
+* Needs execute command from: _Build application_
 ```
 docker build -t food-ui-webapp:1.0.0-[VERSION APP] .
 ```
-* Needs execute command from: _Build application_
 
 ### Run image
 ```

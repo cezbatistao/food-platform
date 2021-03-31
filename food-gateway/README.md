@@ -40,11 +40,17 @@ Open [`http://localhost:9090/swagger-ui/`](http://localhost:9090/swagger-ui/) to
 
 * default port gateway app is `9090`
 
+#### Build application
+```
+./gradlew clean build -x test -Pbuild.number=[VERSION APP]
+```
+
 ## Docker
 
 ### Build image
+* Needs execute command from: _Build application_
 ```
-./gradlew clean build docker -x test -Pbuild.number=[VERSION APP]
+./gradlew docker -Pbuild.number=[VERSION APP]
 ```
 
 ### Run image
@@ -55,7 +61,7 @@ docker run -p 9090:9090 --net=host food-gateway:[VERSION APP]
 
 ### Publish image
 ```
-./gradlew dockerTagDockerHub
+./gradlew dockerTagDockerHub -Pbuild.number=[VERSION APP]
 ```
 In order to push you’ll first have to authenticate with the Docker Hub:
 ```
@@ -65,5 +71,5 @@ docker login
 \
 And push image to Docker Hub
 ```
-./gradlew dockerPushDockerHub
+./gradlew dockerPushDockerHub -Pbuild.number=[VERSION APP]
 ```
