@@ -1,4 +1,4 @@
-# Restaurant App
+# Gateway App
 
 ## Application
 
@@ -36,9 +36,9 @@ docker-compose down
 ```
 ./gradlew  bootRun
 ```
-Open [`http://localhost:8181/swagger-ui/`](http://localhost:8181/swagger-ui/) to use endpoints from application
+Open [`http://localhost:9090/swagger-ui/`](http://localhost:9090/swagger-ui/) to use endpoints from application
 
-* default port restaurant app is `8181`
+* default port gateway app is `9090`
 
 ## Docker
 
@@ -50,7 +50,7 @@ Open [`http://localhost:8181/swagger-ui/`](http://localhost:8181/swagger-ui/) to
 ### Run image
 * Needs execute command from: _Setup application_ start _docker-compose_
 ```
-docker run -p 8181:8181 --net=host food-restaurant:[VERSION APP]
+docker run -p 9090:9090 --net=host food-gateway:[VERSION APP]
 ```
 
 ### Publish image

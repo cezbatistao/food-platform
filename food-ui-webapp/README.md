@@ -3,6 +3,10 @@
 ## Application
 
 Describe microservice here...
+
+### Code template
+
+We are using  
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 #### Run tests and code coverage
@@ -23,22 +27,22 @@ docker-compose down
 ```
 
 #### Start application
+
+##### Install dependencies
 ```
 npm i
 ```
-Then
+Download _node_modules_ dependencies
+
+##### Run application
+Runs the app in the development mode.
 ```
 npm run start
 ```
-
-Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 #### Build application
-```
-npm i
-```
-Then
+* Needs execute command from: _Install dependencies_
 ```
 npm run build
 ```
@@ -47,25 +51,26 @@ npm run build
 
 ### Build image
 ```
-docker build -t food-ui-webapp:1.0.0-local .
+docker build -t food-ui-webapp:1.0.0-[VERSION APP] .
 ```
 * Needs execute command from: _Build application_
 
 ### Run image
 ```
-docker run -p 8080:8080 -e PROXY_ENV=hml cezbatistao/food-ui-webapp:1.0.0-local
+docker run -p 8080:8080 -e PROXY_ENV=hml cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
 ```
 
 ### Publish image
 ```
-docker tag food-ui-webapp:1.0.0-local cezbatistao/food-ui-webapp:1.0.0-local
+docker tag food-ui-webapp:1.0.0-[VERSION APP] cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
 ```
 In order to push you’ll first have to authenticate with the Docker Hub:
 ```
 docker login
 <enter username & password>
 ``` 
-Then
+\
+And push image to Docker Hub
 ```
-docker push cezbatistao/food-ui-webapp:1.0.0-local
+docker push cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
 ```
