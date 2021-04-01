@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://mysql-k8s:3306/db_dc_restaurant?useSSL=false
+    username: restaurant_k8s_user
+    password: restaurant_k8s_passwd

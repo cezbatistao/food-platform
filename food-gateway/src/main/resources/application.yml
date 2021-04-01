@@ -3,6 +3,10 @@ server:
   servlet:
     context-path: /food
 
+application:
+  food-platform:
+    restaurant-app:
+      url: http://localhost:8181
 info:
   app:
     group: ${group}
@@ -18,7 +22,7 @@ spring:
     gateway:
       routes:
         - id: food-restaurant-app
-          uri: http://localhost:8181
+          uri: \${application.food-platform.restaurant-app.url}
           predicates:
             - Path=/food/restaurant/**
           filters:

@@ -1,0 +1,7 @@
+server:
+  port: 8080
+
+application:
+  food-platform:
+    restaurant-app:
+      url: http://food-restaurant:8080
