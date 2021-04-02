@@ -44,7 +44,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 #### Build application
 * Needs execute command from: _Install dependencies_
 ```
-npm run build
+REACT_APP_VERSION=[VERSION APP] npm run build
 ```
 
 ## Docker

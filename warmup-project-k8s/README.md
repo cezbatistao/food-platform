@@ -13,6 +13,13 @@ kubectl apply -f 6-create-databases.yaml
 kubectl apply -f 7-application-startup.yaml
 ```
 
+#### Access application
+```
+minikube ip
+```
+Returns a IP from minikube local machine, in my case: `192.168.99.100`
+Open [`http://192.168.99.100:30080/`](http://192.168.99.100:30080/) to use application
+
 ### Stop application
 ```
 minikube stop
