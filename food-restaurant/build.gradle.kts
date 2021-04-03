@@ -9,7 +9,6 @@ plugins {
 	kotlin("jvm") version "1.4.31"
 	kotlin("plugin.spring") version "1.4.31"
 	jacoco
-	idea
 }
 
 group = "com.food"
@@ -27,7 +26,6 @@ jacoco {
 }
 
 apply(plugin = "com.palantir.docker")
-apply(plugin = "idea")
 
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
 extra["springCloudVersion"] = "2020.0.2"
@@ -54,13 +52,15 @@ val componentTest by sourceSets.creating {
 	runtimeClasspath += output + compileClasspath
 }
 
-idea.module {
-	val testSources = testSourceDirs
-
-	testSources.addAll(project.sourceSets.getByName("componentTest").java.srcDirs)
-	testSources.addAll(project.sourceSets.getByName("componentTest").resources.srcDirs)
-
-	testSourceDirs = testSources
+sourceSets {
+	test {
+		java {
+			srcDir("src/test-component/kotlin")
+		}
+		resources {
+			srcDir("src/test-component/resources")
+		}
+	}
 }
 
 configurations[componentTest.implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
