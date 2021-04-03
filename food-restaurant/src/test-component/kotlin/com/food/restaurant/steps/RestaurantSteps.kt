@@ -38,11 +38,11 @@ class RestaurantSteps: AbstractComponentTest() {
         this.json = this.response?.then()?.statusCode(200);
     }
 
-    @And("user gets a list of restaurants")
-    fun `user gets a list of restaurants`() {
+    @And("user gets a list of restaurants with content {string}")
+    fun `user gets a list of restaurants with content {string}`(expectedJson: String) {
         Assertions.assertNotNull(this.json)
         val expected: String = this.getJsonStringExpectedFromClasspath(
-                "data/restaurant/restaurants/response/200-restaurants.json")
+                "data/restaurant/restaurants/response/${expectedJson}")
         val actual: String = this.getJsonStringActual(this.json)
 
         JSONAssert.assertEquals(expected, actual, CustomComparator(JSONCompareMode.LENIENT))
