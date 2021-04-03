@@ -18,7 +18,7 @@ We are using
 ```
 \
 Test HTML report: `build/reports/tests/test/index.html`
-\
+
 Coverage HTML report: `build/reports/coverage/index.html`
 
 #### Run components tests
