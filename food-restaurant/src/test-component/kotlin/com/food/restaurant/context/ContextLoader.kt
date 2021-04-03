@@ -1,5 +1,7 @@
 package com.food.restaurant.context
 
+import com.food.restaurant.support.TestContext
+import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.spring.CucumberContextConfiguration
 import io.restassured.RestAssured
@@ -19,5 +21,10 @@ class ContextLoader {
     fun startContext() {
         // Empty method, just to setup Application Test Context
         RestAssured.port = serverPort
+    }
+
+    @After
+    fun tearDown() {
+        TestContext.CONTEXT.reset()
     }
 }

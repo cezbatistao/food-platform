@@ -1,6 +1,8 @@
 package com.food.restaurant.support
 
+import com.food.restaurant.support.TestContext.CONTEXT
 import io.restassured.response.ValidatableResponse
+import io.undertow.server.protocol.ajp.AjpRequestParser.CONTEXT
 import org.apache.commons.io.IOUtils
 import org.json.JSONException
 import org.json.JSONObject
@@ -11,7 +13,12 @@ import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
+
 abstract class AbstractComponentTest {
+
+    open fun testContext(): TestContext {
+        return TestContext.CONTEXT
+    }
 
     protected open fun getJsonStringExpectedFromClasspath(pathJsonExpected: String): String {
         return try {

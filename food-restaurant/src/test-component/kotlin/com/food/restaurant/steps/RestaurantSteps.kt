@@ -3,12 +3,10 @@ package com.food.restaurant.steps
 import com.food.restaurant.support.AbstractComponentTest
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
-import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import io.restassured.http.ContentType
 import io.restassured.response.Response
 import io.restassured.response.ValidatableResponse
-import org.junit.jupiter.api.Assertions
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 import org.skyscreamer.jsonassert.comparator.CustomComparator
@@ -17,9 +15,6 @@ class RestaurantSteps: AbstractComponentTest() {
 
     protected var category: String? = null
 
-    private var response: Response? = null
-    private var json: ValidatableResponse? = null
-
     @Given("I had a category {string}")
     fun `I had a category {string}`(category: String) {
         this.category = category
@@ -27,23 +22,21 @@ class RestaurantSteps: AbstractComponentTest() {
 
     @When("user request a list of restaurant with category")
     fun `user request a list of restaurant with category`() {
-        this.response = io.restassured.RestAssured.given()
+        val response: Response = io.restassured.RestAssured.given()
                 .contentType(ContentType.JSON)
                 .param("category", this.category)
                 .get("/api/v1/restaurants")
-    }
 
-    @Then("user get success response from restaurant")
-    fun `user get success response`() {
-        this.json = this.response?.then()?.statusCode(200);
+        this.testContext().setResponse(response)
     }
 
     @And("user gets a list of restaurants with content {string}")
     fun `user gets a list of restaurants with content {string}`(expectedJson: String) {
-        Assertions.assertNotNull(this.json)
+        val json: ValidatableResponse = this.testContext().getJson()
+
         val expected: String = this.getJsonStringExpectedFromClasspath(
                 "data/restaurant/restaurants/response/${expectedJson}")
-        val actual: String = this.getJsonStringActual(this.json)
+        val actual: String = this.getJsonStringActual(json)
 
         JSONAssert.assertEquals(expected, actual, CustomComparator(JSONCompareMode.LENIENT))
     }
