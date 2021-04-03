@@ -8,7 +8,7 @@ CREATE TABLE category
 ) ENGINE=INNODB;
 
 INSERT INTO category(code, description)
-VALUES('pizza', 'Pizza');
+VALUES('pizza', 'Pizzaria');
 INSERT INTO category(code, description)
 VALUES('hamburguer', 'Hambúrguer');
 INSERT INTO category(code, description)

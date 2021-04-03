@@ -95,13 +95,14 @@ dependencies {
 	testImplementation("org.testcontainers:mysql")
 	testImplementation("br.com.six2six:fixture-factory:${property("fixtureFactoryVersion")}")
 
+	testImplementation("org.junit.vintage:junit-vintage-engine:${property("junitVintageEngineVersion")}")
+	testImplementation("io.cucumber:cucumber-java:${property("cucumberVersion")}")
+	testImplementation("io.cucumber:cucumber-junit:${property("cucumberVersion")}")
+	testImplementation("io.cucumber:cucumber-spring:${property("cucumberVersion")}")
+	testImplementation("net.masterthought:cucumber-reporting:${property("cucumberReportingVersion")}")
+	testImplementation("commons-io:commons-io:${property("commonsIoVersion")}")
+
 	"componentTestImplementation"(project)
-	"componentTestImplementation"("org.junit.vintage:junit-vintage-engine:${property("junitVintageEngineVersion")}")
-	"componentTestImplementation"("io.cucumber:cucumber-java:${property("cucumberVersion")}")
-	"componentTestImplementation"("io.cucumber:cucumber-junit:${property("cucumberVersion")}")
-	"componentTestImplementation"("io.cucumber:cucumber-spring:${property("cucumberVersion")}")
-	"componentTestImplementation"("net.masterthought:cucumber-reporting:${property("cucumberReportingVersion")}")
-	"componentTestImplementation"("commons-io:commons-io:${property("commonsIoVersion")}")
 }
 
 dependencyManagement {
