@@ -23,7 +23,7 @@ enum class TestContext {
     }
 
     open fun getResponse(): Response {
-        return this.get<Response>(RESPONSE)
+        return this.get(RESPONSE)
     }
 
     open fun setResponse(response: Response): Response {

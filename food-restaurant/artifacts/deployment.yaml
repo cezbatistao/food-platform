@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: food-restaurant
+spec:
+  selector:
+    matchLabels:
+      app: food-restaurant
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: food-restaurant
+    spec:
+      containers:
+      - name: food-restaurant
+        image: cezbatistao/food-restaurant:1.0.0-0
+        env:
+        - name: ENVIRONMENT_APP
+          value: k8s
+        imagePullPolicy: Always

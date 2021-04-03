@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: food-gateway
+spec:
+  selector:
+    matchLabels:
+      app: food-gateway
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: food-gateway
+    spec:
+      containers:
+        - name: food-gateway
+          image: cezbatistao/food-gateway:1.0.0-0
+          env:
+            - name: ENVIRONMENT_APP
+              value: k8s
+          imagePullPolicy: Always
