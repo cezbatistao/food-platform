@@ -9,6 +9,7 @@ plugins {
 	kotlin("jvm") version "1.4.31"
 	kotlin("plugin.spring") version "1.4.31"
 	jacoco
+	idea
 }
 
 group = "com.food"
@@ -26,6 +27,7 @@ jacoco {
 }
 
 apply(plugin = "com.palantir.docker")
+apply(plugin = "idea")
 
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
 extra["springCloudVersion"] = "2020.0.2"
@@ -35,10 +37,34 @@ extra["springfoxVersion"] = "3.0.0"
 extra["springmockkVersion"] = "3.0.1"
 extra["mockitoKotlinVersion"] = "2.2.0"
 extra["fixtureFactoryVersion"] = "3.1.0"
+extra["cucumberVersion"] = "6.10.2"
+extra["cucumberReportingVersion"] = "5.5.2"
+extra["junitVintageEngineVersion"] = "5.7.1"
+extra["commonsIoVersion"] = "2.8.0"
 
 configurations {
 	implementation.get().exclude(module= "spring-boot-starter-tomcat")
 }
+
+val componentTest by sourceSets.creating {
+	java.srcDir(arrayOf("src/test-component/kotlin", "src/main/kotlin"))
+	resources.srcDir(arrayOf("src/test-component/resources", "src/main/resources"))
+
+	compileClasspath += sourceSets.main.get().output + configurations.testRuntime.get()
+	runtimeClasspath += output + compileClasspath
+}
+
+idea.module {
+	val testSources = testSourceDirs
+
+	testSources.addAll(project.sourceSets.getByName("componentTest").java.srcDirs)
+	testSources.addAll(project.sourceSets.getByName("componentTest").resources.srcDirs)
+
+	testSourceDirs = testSources
+}
+
+configurations[componentTest.implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
+configurations[componentTest.runtimeOnlyConfigurationName].extendsFrom(configurations.testRuntimeOnly.get())
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -68,6 +94,14 @@ dependencies {
 	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${property("mockitoKotlinVersion")}")
 	testImplementation("org.testcontainers:mysql")
 	testImplementation("br.com.six2six:fixture-factory:${property("fixtureFactoryVersion")}")
+
+	"componentTestImplementation"(project)
+	"componentTestImplementation"("org.junit.vintage:junit-vintage-engine:${property("junitVintageEngineVersion")}")
+	"componentTestImplementation"("io.cucumber:cucumber-java:${property("cucumberVersion")}")
+	"componentTestImplementation"("io.cucumber:cucumber-junit:${property("cucumberVersion")}")
+	"componentTestImplementation"("io.cucumber:cucumber-spring:${property("cucumberVersion")}")
+	"componentTestImplementation"("net.masterthought:cucumber-reporting:${property("cucumberReportingVersion")}")
+	"componentTestImplementation"("commons-io:commons-io:${property("commonsIoVersion")}")
 }
 
 dependencyManagement {
@@ -75,6 +109,22 @@ dependencyManagement {
 		mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
 		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
 	}
+}
+
+val componentTestTask = task<Test>("componentTest") {
+	description = "Runs component tests."
+	group = "verification"
+
+	testClassesDirs = componentTest.output.classesDirs
+	classpath = configurations[componentTest.runtimeClasspathConfigurationName] + componentTest.output
+
+	systemProperty("cucumber.publish.quiet", "true")
+
+	shouldRunAfter(tasks.test)
+}
+
+tasks.check {
+	dependsOn(componentTestTask)
 }
 
 tasks.withType<KotlinCompile> {

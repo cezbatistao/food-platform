@@ -16,9 +16,17 @@ We are using
 ```
 ./gradlew clean test
 ```
+\
+Test HTML report: `build/reports/tests/test/index.html`
+\
+Coverage HTML report: `build/reports/coverage/index.html`
 
 #### Run components tests
-**TODO**
+```
+./gradlew componentTest
+```
+\
+Component test HTML report: `build/reports/tests/componentTest/cucumber-html-reports/overview-features.html`
 
 #### Setup application
 Go on folder `dependencies/` and start _docker-compose_
@@ -42,7 +50,7 @@ Open [`http://localhost:8181/swagger-ui/`](http://localhost:8181/swagger-ui/) to
 
 #### Build application
 ```
-./gradlew clean build -x test -Pbuild.number=[VERSION APP]
+./gradlew clean build -x test -x componentTest -Pbuild.number=[VERSION APP]
 ```
 
 ## Docker
