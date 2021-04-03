@@ -50,7 +50,7 @@ with Diagram("Food Platform Architecture", show=False):
     reviewSvc  >> reviewApps
     ratingSvc  >> ratingApp
 
-    customUser >> orderWebUi >> ing >> gatewaySvc
+    customUser >> ing >> orderWebUi >> gatewaySvc
     gateway    >> orderSvc
     gateway    >> restaurantSvc
     orderApp   >> reviewSvc
