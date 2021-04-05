@@ -43,10 +43,10 @@ class RestaurantController(
 
         val restaurantResponse = restaurants.map {
             RestaurantResponse(
-                    it.id!!,
+                    it.uuid!!,
                     it.name,
                     CategoryResponse(
-                            it.category.id!!,
+                            it.category.uuid!!,
                             it.category.code,
                             it.category.description
                     ),

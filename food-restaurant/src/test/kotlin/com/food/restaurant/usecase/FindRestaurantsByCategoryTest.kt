@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 
 class FindRestaurantsByCategoryTest: AbstractUnitTest() {
@@ -24,7 +23,7 @@ class FindRestaurantsByCategoryTest: AbstractUnitTest() {
 
     @BeforeEach
     fun setUp() {
-        Mockito.reset(restaurantGateway)
+        Mockito.reset(restaurantGateway, categoryGateway)
 
         findRestaurantsByCategory = FindRestaurantsByCategory(restaurantGateway, categoryGateway)
     }

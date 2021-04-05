@@ -20,6 +20,7 @@ class CategoryRepository(
         val categories: MutableList<CategoryModel> = this.jdbcTemplate.query(
                 """
                    SELECT id, 
+                          uuid, 
                           code, 
                           description 
                    FROM category 
@@ -37,7 +38,8 @@ class CategoryRepository(
 
         val categories: MutableList<CategoryModel> = this.jdbcTemplate.query(
                 """
-                   SELECT id, 
+                   SELECT id,
+                          uuid, 
                           code, 
                           description 
                    FROM category 
@@ -60,8 +62,8 @@ class CategoryRepository(
 
         this.jdbcTemplate.batchUpdate(
                 """
-                   INSERT INTO category(code, description) 
-                   VALUES(:code, :description) 
+                   INSERT INTO category(uuid, code, description) 
+                   VALUES(:uuid, :code, :description) 
                 """.trimIndent(),
                 parameterSourceFactory.newSqlParameterSources(categoriesModel))
     }

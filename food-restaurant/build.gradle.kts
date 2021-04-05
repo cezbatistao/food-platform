@@ -95,7 +95,6 @@ dependencies {
 	testImplementation("org.testcontainers:mysql")
 	testImplementation("br.com.six2six:fixture-factory:${property("fixtureFactoryVersion")}")
 
-	testImplementation("org.junit.vintage:junit-vintage-engine:${property("junitVintageEngineVersion")}")
 	testImplementation("io.cucumber:cucumber-java:${property("cucumberVersion")}")
 	testImplementation("io.cucumber:cucumber-junit:${property("cucumberVersion")}")
 	testImplementation("io.cucumber:cucumber-spring:${property("cucumberVersion")}")
@@ -103,6 +102,7 @@ dependencies {
 	testImplementation("commons-io:commons-io:${property("commonsIoVersion")}")
 
 	"componentTestImplementation"(project)
+	"componentTestImplementation"("org.junit.vintage:junit-vintage-engine:${property("junitVintageEngineVersion")}")
 }
 
 dependencyManagement {

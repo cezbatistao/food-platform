@@ -32,7 +32,7 @@ class CategoryController(
         val categories: List<Category> = this.listCategory.execute()
         val categoriesResponse = categories.map {
             CategoryResponse(
-                    it.id!!,
+                    it.uuid!!,
                     it.code,
                     it.description
             )

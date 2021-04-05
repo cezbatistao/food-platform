@@ -10,6 +10,7 @@ import com.food.restaurant.usecase.exception.ValidationException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.*
 
 class CategoryGatewayTest: AbstractRepositoryIT() {
 
@@ -46,6 +47,7 @@ class CategoryGatewayTest: AbstractRepositoryIT() {
         categoriesMock.forEach { categoryModel ->
             val category: Category = categories.find { it.code == categoryModel.code }!!
             Assertions.assertNotNull(category.id)
+            Assertions.assertEquals(categoryModel.uuid, category.uuid.toString())
             Assertions.assertEquals(categoryModel.description, category.description)
         }
     }
@@ -80,6 +82,7 @@ class CategoryGatewayTest: AbstractRepositoryIT() {
         // then
         Assertions.assertNotNull(category)
         Assertions.assertNotNull(category.id)
+        Assertions.assertEquals(UUID.fromString("0eda194c-827c-4254-ada8-214115310fc6"), category.uuid)
         Assertions.assertEquals("pizza", category.code)
         Assertions.assertEquals("Pizzaria", category.description)
     }

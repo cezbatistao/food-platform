@@ -6,6 +6,7 @@ import com.food.restaurant.gateway.CategoryGateway
 import com.food.restaurant.gateway.database.model.CategoryModel
 import com.food.restaurant.gateway.database.repository.CategoryRepository
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class CategoryGatewayImpl(
@@ -16,14 +17,14 @@ class CategoryGatewayImpl(
         val categoryModel: CategoryModel = (categoryRepository.findByCode(category)
                 ?: throw EntityNotFoundException("0002", "entityNotFoundException", "Category ${category} don't exists"))
 
-        return Category(categoryModel.id!!, categoryModel.code, categoryModel.description)
+        return Category(categoryModel.id!!, UUID.fromString(categoryModel.uuid!!), categoryModel.code, categoryModel.description)
     }
 
     override fun list(): List<Category> {
         val listAll: List<CategoryModel> = categoryRepository.listAll()
 
         return listAll.map { categoryModel -> Category(
-                categoryModel.id, categoryModel.code, categoryModel.description
+                categoryModel.id, UUID.fromString(categoryModel.uuid), categoryModel.code, categoryModel.description
         ) }
     }
 }
