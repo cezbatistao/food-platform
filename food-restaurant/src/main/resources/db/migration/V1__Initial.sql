@@ -77,3 +77,60 @@ CREATE TABLE restaurant_menu_item
 ) ENGINE=INNODB;
 
 ALTER TABLE restaurant_menu_item ADD CONSTRAINT unique_restaurant_menu_item UNIQUE (id, restaurant_id);
+
+INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
+VALUES (
+  '743b55f8-9543-11eb-a8b3-0242ac130003',
+  'Pepperoni',
+  'Muitas fatias de pepperoni (salame especial condimentado com páprica) servidas sobre mussarela e de molho de tomate.',
+  33.99,
+  (SELECT id FROM restaurant WHERE uuid = 'cbb9c2bd-abde-48a3-891a-6229fc9b7c2f')
+);
+INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
+VALUES (
+  '773712b0-9543-11eb-a8b3-0242ac130003',
+  'Meat',
+  'Mussarela Pizza Hut, pepperoni, presunto, carnes bovinas e suínas cobertas por bacon.',
+  34.99,
+  (SELECT id FROM restaurant WHERE uuid = 'cbb9c2bd-abde-48a3-891a-6229fc9b7c2f')
+);
+INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
+VALUES (
+  '7d35de8a-9543-11eb-a8b3-0242ac130003',
+  'Supreme',
+  'Combinação de molho de tomate, pepperoni, cebola, pimentão, champignon, seleção de carnes bovina e suína e mussarela.',
+  35.99,
+  (SELECT id FROM restaurant WHERE uuid = 'cbb9c2bd-abde-48a3-891a-6229fc9b7c2f')
+);
+INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
+VALUES (
+  '8dc970ae-9543-11eb-a8b3-0242ac130003',
+  'NAPOLITANA',
+  'Molho de tomate, alho cru fatiado, parmesão e folhas frescas de manjericão',
+  43.99,
+  (SELECT id FROM restaurant WHERE uuid = '23e0211c-19ea-47ee-b98e-77e023e1a95f')
+);
+INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
+VALUES (
+  '81af3f42-9543-11eb-a8b3-0242ac130003',
+  'CALABRESA',
+  'Calabresa artesanal em fatias, cebola e azeitonas pretas',
+  41.99,
+  (SELECT id FROM restaurant WHERE uuid = '23e0211c-19ea-47ee-b98e-77e023e1a95f')
+);
+INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
+VALUES (
+  '843bfe62-9543-11eb-a8b3-0242ac130003',
+  'Pepperoni',
+  'Mussarela, oregano e pepperoni.',
+  33.99,
+  (SELECT id FROM restaurant WHERE uuid = '36159a9b-f4d0-4f52-8d0f-3cd0dc702c1c')
+);
+INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
+VALUES (
+  '88e3812e-9543-11eb-a8b3-0242ac130003',
+  'Mussarela',
+  'Queijo mussarela e oregano.',
+  31.99,
+  (SELECT id FROM restaurant WHERE uuid = '36159a9b-f4d0-4f52-8d0f-3cd0dc702c1c')
+);
