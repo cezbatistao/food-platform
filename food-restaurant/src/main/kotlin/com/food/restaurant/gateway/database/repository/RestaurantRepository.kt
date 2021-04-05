@@ -21,7 +21,6 @@ class RestaurantRepository(
     fun findAllByCategory(category: Category): List<RestaurantModel> {
         val resultSetExtractor: ResultSetExtractorImpl<RestaurantModel> = JdbcTemplateMapperFactory
                 .newInstance()
-                .addKeys("id", "itens_id")
                 .newResultSetExtractor(RestaurantModel::class.java)
 
         val restaurants: MutableList<RestaurantModel> = this.jdbcTemplate.query(
@@ -35,15 +34,9 @@ class RestaurantRepository(
                           ca.description AS category_description, 
                           re.logo, 
                           re.description, 
-                          re.address, 
-                          mi.id AS itens_id, 
-                          mi.uuid AS itens_uuid, 
-                          mi.name AS itens_name, 
-                          mi.description AS itens_description, 
-                          mi.price AS itens_value  
+                          re.address 
                    FROM restaurant re 
                    INNER JOIN category ca ON ca.id = re.category_id 
-                   INNER JOIN restaurant_menu_item mi ON mi.restaurant_id = re.id 
                    WHERE ca.code = :categoryCode 
                 """.trimIndent(),
                 mapOf<String, Any?>("categoryCode" to category.code),
@@ -105,7 +98,7 @@ class RestaurantRepository(
 
             val restaurantId: Long = keyHolder.getKeyAs(BigInteger::class.java)?.toLong()!!
 
-            val map: Array<MutableMap<String, Any>> = restaurantModel.itens.map {
+            val map: Array<MutableMap<String, Any>>? = restaurantModel.itens?.map {
                 mutableMapOf<String, Any>(
                         "uuid" to it.uuid,
                         "name" to it.name,
@@ -113,14 +106,14 @@ class RestaurantRepository(
                         "price" to it.value,
                         "restaurant_id" to restaurantId
                 )
-            }.toTypedArray()
+            }?.toTypedArray()
 
             this.jdbcTemplate.batchUpdate(
                     """
                        INSERT INTO restaurant_menu_item(uuid, name, description, price, restaurant_id)
                        VALUES(:uuid, :name, :description, :price, :restaurant_id)
                     """.trimIndent(),
-                    map)
+                    map!!)
         }
     }
 }

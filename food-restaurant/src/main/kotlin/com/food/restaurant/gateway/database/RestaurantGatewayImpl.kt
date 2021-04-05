@@ -3,12 +3,12 @@ package com.food.restaurant.gateway.database
 import com.food.restaurant.domain.Category
 import com.food.restaurant.domain.MenuItem
 import com.food.restaurant.domain.Restaurant
+import com.food.restaurant.domain.RestaurantDetail
 import com.food.restaurant.domain.exception.EntityNotFoundException
 import com.food.restaurant.gateway.RestaurantGateway
 import com.food.restaurant.gateway.database.model.RestaurantModel
 import com.food.restaurant.gateway.database.repository.RestaurantRepository
 import org.springframework.stereotype.Component
-import java.math.BigDecimal
 import java.util.*
 
 @Component
@@ -18,19 +18,31 @@ class RestaurantGatewayImpl(
 
     override fun findAllByCategory(category: Category): List<Restaurant> {
         return this.restaurantRepository.findAllByCategory(category).map {
-            this.mapper(it)
+            Restaurant(
+                    it.id,
+                    UUID.fromString(it.uuid),
+                    it.name,
+                    Category(
+                            it.category.id,
+                            UUID.fromString(it.category.uuid),
+                            it.category.code,
+                            it.category.description),
+                    it.logo,
+                    it.description,
+                    it.address
+            )
         }
     }
 
-    override fun findByUuid(uuid: UUID): Restaurant {
+    override fun findByUuid(uuid: UUID): RestaurantDetail {
         val restaurantModel: RestaurantModel = this.restaurantRepository.findByUuid(uuid)
                 ?: throw EntityNotFoundException("0003", "entityNotFoundException", "Restaurant ${uuid} don't exists")
 
         return this.mapper(restaurantModel)
     }
 
-    private fun mapper(restaurantModel: RestaurantModel): Restaurant {
-        return Restaurant(
+    private fun mapper(restaurantModel: RestaurantModel): RestaurantDetail {
+        return RestaurantDetail(
                 restaurantModel.id,
                 UUID.fromString(restaurantModel.uuid),
                 restaurantModel.name,
@@ -42,7 +54,7 @@ class RestaurantGatewayImpl(
                 restaurantModel.logo,
                 restaurantModel.description,
                 restaurantModel.address,
-                restaurantModel.itens.map { menuItemModel ->
+                restaurantModel.itens?.map { menuItemModel ->
                     MenuItem(
                             menuItemModel.id,
                             UUID.fromString(menuItemModel.uuid),
@@ -50,7 +62,7 @@ class RestaurantGatewayImpl(
                             menuItemModel.description,
                             menuItemModel.value
                     )
-                }
+                }!!
         )
     }
 }

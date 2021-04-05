@@ -1,6 +1,6 @@
 package com.food.restaurant.usecase
 
-import com.food.restaurant.domain.Restaurant
+import com.food.restaurant.domain.RestaurantDetail
 import com.food.restaurant.gateway.RestaurantGateway
 import org.springframework.stereotype.Component
 import java.util.*
@@ -10,7 +10,7 @@ class GetRestaurantDetail(
         private val restaurantGateway: RestaurantGateway
 ) {
 
-    fun execute(uuid: UUID): Restaurant {
+    fun execute(uuid: UUID): RestaurantDetail {
         return this.restaurantGateway.findByUuid(uuid)
     }
 }

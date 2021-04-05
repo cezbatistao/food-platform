@@ -3,9 +3,8 @@ package com.food.restaurant.usecase
 import br.com.six2six.fixturefactory.Fixture
 import com.food.restaurant.config.AbstractUnitTest
 import com.food.restaurant.domain.MenuItem
-import com.food.restaurant.domain.Restaurant
+import com.food.restaurant.domain.RestaurantDetail
 import com.food.restaurant.domain.exception.EntityNotFoundException
-import com.food.restaurant.gateway.CategoryGateway
 import com.food.restaurant.gateway.RestaurantGateway
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -57,29 +56,29 @@ class GetRestaurantDetailTest: AbstractUnitTest() {
         // given
         val uuidRestaurant: UUID = UUID.randomUUID()
 
-        val restaurantFromGateway: Restaurant = Fixture.from(Restaurant::class.java).gimme("pizza hut")
+        val restaurantDetailFromGateway: RestaurantDetail = Fixture.from(RestaurantDetail::class.java).gimme("pizza hut")
 
-        whenever(this.restaurantGateway.findByUuid(uuidRestaurant)).thenReturn(restaurantFromGateway)
+        whenever(this.restaurantGateway.findByUuid(uuidRestaurant)).thenReturn(restaurantDetailFromGateway)
 
         // when
-        val restaurant: Restaurant = getRestaurantDetail.execute(uuidRestaurant)
+        val restaurantDetail: RestaurantDetail = getRestaurantDetail.execute(uuidRestaurant)
 
         // then
         verify(restaurantGateway, times(1)).findByUuid(uuidRestaurant)
 
-        Assertions.assertNotNull(restaurant)
-        Assertions.assertEquals(restaurantFromGateway.id, restaurant.id)
-        Assertions.assertEquals(restaurantFromGateway.uuid, restaurant.uuid)
-        Assertions.assertEquals(restaurantFromGateway.name, restaurant.name)
-        Assertions.assertEquals(restaurantFromGateway.category, restaurant.category)
-        Assertions.assertEquals(restaurantFromGateway.logo, restaurant.logo)
-        Assertions.assertEquals(restaurantFromGateway.description, restaurant.description)
-        Assertions.assertEquals(restaurantFromGateway.address, restaurant.address)
+        Assertions.assertNotNull(restaurantDetail)
+        Assertions.assertEquals(restaurantDetailFromGateway.id, restaurantDetail.id)
+        Assertions.assertEquals(restaurantDetailFromGateway.uuid, restaurantDetail.uuid)
+        Assertions.assertEquals(restaurantDetailFromGateway.name, restaurantDetail.name)
+        Assertions.assertEquals(restaurantDetailFromGateway.category, restaurantDetail.category)
+        Assertions.assertEquals(restaurantDetailFromGateway.logo, restaurantDetail.logo)
+        Assertions.assertEquals(restaurantDetailFromGateway.description, restaurantDetail.description)
+        Assertions.assertEquals(restaurantDetailFromGateway.address, restaurantDetail.address)
 
-        Assertions.assertEquals(restaurantFromGateway.itens.size, restaurant.itens.size)
+        Assertions.assertEquals(restaurantDetailFromGateway.itens.size, restaurantDetail.itens.size)
 
-        restaurantFromGateway.itens.forEach {
-            val menuItem: MenuItem = restaurant.itens.find { menuItem: MenuItem -> menuItem.id == it.id }!!
+        restaurantDetailFromGateway.itens.forEach {
+            val menuItem: MenuItem = restaurantDetail.itens.find { menuItem: MenuItem -> menuItem.id == it.id }!!
 
             Assertions.assertEquals(it.name, menuItem.name)
             Assertions.assertEquals(it.uuid, menuItem.uuid)

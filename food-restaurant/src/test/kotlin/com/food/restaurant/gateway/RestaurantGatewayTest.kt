@@ -4,13 +4,12 @@ import br.com.six2six.fixturefactory.Fixture
 import com.food.restaurant.config.AbstractRepositoryIT
 import com.food.restaurant.domain.Category
 import com.food.restaurant.domain.Restaurant
+import com.food.restaurant.domain.RestaurantDetail
 import com.food.restaurant.domain.exception.EntityNotFoundException
 import com.food.restaurant.gateway.database.model.CategoryModel
 import com.food.restaurant.gateway.database.model.RestaurantModel
 import com.food.restaurant.gateway.database.repository.CategoryRepository
 import com.food.restaurant.gateway.database.repository.RestaurantRepository
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -121,39 +120,39 @@ class RestaurantGatewayTest: AbstractRepositoryIT() {
         val uuidPizzaHut = UUID.fromString("cbb9c2bd-abde-48a3-891a-6229fc9b7c2f")
 
         // when
-        val restaurant: Restaurant = restaurantGateway.findByUuid(uuidPizzaHut)
+        val restaurantDetail: RestaurantDetail = restaurantGateway.findByUuid(uuidPizzaHut)
 
         // then
-        Assertions.assertNotNull(restaurant)
-        Assertions.assertNotNull(restaurant.id)
-        Assertions.assertEquals("Pizza Hut", restaurant.name)
-        Assertions.assertNotNull(restaurant.category.id)
-        Assertions.assertNotNull(restaurant.category.uuid)
-        Assertions.assertEquals("pizza", restaurant.category.code)
-        Assertions.assertEquals("Pizzaria", restaurant.category.description)
-        Assertions.assertEquals("https://pbs.twimg.com/profile_images/1333417326704791553/Mm0bj3oN.jpg", restaurant.logo)
+        Assertions.assertNotNull(restaurantDetail)
+        Assertions.assertNotNull(restaurantDetail.id)
+        Assertions.assertEquals("Pizza Hut", restaurantDetail.name)
+        Assertions.assertNotNull(restaurantDetail.category.id)
+        Assertions.assertNotNull(restaurantDetail.category.uuid)
+        Assertions.assertEquals("pizza", restaurantDetail.category.code)
+        Assertions.assertEquals("Pizzaria", restaurantDetail.category.description)
+        Assertions.assertEquals("https://pbs.twimg.com/profile_images/1333417326704791553/Mm0bj3oN.jpg", restaurantDetail.logo)
         Assertions.assertEquals("Pizza Hut é uma cadeia de restaurantes e franquias especializada em pizzas e massas. Com sede na cidade de Plano, no Texas, a Pizza Hut é a maior cadeia de pizzarias do mundo, com quase 15 mil restaurantes e quiosques em mais de 130 países. Possui 95 restaurantes no Brasil e 91 em Portugal.",
-                restaurant.description)
-        Assertions.assertEquals("Av. Nome da avenida, 123", restaurant.address)
+                restaurantDetail.description)
+        Assertions.assertEquals("Av. Nome da avenida, 123", restaurantDetail.address)
 
         // and
-        Assertions.assertEquals(3, restaurant.itens.size)
+        Assertions.assertEquals(3, restaurantDetail.itens.size)
 
-        val menuItemPepperoni = restaurant.itens.find { it.uuid.toString() == "743b55f8-9543-11eb-a8b3-0242ac130003" }!!
+        val menuItemPepperoni = restaurantDetail.itens.find { it.uuid.toString() == "743b55f8-9543-11eb-a8b3-0242ac130003" }!!
         Assertions.assertNotNull(menuItemPepperoni.id)
         Assertions.assertEquals("Pepperoni", menuItemPepperoni.name)
         Assertions.assertEquals("Muitas fatias de pepperoni (salame especial condimentado com páprica) servidas sobre mussarela e de molho de tomate.",
                 menuItemPepperoni.description)
         Assertions.assertEquals(BigDecimal("33.99"), menuItemPepperoni.value)
 
-        val menuItemMeat = restaurant.itens.find { it.uuid.toString() == "773712b0-9543-11eb-a8b3-0242ac130003" }!!
+        val menuItemMeat = restaurantDetail.itens.find { it.uuid.toString() == "773712b0-9543-11eb-a8b3-0242ac130003" }!!
         Assertions.assertNotNull(menuItemMeat.id)
         Assertions.assertEquals("Meat", menuItemMeat.name)
         Assertions.assertEquals("Mussarela Pizza Hut, pepperoni, presunto, carnes bovinas e suínas cobertas por bacon.",
                 menuItemMeat.description)
         Assertions.assertEquals(BigDecimal("34.99"), menuItemMeat.value)
 
-        val menuItemSupreme = restaurant.itens.find { it.uuid.toString() == "7d35de8a-9543-11eb-a8b3-0242ac130003" }!!
+        val menuItemSupreme = restaurantDetail.itens.find { it.uuid.toString() == "7d35de8a-9543-11eb-a8b3-0242ac130003" }!!
         Assertions.assertNotNull(menuItemSupreme.id)
         Assertions.assertEquals("Supreme", menuItemSupreme.name)
         Assertions.assertEquals("Combinação de molho de tomate, pepperoni, cebola, pimentão, champignon, seleção de carnes bovina e suína e mussarela.",

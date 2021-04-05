@@ -8,7 +8,7 @@ class RestaurantModel(
         val logo: String,
         val description: String,
         val address: String,
-        val itens: List<MenuItemModel>
+        val itens: List<MenuItemModel>?
 ) {
 
     constructor(uuid: String, name: String, category: CategoryModel, logo: String,
