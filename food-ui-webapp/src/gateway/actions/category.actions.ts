@@ -61,6 +61,7 @@ export const getCategories = (): ThunkAction<
     const categoriesResponse: CategoryResponse[] = response;
     const categories = categoriesResponse.map(categoryResponse => {
       return new Category(
+        categoryResponse.uuid, 
         categoryResponse.code, 
         categoryResponse.description
       );

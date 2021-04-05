@@ -6,7 +6,7 @@
     headers:
       Content-Type: application/json; charset=utf-8
       Access-Control-Allow-Origin: "*"
-    file: mocks/response/restaurant_categories_response.json
+    file: mocks/response/categories_response.json
 
 - request:
     url: ^/food/restaurant/api/v1/restaurants$
@@ -30,3 +30,27 @@
       Content-Type: application/json; charset=utf-8
       Access-Control-Allow-Origin: "*"
     file: mocks/response/empty_restaurants_response.json
+
+- request:
+    url: ^/food/restaurant/api/v1/restaurants/cbb9c2bd-abde-48a3-891a-6229fc9b7c2f$
+    method: GET
+  response:
+    status: 200
+    headers:
+      Content-Type: application/json; charset=utf-8
+      Access-Control-Allow-Origin: "*"
+    file: mocks/response/detail_restaurant.json
+- request:
+    url: ^/food/restaurant/api/v1/restaurants/([a-zA-Z0-9\-]+)$
+    method: GET
+  response:
+    status: 404
+    headers:
+      Content-Type: application/json; charset=utf-8
+      Access-Control-Allow-Origin: "*"
+    body: {
+      "error": {
+        "code": "0003",
+        "message": "Restaurant <% url[1] %> don't exists"
+      }
+    }

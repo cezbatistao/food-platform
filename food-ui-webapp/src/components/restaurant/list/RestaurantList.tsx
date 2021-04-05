@@ -2,9 +2,9 @@ import Grid from '@material-ui/core/Grid';
 
 import { useSelector } from 'react-redux';
 
-import RestaurantCard from './RestaurantCard';
-import { RootState } from '../../gateway';
-import Restaurant from '../../domain/Restaurant';
+import RestaurantCard from '../card/RestaurantCard';
+import { RootState } from '../../../gateway';
+import Restaurant from '../../../domain/Restaurant';
 
 type RestaurantState = {
   restaurants: Restaurant[], 
@@ -22,8 +22,9 @@ const RestaurantList = () => {
       {
         restaurants.map(restaurant => {
           return(
-            <Grid key={ restaurant.id } item xs={12} sm={4}>
+            <Grid key={ restaurant.uuid } item xs={12} sm={4}>
               <RestaurantCard 
+                uuid={ restaurant.uuid } 
                 name={ restaurant.name } 
                 logo={ restaurant.logo }
                 description={ restaurant.description }

@@ -5,8 +5,8 @@ import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import RestaurantList from '../restaurant/RestaurantList';
-import RestaurantCategory from '../restaurant/RestaurantCategory';
+import RestaurantList from '../restaurant/list/RestaurantList';
+import RestaurantCategory from '../restaurant/category/RestaurantCategory';
 
 const useStyles = makeStyles((theme) => ({
   root: {

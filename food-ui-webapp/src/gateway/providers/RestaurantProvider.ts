@@ -2,17 +2,33 @@ import { AxiosResponse } from 'axios';
 import { axios } from './Api';
 
 export interface CategoryResponse {
-  id: number;
+  uuid: string;
   code: string;
   description: string;
 }
 
 export interface RestaurantResponse {
-  id: string;
+  uuid: string;
   name: string;
   logo: string;
   description: string;
   address: string;
+}
+
+export interface MenuItemResponse {
+  uuid: string;
+  name: string;
+  description: string;
+  value: string;
+}
+
+export interface RestaurantDetailResponse {
+  uuid: string;
+  name: string;
+  logo: string;
+  description: string;
+  address: string;
+  itens: MenuItemResponse[]
 }
 
 export const getAllCategories = async (): Promise< // change to fetchCategories
@@ -60,5 +76,20 @@ export const fetchRestaurantsByCategory = async (
   });
 
   const AxiosResponse: AxiosResponse<RestaurantResponse[]> = response?.data;
+  return AxiosResponse?.data;
+}
+
+export const fetchRestaurantDetail = async (
+  uuid: string
+): Promise<RestaurantDetailResponse> => {
+  const response: AxiosResponse = await axios({
+    url: `/food/restaurant/api/v1/restaurants/${uuid}`, 
+    method: 'get', 
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  });
+
+  const AxiosResponse: AxiosResponse<RestaurantDetailResponse> = response?.data;
   return AxiosResponse?.data;
 }

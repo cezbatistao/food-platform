@@ -8,10 +8,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Category from '../../domain/Category';
-import { getCategories } from '../../gateway/actions/category.actions';
-import { getRestaurantsByCategory } from '../../gateway/actions/restaurant.actions';
-import { RootState } from '../../gateway';
+import Category from '../../../domain/Category';
+import { getCategories } from '../../../gateway/actions/category.actions';
+import { getRestaurantsByCategory } from '../../../gateway/actions/restaurant.actions';
+import { RootState } from '../../../gateway';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -63,7 +63,7 @@ const RestaurantCategory = () => {
         >
           {!loading && 
             categories.map(category => {
-              return <MenuItem key={ category.id } value={ category.id }>{ category.description }</MenuItem>;
+              return <MenuItem key={ category.uuid } value={ category.code }>{ category.description }</MenuItem>;
             })
           }
         </Select>

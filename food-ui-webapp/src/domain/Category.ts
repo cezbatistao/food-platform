@@ -1,14 +1,20 @@
 export default class Category {
-  _id: string;
+  _uuid: string;
+  _code: string;
   _description: string;
 
-  constructor(id: string, description: string) {
-    this._id = id;
+  constructor(uuid: string, code: string, description: string) {
+    this._uuid = uuid;
+    this._code = code;
     this._description = description;
   }
 
-  get id(): string {
-    return this._id;
+  get uuid(): string {
+    return this._uuid;
+  }
+
+  get code(): string {
+    return this._code;
   }
 
   get description(): string {

@@ -1,17 +1,21 @@
-export default class Restaurant {
+import MenuItem from "./MenuItem";
+
+export default class RestaurantDetail {
   _uuid: string;
   _name: string;
   _logo: string;
   _description: string;
   _address: string;
+  _itens: MenuItem[]
 
   constructor(uuid: string, name: string, logo: string, description: string, 
-              address: string) {
+              address: string, itens: MenuItem[]) {
     this._uuid = uuid;
     this._name = name;
     this._logo = logo;
     this._description = description;
     this._address = address;
+    this._itens = itens;
   }
 
   get uuid(): string {
@@ -32,5 +36,9 @@ export default class Restaurant {
 
   get address(): string {
     return this._address;
+  }
+
+  get itens(): MenuItem[] {
+    return this._itens;
   }
 }

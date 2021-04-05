@@ -24,11 +24,11 @@ const getRestaurantsByCategoryLoading: ActionCreator<
 }
 
 const getRestaurantsByCategorySuccess: ActionCreator<RestaurantActionTypes> = (
-  categories: Restaurant[]
+  restaurants: Restaurant[]
 ) => {
   return { 
     type: GET_RESTAURANTS_SUCCESS, 
-    payload: categories, 
+    payload: restaurants, 
     loading: false,
     error: false
   };
@@ -61,7 +61,7 @@ export const getRestaurantsByCategory = (category: string): ThunkAction<
     const restaurantsResponse: RestaurantResponse[] = response;
     const restaurants = restaurantsResponse.map(restaurantResponse => {
       return new Restaurant(
-        restaurantResponse.id, 
+        restaurantResponse.uuid, 
         restaurantResponse.name,
         restaurantResponse.logo,
         restaurantResponse.description,
