@@ -25,6 +25,8 @@ const Header = () => {
   
   const classes = useStyles();
 
+  const preventDefault = (event: React.SyntheticEvent) => event.preventDefault();
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBarColor} style={{background: 'linear-gradient(45deg, #ffa000 30%, #ef6c00 90%)'}} position="static">

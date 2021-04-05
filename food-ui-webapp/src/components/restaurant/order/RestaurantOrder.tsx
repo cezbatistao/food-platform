@@ -1,17 +1,6 @@
 import { Theme, createStyles, makeStyles, useTheme } from '@material-ui/core/styles';
 
 import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-
-
-import Header from "../../header/Header";
-import Notification from "../../notification/Notification";
 
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -60,24 +49,20 @@ const RestaurantOrder = () => {
   ) => state.restaurantDetail);
 
   return (
-    <>
-      <Notification />
-      <Header />
-      <Container maxWidth="lg" className={classes.container}>
-        {!loading && 
-          restaurant.itens?.map(menuItem => {
-            return (
-              <RestaurantItem 
-                uuid={ menuItem.uuid } 
-                name={ menuItem.name } 
-                description={ menuItem.description } 
-                value={ menuItem.value } 
-              />
-            );
-          })
-        }
-      </Container>
-    </>
+    <Container maxWidth="lg" className={classes.container}>
+      {!loading && 
+        restaurant.itens?.map(menuItem => {
+          return (
+            <RestaurantItem 
+              uuid={ menuItem.uuid } 
+              name={ menuItem.name } 
+              description={ menuItem.description } 
+              value={ menuItem.value } 
+            />
+          );
+        })
+      }
+    </Container>
   );
 }
 

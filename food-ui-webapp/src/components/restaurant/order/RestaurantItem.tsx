@@ -6,19 +6,6 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 
-
-import Header from "../../header/Header";
-import Notification from "../../notification/Notification";
-
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from "react-router-dom";
-
-import { getRestaurantDetail } from '../../../gateway/actions/restaurantDetail.actions';
-import { RestaurantDetailState } from "../../../gateway/reducers/restaurantDetail.reducer";
-import { RootState } from "../../../gateway";
-import { yellow } from '@material-ui/core/colors';
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -59,28 +46,31 @@ const RestaurantItem = ({uuid, name, description, value}: Props) => {
   }
   
   return (
-    <Card key={ uuid } className={classes.root}>
-      <CardMedia
-        className={classes.cover}
-        image="https://astron.com.br/wp-content/uploads/2017/07/pizza-site-or.jpg"
-        title={ name }
-      />
-      <CardActionArea>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography component="h5" variant="h5">
-              { name }
-            </Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              { description }
-            </Typography>
-            <Typography variant="subtitle2" color="textSecondary">
-              { formatNumber(value) }
-            </Typography>
-          </CardContent>
-        </div>
-      </CardActionArea>
-    </Card>
+    <>
+      <Card key={ uuid } className={classes.root}>
+        <CardMedia
+          className={classes.cover}
+          image="https://astron.com.br/wp-content/uploads/2017/07/pizza-site-or.jpg"
+          title={ name }
+        />
+        <CardActionArea>
+          <div className={classes.details}>
+            <CardContent className={classes.content}>
+              <Typography component="h5" variant="h5">
+                { name }
+              </Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                { description }
+              </Typography>
+              <Typography variant="subtitle2" color="textSecondary">
+                { formatNumber(value) }
+              </Typography>
+            </CardContent>
+          </div>
+        </CardActionArea>
+      </Card>
+      <br />
+    </>
   );
 }
 

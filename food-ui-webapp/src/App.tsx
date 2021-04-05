@@ -1,17 +1,17 @@
-import Header from './components/header/Header';
-import Main from './components/main/Main';
+import { FunctionComponent } from 'react';
 
-import './App.scss';
+import Header from './components/header/Header';
 import Notification from './components/notification/Notification';
 
-const App = () => {
-  return (
-    <>
-      <Notification />
-      <Header />
-      <Main />
-    </>
-  );
-};
+import './App.scss';
+
+type Props = {
+}
+
+const App: FunctionComponent<Props> = (props) => <>
+  <Notification />
+  <Header />
+  { props.children }
+</>
 
 export default App;
