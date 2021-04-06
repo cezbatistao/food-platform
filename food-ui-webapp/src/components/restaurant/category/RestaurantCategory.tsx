@@ -9,8 +9,8 @@ import queryString from 'query-string';
 
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation } from "react-router-dom";
-import * as H from 'history';
+import { useLocation, useHistory } from "react-router-dom";
+import { Location } from 'history';
 
 import Category from '../../../domain/Category';
 import { getCategories } from '../../../gateway/actions/category.actions';
@@ -42,9 +42,28 @@ const RestaurantCategory = () => {
 
   const classes = useStyles();
 
+  const location = useLocation();
+  let history = useHistory();
+
+  const getCategoryFromQueryString = (location: Location<unknown>) => {
+    const parsed = queryString.parse(location.search);
+    return parsed.category ? parsed.category as string : undefined;
+  }
+
+  const handleChangeCategory = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const categorySelected = event.target.value as string;
+    history.push({
+      search: `?category=${categorySelected}`
+    });
+  }
+
+  const categoryQueryString = getCategoryFromQueryString(location);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCategories());
+    dispatchGetRestaurantsByCategory(categoryQueryString as string);
+    
   }, [dispatch]);
 
   const { loading, categories }: CategoryState = useSelector((
@@ -56,20 +75,6 @@ const RestaurantCategory = () => {
       dispatch(getRestaurantsByCategory(category));
     }
   }
-
-  const getCategoryFromQueryString = (location: H.Location<unknown>) => {
-    const parsed = queryString.parse(location.search);
-    return parsed.category ? parsed.category as string : undefined;
-  }
-
-  const handleChangeCategory = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const categorySelected = event.target.value as string;
-    dispatchGetRestaurantsByCategory(categorySelected);
-  }
-
-  const location = useLocation();
-  const categoryQueryString = getCategoryFromQueryString(location);
-  dispatchGetRestaurantsByCategory(categoryQueryString as string);
 
   return (
     <>

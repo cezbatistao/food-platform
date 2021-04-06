@@ -39,18 +39,9 @@ type Props = {
   address: string
 }
 
-type RestaurantState = {
-  restaurants: Restaurant[], 
-  loading: boolean
-}
-
 const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
 
   const classes = useStyles();
-
-  const { loading, restaurants }: RestaurantState = useSelector(
-    (state: RootState) => state.restaurant
-  );
 
   let history = useHistory();
 
