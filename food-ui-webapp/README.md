@@ -52,7 +52,7 @@ REACT_APP_VERSION=[VERSION APP] npm run build
 ### Build image
 * Needs execute command from: _Build application_
 ```
-docker build -t food-ui-webapp:1.0.0-[VERSION APP] .
+npm run docker-build --react_app_version=[VERSION APP]
 ```
 
 ### Run image
@@ -62,7 +62,7 @@ docker run -p 8080:8080 --net=host -e PROXY_ENV=hml cezbatistao/food-ui-webapp:1
 
 ### Publish image
 ```
-docker tag food-ui-webapp:1.0.0-[VERSION APP] cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
+npm run docker-tag --react_app_version=[VERSION APP]
 ```
 In order to push you’ll first have to authenticate with the Docker Hub:
 ```
@@ -72,7 +72,7 @@ docker login
 \
 And push image to Docker Hub
 ```
-docker push cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
+npm run docker-push --react_app_version=[VERSION APP]
 ```
 
 ## Kubernetes
