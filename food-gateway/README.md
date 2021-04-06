@@ -67,9 +67,15 @@ In order to push you’ll first have to authenticate with the Docker Hub:
 ```
 docker login
 <enter username & password>
-``` 
+```
 \
 And push image to Docker Hub
 ```
 ./gradlew dockerPushDockerHub -Pbuild.number=[VERSION APP]
+```
+
+## Kubernetes
+```
+kubectl apply -f artifacts/deployment.yaml
+kubectl apply -f artifacts/service.yaml
 ```

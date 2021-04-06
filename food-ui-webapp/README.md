@@ -68,9 +68,19 @@ In order to push you’ll first have to authenticate with the Docker Hub:
 ```
 docker login
 <enter username & password>
-``` 
+```
 \
 And push image to Docker Hub
 ```
 docker push cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
 ```
+
+## Kubernetes
+```
+kubectl apply -f artifacts/deployment.yaml
+kubectl apply -f artifacts/service.yaml
+```
+\
+To access application: `minikube ip`, this return IP from my minikube local machine: `192.168.99.100`
+\
+Open [`http://192.168.99.100:30080/`](http://192.168.99.100:30080/) to use application
