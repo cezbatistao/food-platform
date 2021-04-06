@@ -1,5 +1,7 @@
-FROM openjdk:11-jre-slim
+FROM adoptopenjdk/openjdk11:alpine-jre
 VOLUME /tmp
+
+RUN apk add --no-cache curl
 
 ENV ENVIRONMENT_APP default
 

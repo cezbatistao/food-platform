@@ -17,7 +17,7 @@ class CategoryGatewayImpl(
         val categoryModel: CategoryModel = (categoryRepository.findByCode(category)
                 ?: throw EntityNotFoundException("0002", "entityNotFoundException", "Category ${category} don't exists"))
 
-        return Category(categoryModel.id!!, UUID.fromString(categoryModel.uuid!!), categoryModel.code, categoryModel.description)
+        return Category(categoryModel.id!!, UUID.fromString(categoryModel.uuid), categoryModel.code, categoryModel.description)
     }
 
     override fun list(): List<Category> {
