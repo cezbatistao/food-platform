@@ -22,15 +22,13 @@ const RestaurantList = () => {
       {
         restaurants.map(restaurant => {
           return(
-            <Grid key={ restaurant.uuid } item xs={12} sm={4}>
-              <RestaurantCard 
-                uuid={ restaurant.uuid } 
-                name={ restaurant.name } 
-                logo={ restaurant.logo }
-                description={ restaurant.description }
-                address={ restaurant.address }
-              />
-            </Grid>
+            <RestaurantCard 
+              uuid={ restaurant.uuid } 
+              name={ restaurant.name } 
+              logo={ restaurant.logo }
+              description={ restaurant.description }
+              address={ restaurant.address }
+            />
           );
         })
       }

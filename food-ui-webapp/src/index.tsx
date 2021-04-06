@@ -18,9 +18,9 @@ import Health from './components/health/Health';
 import { store } from './gateway'
 
 ReactDOM.render(
-  <App>
-    <Provider store={store}>
+  <Provider store={store}>
     <Router forceRefresh={true}>
+      <App>
         <Switch>
           <Route exact path="/" render={() => (<Redirect to="/home" />)} />
           <Route exact path="/home" component={Main} />
@@ -28,8 +28,8 @@ ReactDOM.render(
           <Route exact path="/info" component={Info} />
           <Route exact path="/health" component={Health} />
         </Switch>
-      </Router>
-    </Provider>
-  </App>,
+      </App>
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );

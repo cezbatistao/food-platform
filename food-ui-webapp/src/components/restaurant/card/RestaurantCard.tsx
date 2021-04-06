@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -54,7 +55,7 @@ const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
   let history = useHistory();
 
   return (
-    <div>
+    <Grid key={ uuid } item xs={12} sm={4}>
       <Card className={classes.root}>
         <CardActionArea onClick={(evt) => {
             history.push(`/order/${uuid}`);
@@ -86,7 +87,7 @@ const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
           </CardContent>
         </CardActionArea>
       </Card>
-    </div>
+    </Grid>
   );
 }
 
