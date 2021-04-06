@@ -44,7 +44,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 #### Build application
 * Needs execute command from: _Install dependencies_
 ```
-REACT_APP_VERSION=[VERSION APP] npm run build
+REACT_APP_BUILD_NUMBER=[VERSION APP] npm run build
 ```
 
 ## Docker
@@ -57,7 +57,7 @@ npm run docker-build --react_app_version=[VERSION APP]
 
 ### Run image
 ```
-docker run -p 8080:8080 --net=host -e PROXY_ENV=hml cezbatistao/food-ui-webapp:1.0.0-[VERSION APP]
+docker run -p 8080:8080 --net=host -e PROXY_ENV=local food-ui-webapp:1.0.0-[VERSION APP]
 ```
 
 ### Publish image
