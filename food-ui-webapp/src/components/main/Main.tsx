@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import RestaurantList from '../restaurant/list/RestaurantList';
-import RestaurantCategory from '../restaurant/category/RestaurantCategory';
+import RestaurantCategoryContainer from '../restaurant/category/RestaurantCategoryContainer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +44,7 @@ const Main = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={8} lg={9}>
           <Paper className={fixedHeightPaper}>
-            <RestaurantCategory />
+            <RestaurantCategoryContainer />
           </Paper>
         </Grid>
       </Grid>

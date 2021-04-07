@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header renders the heading 1`] = `
+<div
+  className="makeStyles-root-1"
+>
+  <WithStyles(ForwardRef(AppBar))
+    className="makeStyles-appBarColor-4"
+    position="static"
+    style={
+      Object {
+        "background": "linear-gradient(45deg, #ffa000 30%, #ef6c00 90%)",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(Toolbar))>
+      <Memo(ForwardRef(FastfoodIcon))
+        className="makeStyles-menuButton-2"
+      />
+      <WithStyles(ForwardRef(Typography))
+        className="makeStyles-title-3"
+        variant="h6"
+      >
+        Food Platform
+      </WithStyles(ForwardRef(Typography))>
+      <Memo(ForwardRef(ShoppingBasketIcon)) />
+    </WithStyles(ForwardRef(Toolbar))>
+  </WithStyles(ForwardRef(AppBar))>
+</div>
+`;
+
+exports[`Link renders the heading 1`] = `
+<div
+  className="makeStyles-root-1"
+>
+  <WithStyles(ForwardRef(AppBar))
+    className="makeStyles-appBarColor-4"
+    position="static"
+    style={
+      Object {
+        "background": "linear-gradient(45deg, #ffa000 30%, #ef6c00 90%)",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(Toolbar))>
+      <Memo(ForwardRef(FastfoodIcon))
+        className="makeStyles-menuButton-2"
+      />
+      <WithStyles(ForwardRef(Typography))
+        className="makeStyles-title-3"
+        variant="h6"
+      >
+        Food Platform
+      </WithStyles(ForwardRef(Typography))>
+      <Memo(ForwardRef(ShoppingBasketIcon)) />
+    </WithStyles(ForwardRef(Toolbar))>
+  </WithStyles(ForwardRef(AppBar))>
+</div>
+`;
