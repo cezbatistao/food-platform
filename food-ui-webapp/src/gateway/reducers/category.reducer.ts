@@ -29,7 +29,7 @@ export const categoryReducer: Reducer<
       return {
         ...state, 
         categories: [], 
-        loading: action.loading, 
+        loading: true, 
         error: false
       };
     }
