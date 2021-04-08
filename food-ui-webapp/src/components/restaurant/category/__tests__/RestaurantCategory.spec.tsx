@@ -83,7 +83,7 @@ describe('RestaurantCategory', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it("renders the components RestaurantCategory and RestaurantList", async () => {
+  it("should dispatch a getRestaurantsByCategory when select a category of restaurant", () => {
     const valueToSelect = 'pizza';
 
     mockUseDispatch.mockReturnValue(jest.fn());
