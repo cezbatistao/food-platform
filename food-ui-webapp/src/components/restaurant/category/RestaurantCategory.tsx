@@ -5,6 +5,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 
+import { useDispatch } from 'react-redux';
+
 import Category from '../../../domain/Category';
 import { getRestaurantsByCategory } from '../../../gateway/actions/restaurant.actions';
 
@@ -17,13 +19,14 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   loading: boolean,
-  categories: Category[], 
-  dispatch: any
+  categories: Category[]
 }
 
-const RestaurantCategory = ({ loading, categories, dispatch }: Props) => {
+const RestaurantCategory = ({ loading, categories }: Props) => {
   
   const classes = useStyles();
+
+  const dispatch = useDispatch();
 
   const handleChangeCategory = (event: React.ChangeEvent<{ value: unknown }>) => {
     const categorySelected = event.target.value as string;

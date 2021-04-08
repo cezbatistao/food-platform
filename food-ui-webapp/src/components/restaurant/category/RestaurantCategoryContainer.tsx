@@ -55,7 +55,6 @@ const RestaurantCategoryContainer = () => {
     <RestaurantCategory 
       loading={loading} 
       categories={categories} 
-      dispatch={dispatch} 
     />
   );
 }
