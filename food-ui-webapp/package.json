@@ -101,10 +101,16 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
+      "!src/domain/**",
+      "!src/components/health/**",
+      "!src/components/info/**",
       "!src/**/*.d.ts",
       "!src/index.tsx",
       "!src/serviceWorker.ts",
-      "!src/reportWebVitals.ts"
+      "!src/reportWebVitals.ts", 
+      "!src/setupProxy.js", 
+      "!src/setupTests.ts",
+      "!src/config.ts"
     ],
     "coveragePathIgnorePatterns": [
       "./src/*/*.types.{ts,tsx}",

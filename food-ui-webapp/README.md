@@ -10,7 +10,11 @@ We are using
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 #### Run tests and code coverage
-**TODO**
+```
+npm run test:coverage
+```
+\
+Coverage HTML report: coverage/lcov-report/index.html
 
 #### Run components tests
 **TODO**
