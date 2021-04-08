@@ -84,5 +84,23 @@ describe("User Actions", () => {
       expect(actions[1].error).toEqual(false);
       expect(actions[1].payload.length).toEqual(0);
     });
+
+    it("should return a loading and failure", async () => {
+      mockGetAllCategories.mockImplementationOnce(() =>
+        null
+      );
+  
+      await store.dispatch(getCategories());
+      const actions = store.getActions();
+  
+      expect(actions[0].type).toEqual("GET_CATEGORIES_LOADING");
+      expect(actions[0].loading).toEqual(true);
+      expect(actions[0].error).toEqual(false);
+  
+      expect(actions[1].type).toEqual("GET_CATEGORIES_FAILURE");
+      expect(actions[1].loading).toEqual(false);
+      expect(actions[1].error).toEqual(true);
+      expect(actions[1].payload).toBeUndefined();
+    });
   });
 });
