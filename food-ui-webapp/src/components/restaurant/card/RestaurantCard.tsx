@@ -65,6 +65,7 @@ const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
             }
             title={ name }
             subheader={ address }
+            data-test="card_header_restaurant_data"
           />
           <CardMedia
             className={classes.media}

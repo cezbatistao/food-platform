@@ -1,0 +1,22 @@
+{
+  "integrationFolder": "features",
+  "pluginsFile": "config/plugins.js",
+  "supportFile": "config/support.js",
+  "fixturesFolder": "cypress/fixtures",
+  "screenshotsFolder": "mochawesome-report/screenshots",
+  "reporter": "mochawesome",
+  "experimentalFetchPolyfill": false,
+  "baseUrl": "http://food-ui-webapp:8080",
+  "video": false, 
+  "reporterOptions": {
+    "reportDir": "mochawesome-report",
+    "overwrite": false,
+    "html": false,
+    "json": true, 
+    "timestamp": "mmddyyyy_HHMMss"
+  },
+  "chromeWebSecurity": false, 
+  "env": {
+
+  }
+}

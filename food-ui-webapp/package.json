@@ -107,8 +107,8 @@
       "!src/**/*.d.ts",
       "!src/index.tsx",
       "!src/serviceWorker.ts",
-      "!src/reportWebVitals.ts", 
-      "!src/setupProxy.js", 
+      "!src/reportWebVitals.ts",
+      "!src/setupProxy.js",
       "!src/setupTests.ts",
       "!src/config.ts"
     ],

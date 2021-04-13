@@ -1,0 +1,32 @@
+{
+  "name": "food-ui-webapp-component-test",
+  "version": "1.0.0",
+  "dependencies": {
+    "cypress-cucumber-preprocessor": "2.3.1"
+  },
+  "scripts": {
+    "test": "cypress open",
+    "e2e-ci-test:headless": "CYPRESS_RETRIES=3 cypress run --env TAGS='@e2e'",
+    "e2e-test:headless": "DEBUG=cypress:* cypress run --browser chrome --headless --env TAGS='@e2e'",
+    "component-test:headless": "cypress run --browser chrome --headless --env TAGS='@component'",
+    "only": "cypress run --browser chrome --headless --env TAGS='@only'",
+    "merge:reports": "mochawesome-merge --reportDir mochawesome-report > mochawesome-report/cypress-test-report.json",
+    "generate:report": "marge mochawesome-report/cypress-test-report.json --reportFilename index.html"
+  },
+  "cypress-cucumber-preprocessor": {
+    "step_definitions": "step_definitions/"
+  },
+  "devDependencies": {
+    "@cypress/webpack-preprocessor": "^5.7.0",
+    "cypress": "^4.5.0",
+    "cypress-multi-reporters": "^1.1.9",
+    "cypress-plugin-retries": "^1.5.2",
+    "cypress-plugin-tab": "^1.0.5",
+    "marge": "^1.0.1",
+    "mocha": "^8.1.3",
+    "mochawesome": "^6.1.1",
+    "mochawesome-merge": "^4.1.0",
+    "mochawesome-report-generator": "^5.1.0",
+    "shelljs": "^0.8.3"
+  }
+}

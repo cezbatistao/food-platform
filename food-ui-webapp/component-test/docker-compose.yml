@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  stubby:
+    container_name: stubby_component_test
+    build: ../dependencies/stubby/
+    volumes:
+      - ../dependencies/stubby:/mocks
+    command: stubby -d /mocks/init.yml -s 8882 -t 7443 -a 8889 -w
+    ports:
+      - 9090:8882
+      - 8882:8882
+      - 7443:7443
+      - 8889:8889
+    networks:
+      - ui-webapp-cte-network
+  food-ui-webapp:
+    container_name: food_ui_webapp_component_test
+    build: 
+      context: ../
+    depends_on:
+      - stubby
+    links:
+      - stubby
+    networks:
+      - ui-webapp-cte-network
+    environment:
+      - PROXY_ENV=cte
+      - ENVIRONMENT_APP=cte
+  cypress:
+    container_name: food_ui_webapp_cypress_component_test
+    image: food_ui_webapp_cypress_component_test
+    ipc: host
+    build:
+      context: .
+      dockerfile: Dockerfile-cypress
+    depends_on:
+      - food-ui-webapp
+      - stubby
+    links:
+      - food-ui-webapp
+      - stubby
+    networks:
+      - ui-webapp-cte-network
+    volumes:
+      - ./mochawesome-report:/usr/src/app/mochawesome-report
+    command: dockerize -wait http://food-ui-webapp:8080/health -wait http://stubby:8882/
+
+networks:
+  ui-webapp-cte-network:

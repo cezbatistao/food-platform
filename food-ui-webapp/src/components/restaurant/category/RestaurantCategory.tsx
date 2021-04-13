@@ -37,6 +37,7 @@ const RestaurantCategory = ({ loading, categories }: Props) => {
     <FormControl className={classes.formControl}>
       <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
       <Select 
+        data-test="select_category"
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         onChange={handleChangeCategory}
