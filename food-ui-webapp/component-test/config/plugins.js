@@ -1,8 +1,14 @@
+const browserify = require('@cypress/browserify-preprocessor');
 const cucumber = require('cypress-cucumber-preprocessor').default;
-const webpack = require('@cypress/webpack-preprocessor')
+const resolve = require('resolve');
 const fs = require('fs');
 
 module.exports = (on, config) => {
+  const options = browserify.defaultOptions;
+  options.browserifyOptions.plugin.unshift(
+    ['tsify', { project: './tsconfig.json' }]
+  );
+
   on('before:browser:launch', (browser = {}, launchOptions) => {
     if (browser.family === 'chromium' && browser.name !== 'electron') {
       launchOptions.args.push('--disable-dev-shm-usage')
@@ -36,6 +42,6 @@ module.exports = (on, config) => {
       })
     })
   }),
-  on('file:preprocessor', cucumber()),
+  on('file:preprocessor', cucumber(options)),
   require('cypress-plugin-retries/lib/plugin')(on)
 }

@@ -1,4 +1,5 @@
 {
+  "ignoreTestFiles": "*.ts", 
   "integrationFolder": "features",
   "pluginsFile": "config/plugins.js",
   "supportFile": "config/support.js",
