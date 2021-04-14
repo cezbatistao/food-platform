@@ -48,7 +48,7 @@ export const getAllCategories = async (): Promise< // change to fetchCategories
   // } catch (err) {
   //   console.error(err);
   // }
-debugger;
+
   const response: AxiosResponse = await axios({
     url: '/food/restaurant/api/v1/categories', 
     method: 'get', 
@@ -56,7 +56,7 @@ debugger;
       'Content-Type': 'application/json',
     }
   });
-debugger;
+
   const AxiosResponse: AxiosResponse<CategoryResponse[]> = response?.data;
   return AxiosResponse?.data;
 }

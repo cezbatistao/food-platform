@@ -60,7 +60,6 @@ export const getRestaurantDetail = (uuid: string): ThunkAction<
       return dispatch(getRestaurantDetailFailure());
     }
     
-    debugger;
     const restaurantDetailResponse: RestaurantDetailResponse = response;
 
     const restaurantDetail = new RestaurantDetail(

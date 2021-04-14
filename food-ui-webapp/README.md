@@ -17,7 +17,7 @@ npm run test:coverage
 Coverage HTML report: coverage/lcov-report/index.html
 
 #### Run components tests
-**TODO**
+Read ![component-test/README.md](component-test/README.md) file
 
 #### Setup application
 Go on folder `dependencies/`
