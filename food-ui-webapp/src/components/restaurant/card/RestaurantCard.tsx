@@ -32,7 +32,7 @@ const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
         <div className="card-body">
           <h6 className="card-title">{ address }</h6>
           <p className="card-text"></p>
-          <div className="card-footer bg-transparent">{ description }</div>
+          <div className="card-footer bg-transparent">TODO: Add stars from rating here!</div>
           <a href="#" className="stretched-link"></a>
         </div>
       </div>

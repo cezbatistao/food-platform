@@ -33,7 +33,7 @@ const RestaurantOrder = () => {
                   <div className="card-body">
                     <h5 className="card-title">{ restaurant.name }</h5>
                     <p className="card-text">{ restaurant.description }</p>
-                    <p className="card-text"><small className="text-muted">TODO: Adicionar as estrelas aqui!</small></p>
+                    <p className="card-text"><small className="text-muted">TODO: Add stars from rating here!</small></p>
                   </div>
                 </div>
               </div>
