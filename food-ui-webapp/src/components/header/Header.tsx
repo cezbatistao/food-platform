@@ -1,42 +1,18 @@
-import { makeStyles } from '@material-ui/core/styles';
-import orange from '@material-ui/core/colors/orange';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { Fastfood, ShoppingBasket } from '@material-ui/icons';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  appBarColor: {
-    backgroundColor: orange['800'],
-  }
-}));
-
 const Header = () => {
-  
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <AppBar className={classes.appBarColor} style={{background: 'linear-gradient(45deg, #ffa000 30%, #ef6c00 90%)'}} position="static">
-        <Toolbar>
-          <Fastfood className={classes.menuButton} />
-          <Typography variant="h6" className={classes.title}>
-            Food Platform
-          </Typography>
-          <ShoppingBasket />
-        </Toolbar>
-      </AppBar>
-    </div>
+    <div className="container">
+    <header className="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <i style={{ paddingRight: "15px" }} className="fas fa-utensils fa-2x"></i>
+        <span className="fs-4">Food Platform</span>
+      </a>
+      <ul className="nav nav-pills">
+        <li className="nav-item">
+          <i className="fas fa-shopping-basket fa-2x"></i>
+        </li>
+      </ul>
+    </header>
+  </div>
   );
 }
 

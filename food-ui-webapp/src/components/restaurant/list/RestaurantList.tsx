@@ -1,5 +1,3 @@
-import Grid from '@material-ui/core/Grid';
-
 import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -19,23 +17,21 @@ const RestaurantList = () => {
   ) => state.restaurant);
   
   return (
-    <Grid container spacing={3}>
+    <div className="row row-cols-1 row-cols-md-3 g-4">
       {
         restaurants.map(restaurant => {
           return(
-            <Fragment key={ restaurant.uuid }>
-              <RestaurantCard 
-                uuid={ restaurant.uuid } 
-                name={ restaurant.name } 
-                logo={ restaurant.logo }
-                description={ restaurant.description }
-                address={ restaurant.address }
-              />
-            </Fragment>
+            <RestaurantCard 
+              uuid={ restaurant.uuid } 
+              name={ restaurant.name } 
+              logo={ restaurant.logo }
+              description={ restaurant.description }
+              address={ restaurant.address }
+            />
           );
         })
       }
-    </Grid>
+    </div>
   );
 }
 

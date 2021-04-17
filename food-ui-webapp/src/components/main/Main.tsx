@@ -1,61 +1,26 @@
-import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-
 import RestaurantList from '../restaurant/list/RestaurantList';
 import RestaurantCategoryContainer from '../restaurant/category/RestaurantCategoryContainer';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  rootContainer: {
-    flexGrow: 1,
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 240,
-  },
-}));
-
 const Main = () => {
 
-  const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper);
-
   return (
-    <Container maxWidth="lg" className={classes.container}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8} lg={9}>
-          <Paper className={fixedHeightPaper}>
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-6 col-md-4">
             <RestaurantCategoryContainer />
-          </Paper>
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item xs={12} lg={9}>
-          <Paper className={fixedHeightPaper}>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div className="container">
+        <div className="row">
+          <div className="col-8 col-md-12">
             <RestaurantList />
-          </Paper>
-        </Grid>
-      </Grid>
-    </Container>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

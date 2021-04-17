@@ -1,9 +1,4 @@
-import * as enzyme from 'enzyme';
-
-import { createMount, createShallow } from '@material-ui/core/test-utils';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import { shallow } from 'enzyme';
 
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -26,21 +21,9 @@ jest.mock('../../../../gateway/actions/restaurant.actions', () => ({
 
 describe('RestaurantCategory', () => {
 
-  let shallow:typeof enzyme.shallow;
-  let mount: any;
-
-  beforeAll(() => {
-    shallow = createShallow();
-    mount = createMount({strict: true});
-  });
-
   beforeEach(() => {
     mockUseDispatch.mockClear();
     mockGetRestaurantsByCategory.mockClear();
-  });
-
-  afterAll(() => {
-    mount.cleanUp();
   });
 
   it("renders the categories from restaurant", () => {
@@ -54,8 +37,8 @@ describe('RestaurantCategory', () => {
       />
     );
 
-    expect(wrapper.find(FormControl).length).toBe(1);
-    expect(wrapper.find(MenuItem).length).toBe(5);
+    expect(wrapper.find('select').length).toBe(1);
+    expect(wrapper.find('select option').length).toBe(6);
     
     expect(mockUseDispatch).toHaveBeenCalledTimes(0);
     expect(mockGetRestaurantsByCategory).toHaveBeenCalledTimes(0);
@@ -74,8 +57,8 @@ describe('RestaurantCategory', () => {
       />
     );
 
-    expect(wrapper.find(FormControl).length).toBe(1);
-    expect(wrapper.find(MenuItem).length).toBe(0);
+    expect(wrapper.find('select').length).toBe(1);
+    expect(wrapper.find('select option').length).toBe(1);
 
     expect(mockUseDispatch).toHaveBeenCalledTimes(0);
     expect(mockGetRestaurantsByCategory).toHaveBeenCalledTimes(0);
@@ -96,7 +79,7 @@ describe('RestaurantCategory', () => {
       />
     );
     
-    wrapper.find(Select).simulate('change', {
+    wrapper.find('select').simulate('change', {
       target: { value: valueToSelect }
     });
 

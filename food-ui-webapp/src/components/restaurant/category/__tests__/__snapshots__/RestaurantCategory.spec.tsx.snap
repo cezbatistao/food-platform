@@ -1,66 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`RestaurantCategory renders empty categories 1`] = `
-<WithStyles(ForwardRef(FormControl))
-  className="makeStyles-formControl-1"
+<select
+  aria-label="Default select example"
+  className="form-select"
+  onChange={[Function]}
 >
-  <WithStyles(ForwardRef(InputLabel))
-    id="demo-simple-select-label"
+  <option
+    disabled={true}
+    selected={true}
   >
-    Categoria
-  </WithStyles(ForwardRef(InputLabel))>
-  <WithStyles(ForwardRef(Select))
-    id="demo-simple-select"
-    labelId="demo-simple-select-label"
-    onChange={[Function]}
-  />
-</WithStyles(ForwardRef(FormControl))>
+    Selecione uma categoria
+  </option>
+</select>
 `;
 
 exports[`RestaurantCategory renders the categories from restaurant 1`] = `
-<WithStyles(ForwardRef(FormControl))
-  className="makeStyles-formControl-1"
+<select
+  aria-label="Default select example"
+  className="form-select"
+  onChange={[Function]}
 >
-  <WithStyles(ForwardRef(InputLabel))
-    id="demo-simple-select-label"
+  <option
+    disabled={true}
+    selected={true}
   >
-    Categoria
-  </WithStyles(ForwardRef(InputLabel))>
-  <WithStyles(ForwardRef(Select))
-    id="demo-simple-select"
-    labelId="demo-simple-select-label"
-    onChange={[Function]}
+    Selecione uma categoria
+  </option>
+  <option
+    key="0eda194c-827c-4254-ada8-214115310fc6"
+    value="pizza"
   >
-    <WithStyles(ForwardRef(MenuItem))
-      key="0eda194c-827c-4254-ada8-214115310fc6"
-      value="pizza"
-    >
-      Pizzaria
-    </WithStyles(ForwardRef(MenuItem))>
-    <WithStyles(ForwardRef(MenuItem))
-      key="cc0cd1b9-4217-498d-8da8-661de03b86e5"
-      value="hamburguer"
-    >
-      Hambúrguer
-    </WithStyles(ForwardRef(MenuItem))>
-    <WithStyles(ForwardRef(MenuItem))
-      key="577a9962-e9b7-46a9-abc8-211e42f6f1aa"
-      value="japonesa"
-    >
-      Japonesa
-    </WithStyles(ForwardRef(MenuItem))>
-    <WithStyles(ForwardRef(MenuItem))
-      key="67e92973-f1ff-4cc3-b2c0-6485939ae442"
-      value="vegetariana"
-    >
-      Vegetariana
-    </WithStyles(ForwardRef(MenuItem))>
-    <WithStyles(ForwardRef(MenuItem))
-      key="2358fb2d-f0dc-4a00-8b55-6fbbce158e91"
-      value="brasileira"
-    >
-      Brasileira
-    </WithStyles(ForwardRef(MenuItem))>
-  </WithStyles(ForwardRef(Select))>
-</WithStyles(ForwardRef(FormControl))>
+    Pizzaria
+  </option>
+  <option
+    key="cc0cd1b9-4217-498d-8da8-661de03b86e5"
+    value="hamburguer"
+  >
+    Hambúrguer
+  </option>
+  <option
+    key="577a9962-e9b7-46a9-abc8-211e42f6f1aa"
+    value="japonesa"
+  >
+    Japonesa
+  </option>
+  <option
+    key="67e92973-f1ff-4cc3-b2c0-6485939ae442"
+    value="vegetariana"
+  >
+    Vegetariana
+  </option>
+  <option
+    key="2358fb2d-f0dc-4a00-8b55-6fbbce158e91"
+    value="brasileira"
+  >
+    Brasileira
+  </option>
+</select>
 `;

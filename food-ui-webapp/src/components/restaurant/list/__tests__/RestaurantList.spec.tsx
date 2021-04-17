@@ -1,6 +1,4 @@
-import * as enzyme from 'enzyme';
-
-import { createMount, createShallow } from '@material-ui/core/test-utils';
+import { shallow } from 'enzyme';
 
 import { useSelector } from 'react-redux';
 
@@ -20,21 +18,9 @@ jest.mock('react-redux', () => ({
 
 describe('RestaurantList', () => {
 
-  let shallow:typeof enzyme.shallow;
-  let mount: any;
-
-  beforeAll(() => {
-    shallow = createShallow();
-    mount = createMount({strict: true});
-  });
-
   beforeEach(() => {
     mockUseDispatch.mockClear();
     mockUseSelector.mockClear();
-  });
-
-  afterAll(() => {
-    mount.cleanUp();
   });
 
   it("should don't show RestaurantCard", () => {

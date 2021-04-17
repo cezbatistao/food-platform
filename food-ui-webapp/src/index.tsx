@@ -1,5 +1,3 @@
-import './index.scss';
-
 import ReactDOM from 'react-dom';
 import {
   Route, 

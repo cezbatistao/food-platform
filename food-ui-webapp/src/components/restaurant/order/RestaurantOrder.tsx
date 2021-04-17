@@ -1,7 +1,3 @@
-import { Theme, createStyles, makeStyles, useTheme } from '@material-ui/core/styles';
-
-import Container from '@material-ui/core/Container';
-
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from "react-router-dom";
@@ -11,58 +7,58 @@ import { RestaurantDetailState } from "../../../gateway/reducers/restaurantDetai
 import { RootState } from "../../../gateway";
 import RestaurantItem from './RestaurantItem';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-    },
-    container: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(4),
-    },
-    details: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    content: {
-      flex: '1 0 auto',
-    },
-    cover: {
-      width: 151,
-    },
-  }),
-);
-
 const RestaurantOrder = () => {
   const { uuid } = useParams<{ uuid: string }>();
-
-  const classes = useStyles();
-  const theme = useTheme();
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getRestaurantDetail(uuid));
   }, [dispatch]);
 
-  const { loading, restaurant }: RestaurantDetailState = useSelector((
+  const { loading, restaurant, error }: RestaurantDetailState = useSelector((
     state: RootState
   ) => state.restaurantDetail);
 
   return (
-    <Container maxWidth="lg" className={classes.container}>
-      {!loading && 
-        restaurant.itens?.map(menuItem => {
-          return (
-            <RestaurantItem 
-              uuid={ menuItem.uuid } 
-              name={ menuItem.name } 
-              description={ menuItem.description } 
-              value={ menuItem.value } 
-            />
-          );
-        })
+    <>
+      {!error && 
+        <div className="container">
+          <div className="row">
+            <div className="card mb-3">
+              <div className="row g-0">
+                <div className="col-md-2">
+                  <img src={ restaurant.logo } alt={ restaurant.name } style={{ maxWidth: "200px" }} />
+                </div>
+                <div className="col-md-10">
+                  <div className="card-body">
+                    <h5 className="card-title">{ restaurant.name }</h5>
+                    <p className="card-text">{ restaurant.description }</p>
+                    <p className="card-text"><small className="text-muted">TODO: Adicionar as estrelas aqui!</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       }
-    </Container>
+      <br />
+      <div className="container">
+        <div className="row">
+          {!loading && 
+            restaurant.itens?.map(menuItem => {
+              return (
+                <RestaurantItem 
+                  uuid={ menuItem.uuid } 
+                  name={ menuItem.name } 
+                  description={ menuItem.description } 
+                  value={ menuItem.value } 
+                />
+              );
+            })
+          }
+        </div>
+      </div>
+    </>
   );
 }
 

@@ -4,8 +4,6 @@ import { useLocation } from "react-router-dom";
 import Header from './components/header/Header';
 import Notification from './components/notification/Notification';
 
-import './App.scss';
-
 type Props = {
 }
 
