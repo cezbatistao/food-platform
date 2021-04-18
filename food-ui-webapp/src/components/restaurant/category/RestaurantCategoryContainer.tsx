@@ -17,44 +17,30 @@ type CategoryState = {
 
 const RestaurantCategoryContainer = () => {
 
-  // const location = useLocation();
-  // let history = useHistory();
+  const location = useLocation();
+  let history = useHistory();
 
-  // const getCategoryFromQueryString = (location: Location<unknown>) => {
-  //   const parsed = queryString.parse(location.search);
-  //   return parsed.category ? parsed.category as string : undefined;
-  // }
+  const getCategoryFromQueryString = (location: Location<unknown>) => {
+    const parsed = queryString.parse(location.search);
+    return parsed.category ? parsed.category as string : "";
+  }
 
-  // const handleChangeCategory = (event: React.ChangeEvent<{ value: unknown }>) => {
-  //   const categorySelected = event.target.value as string;
-  //   history.push({
-  //     search: `?category=${categorySelected}`
-  //   });
-  // }
-
-  // const categoryQueryString = getCategoryFromQueryString(location);
+  const categoryQueryString = getCategoryFromQueryString(location);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCategories());
-    // dispatchGetRestaurantsByCategory(categoryQueryString as string);
-    
   }, [dispatch]);
 
   const { loading, categories }: CategoryState = useSelector((
     state: RootState
   ) => state.category);
 
-  // const dispatchGetRestaurantsByCategory = (category: string) => {
-  //   if(category) {
-  //     dispatch(getRestaurantsByCategory(category));
-  //   }
-  // }
-
   return (
     <RestaurantCategory 
-      loading={loading} 
-      categories={categories} 
+      loading={ loading } 
+      categories={ categories } 
+      categoryFromParameter={ categoryQueryString }
     />
   );
 }

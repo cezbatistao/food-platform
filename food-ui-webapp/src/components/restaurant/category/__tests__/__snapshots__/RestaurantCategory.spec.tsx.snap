@@ -2,13 +2,14 @@
 
 exports[`RestaurantCategory renders empty categories 1`] = `
 <select
-  aria-label="Default select example"
+  aria-label="Selecione uma categoria"
   className="form-select"
   onChange={[Function]}
+  value=""
 >
   <option
     disabled={true}
-    selected={true}
+    value=""
   >
     Selecione uma categoria
   </option>
@@ -17,13 +18,14 @@ exports[`RestaurantCategory renders empty categories 1`] = `
 
 exports[`RestaurantCategory renders the categories from restaurant 1`] = `
 <select
-  aria-label="Default select example"
+  aria-label="Selecione uma categoria"
   className="form-select"
   onChange={[Function]}
+  value=""
 >
   <option
     disabled={true}
-    selected={true}
+    value=""
   >
     Selecione uma categoria
   </option>

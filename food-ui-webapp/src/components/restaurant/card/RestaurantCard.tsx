@@ -1,8 +1,4 @@
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-
-import Restaurant from '../../../domain/Restaurant';
-import { RootState } from '../../../gateway';
 
 type Props = {
   uuid: string,
@@ -22,8 +18,8 @@ const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
 
   return (
     <div 
-      onClick={ () => handleClickCard(uuid) } 
       key={ uuid } 
+      onClick={ () => handleClickCard(uuid) } 
       className="col"
     >
       <div className="card h-100">

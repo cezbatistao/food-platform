@@ -17,11 +17,12 @@ const RestaurantList = () => {
   ) => state.restaurant);
   
   return (
-    <div className="row row-cols-1 row-cols-md-5 g-4">
+    <div key="restaurant-list" className="row row-cols-1 row-cols-md-5 g-4">
       {
         restaurants.map(restaurant => {
           return(
             <RestaurantCard 
+              key={ restaurant.uuid } 
               uuid={ restaurant.uuid } 
               name={ restaurant.name } 
               logo={ restaurant.logo }

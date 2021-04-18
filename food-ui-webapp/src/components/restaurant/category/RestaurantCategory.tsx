@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Category from '../../../domain/Category';
@@ -5,22 +6,40 @@ import { getRestaurantsByCategory } from '../../../gateway/actions/restaurant.ac
 
 type Props = {
   loading: boolean,
-  categories: Category[]
+  categories: Category[], 
+  categoryFromParameter: string
 }
 
-const RestaurantCategory = ({ loading, categories }: Props) => {
+const RestaurantCategory = ({ loading, categories, categoryFromParameter }: Props) => {
   
+  const [categorySelected, setCategorySelected] = useState<string>(categoryFromParameter);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setCategorySelected(categoryFromParameter);
+    if(categorySelected && categories.some(category => category.code === categorySelected)) {
+      dispatch(getRestaurantsByCategory(categorySelected));
+    } else if(categorySelected && !categories.some(category => category.code === categorySelected)) {
+      setCategorySelected("");
+    }
+  }, [categories]);
+
   const handleChangeCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // event.preventDefault();
-    const categorySelected = event.target.value as string;
-    dispatch(getRestaurantsByCategory(categorySelected));
+    const categorySelectedFromSelect = event.target.value as string;
+    setCategorySelected(categorySelectedFromSelect);
+    dispatch(getRestaurantsByCategory(categorySelectedFromSelect));
+    var refresh = `${window.location.protocol}//${window.location.host + window.location.pathname}?category=${categorySelectedFromSelect}`;
+    window.history.pushState({ path: refresh }, '', refresh);
   }
 
   return (
-    <select className="form-select" aria-label="Default select example" onChange={ handleChangeCategory }>
-      <option disabled selected>Selecione uma categoria</option>
+    <select 
+      className="form-select" 
+      aria-label="Selecione uma categoria" 
+      onChange={ handleChangeCategory }
+      value= { categorySelected }
+    >
+      <option value="" disabled>Selecione uma categoria</option>
       {!loading && 
         categories.map(category => {
           return (
