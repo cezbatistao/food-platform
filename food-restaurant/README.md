@@ -42,7 +42,7 @@ docker-compose down
 #### Start application
 * Needs execute command from: _Setup application_ start _docker-compose_
 ```
-./gradlew  bootRun
+./gradlew bootRun
 ```
 Open [`http://localhost:8181/swagger-ui/`](http://localhost:8181/swagger-ui/) to use endpoints from application
 
