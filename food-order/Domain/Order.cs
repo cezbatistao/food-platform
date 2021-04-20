@@ -15,7 +15,7 @@ namespace food_order.Domain
             this.itens = new List<Item>(itens);
 
             this.total = itens.Aggregate(0.0m, 
-                (decimal acc, Item value) => acc + value.value);
+                (decimal acc, Item value) => acc + value.Value);
         }
     }
 }

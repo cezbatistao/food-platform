@@ -26,14 +26,14 @@ namespace food_order.Entrypoint.Rest
         [HttpPost("v1/orders")]
         public ActionResult<OrderResponse> RegisterOrder([FromBody] OrderRequest orderRequest)
         {
-            List<Item> itens = orderRequest.itens.ConvertAll(itemRequest => 
-                new Item(itemRequest.uuid, itemRequest.name, itemRequest.value));
-            Order orderToRegister = new Order(orderRequest.restaurantUuid, itens);
+            List<Item> itens = orderRequest.Itens.ConvertAll(itemRequest => 
+                new Item(itemRequest.Uuid, itemRequest.Name, itemRequest.Value));
+            Order orderToRegister = new Order(orderRequest.RestaurantUuid, itens);
 
             RequestedOrder requestedOrder = this.registerOrder.Execute(orderToRegister);
 
-            OrderResponse orderResponse = new OrderResponse(requestedOrder.uuid, 
-                requestedOrder.restaurantUuid, requestedOrder.total);
+            OrderResponse orderResponse = new OrderResponse(requestedOrder.Uuid, 
+                requestedOrder.RestaurantUuid, requestedOrder.Total);
             
             return Ok(orderResponse);
         }

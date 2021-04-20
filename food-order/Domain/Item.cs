@@ -2,14 +2,14 @@ namespace food_order.Domain
 {
     public class Item
     {
-        public string uuid { get; }
-        public string name { get; }
-        public decimal value { get; }
+        public string Uuid { get; }
+        public string Name { get; }
+        public decimal Value { get; }
 
         public Item(string uuid, string name, decimal value) {
-            this.uuid = uuid;
-            this.name = name;
-            this.value = value;
+            this.Uuid = uuid;
+            this.Name = name;
+            this.Value = value;
         }
     }
 }

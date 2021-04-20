@@ -26,7 +26,7 @@ namespace food_order.UseCase
 
             bool orderOk = order.itens.TrueForAll(orderItem => 
                 itens.Exists(menuItem => 
-                    menuItem.Uuid.Equals(orderItem.uuid) && menuItem.Value == orderItem.value
+                    menuItem.Uuid.Equals(orderItem.Uuid) && menuItem.Value == orderItem.Value
                 )
             );
 
