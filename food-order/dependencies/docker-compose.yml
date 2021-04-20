@@ -6,20 +6,20 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_DATABASE=db_restaurant
+      - MYSQL_DATABASE=db_order
       - MYSQL_ROOT_PASSWORD=root_passwd
-      - MYSQL_USER=restaurant_user
-      - MYSQL_PASSWORD=restaurant_passwd
+      - MYSQL_USER=order_user
+      - MYSQL_PASSWORD=order_passwd
     volumes:
-      - mysql-restaurant-datavolume:/var/lib/mysql
+      - mysql-order-datavolume:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     links:
       - mysql
     ports:
-      - 8001:80
+      - 8002:80
     environment:
       - PMA_ARBITRARY=1
 
 volumes:
-  mysql-restaurant-datavolume:
+  mysql-order-datavolume:

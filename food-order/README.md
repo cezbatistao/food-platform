@@ -42,16 +42,23 @@ Open [`http://localhost:5000/swagger/index.html`](http://localhost:5000/swagger/
 * default port restaurant app is `5000`
 
 #### Build application
-**TODO**
+```
+dotnet restore src
+dotnet publish -c Release -o out src
+```
 
 ## Docker
 
 ### Build image
 * Needs execute command from: _Build application_
-**TODO**
+```
+docker build -t food-order:1.0.0-[VERSION APP] .
+```
 
 ### Run image
-**TODO**
+```
+docker run -p 5000:80 food-order:1.0.0-[VERSION APP]
+```
 
 ### Publish image
 **TODO**

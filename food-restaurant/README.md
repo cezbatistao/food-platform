@@ -64,7 +64,7 @@ Open [`http://localhost:8181/swagger-ui/`](http://localhost:8181/swagger-ui/) to
 ### Run image
 * Needs execute command from: _Setup application_ start _docker-compose_
 ```
-docker run -p 8181:8181 --net=host food-restaurant:[VERSION APP]
+docker run -p 8181:8181 food-restaurant:[VERSION APP]
 ```
 
 ### Publish image

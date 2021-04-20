@@ -56,7 +56,7 @@ Open [`http://localhost:9090/swagger-ui/`](http://localhost:9090/swagger-ui/) to
 ### Run image
 * Needs execute command from: _Setup application_ start _docker-compose_
 ```
-docker run -p 9090:9090 --net=host food-gateway:[VERSION APP]
+docker run -p 9090:9090 food-gateway:[VERSION APP]
 ```
 
 ### Publish image
