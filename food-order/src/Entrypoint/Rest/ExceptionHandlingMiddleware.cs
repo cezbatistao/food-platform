@@ -5,6 +5,7 @@ using food_order.Domain.Exception;
 using food_order.Entrypoint.Rest.Json;
 using food_order.Entrypoint.Rest.Json.Error;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -13,10 +14,13 @@ namespace food_order.Entrypoint.Rest
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next)
+        public ExceptionHandlingMiddleware(RequestDelegate next, 
+            ILogger<ExceptionHandlingMiddleware> logger)
         {
             this._next = next;
+            this._logger = logger;
         }
         
         public async Task Invoke(HttpContext context)
@@ -27,6 +31,7 @@ namespace food_order.Entrypoint.Rest
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Error handler: {ex}", ex);
                 await HandleExceptionAsync(context, ex);
             }
         }
