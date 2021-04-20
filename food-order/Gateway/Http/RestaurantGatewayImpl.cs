@@ -6,7 +6,7 @@ namespace food_order.Gateway.Http
 {
     public class RestaurantGatewayImpl: IRestaurantGateway
     {
-        public Restaurant findById(string Uuid)
+        public RestaurantDetail findById(string Uuid)
         {
             if (Uuid.Equals("cbb9c2bd-abde-48a3-891a-6229fc9b7c2f"))
             {
@@ -29,7 +29,7 @@ namespace food_order.Gateway.Http
                     )
                 };
             
-                return new Restaurant(1, 
+                return new RestaurantDetail( 
                     "cbb9c2bd-abde-48a3-891a-6229fc9b7c2f", 
                     "Pizza Hut", 
                     "Av. Nome da avenida, 123", 

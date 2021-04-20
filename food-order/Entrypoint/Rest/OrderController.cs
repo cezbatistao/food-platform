@@ -16,24 +16,28 @@ namespace food_order.Entrypoint.Rest
     [ApiController]
     public class OrderController : Controller
     {
-        private readonly RegisterOrder registerOrder;
+        private readonly RegisterOrder _registerOrder;
 
         public OrderController(RegisterOrder registerOrder)
         {
-            this.registerOrder = registerOrder;
+            this._registerOrder = registerOrder;
         }
 
         [HttpPost("v1/orders")]
         public ActionResult<OrderResponse> RegisterOrder([FromBody] OrderRequest orderRequest)
         {
-            List<Item> itens = orderRequest.Itens.ConvertAll(itemRequest => 
-                new Item(itemRequest.Uuid, itemRequest.Name, itemRequest.Value));
-            Order orderToRegister = new Order(orderRequest.RestaurantUuid, itens);
+            List<OrderedItem> itens = orderRequest.Itens.ConvertAll(itemRequest => 
+                new OrderedItem(itemRequest.Uuid, itemRequest.Amount, itemRequest.UnitValue));
+            Ordered orderToRegister = new Ordered(orderRequest.RestaurantUuid, itens);
 
-            RequestedOrder requestedOrder = this.registerOrder.Execute(orderToRegister);
+            Order order = _registerOrder.Execute(orderToRegister);
 
-            OrderResponse orderResponse = new OrderResponse(requestedOrder.Uuid, 
-                requestedOrder.RestaurantUuid, requestedOrder.Total);
+            var restaurantResponse = new RestaurantResponse(order.Restaurant.Uuid, order.Restaurant.Name);
+            List<OrderItemResponse> orderItemResponses = order.Itens.Select(orderItem => 
+                    new OrderItemResponse(orderItem.Uuid, orderItem.Name, orderItem.Amount, orderItem.UnitValue))
+                .ToList();
+            OrderResponse orderResponse = new OrderResponse(order.Uuid, 
+                restaurantResponse, orderItemResponses, order.Total);
             
             return Ok(new DataResponse<OrderResponse>(orderResponse));
         }

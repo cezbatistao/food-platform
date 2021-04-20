@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using food_order.Domain;
@@ -19,19 +20,26 @@ namespace food_order.UseCase
             this._restaurantGateway = restaurantGateway;
         }
         
-        public RequestedOrder Execute(Order order)
+        public Order Execute(Ordered ordered)
         {
-            Restaurant restaurant = _restaurantGateway.findById(order.restaurantUuid);
-            List<MenuItem> itens = restaurant.Itens;
+            RestaurantDetail restaurantDetail = _restaurantGateway.findById(ordered.restaurantUuid);
+            List<MenuItem> itens = restaurantDetail.Itens;
 
-            bool orderOk = order.itens.TrueForAll(orderItem => 
+            bool orderOk = ordered.itens.TrueForAll(orderedItem => 
                 itens.Exists(menuItem => 
-                    menuItem.Uuid.Equals(orderItem.Uuid) && menuItem.Value == orderItem.Value
+                    menuItem.Uuid.Equals(orderedItem.Uuid) && menuItem.Value == orderedItem.UnitValue
                 )
             );
 
             if (orderOk)
             {
+                var restaurant = new Restaurant(restaurantDetail.Uuid, restaurantDetail.Name);
+                List<OrderItem> orderItems = ordered.itens.Select(orderedItem =>
+                {
+                    MenuItem menuItem = itens.Find(menuItem => menuItem.Uuid.Equals(orderedItem.Uuid));
+                    return new OrderItem(menuItem.Uuid, menuItem.Name, orderedItem.Amount, menuItem.Value);
+                }).ToList();
+                var order = new Order(null, Guid.NewGuid().ToString(), restaurant, orderItems, ordered.total);
                 return _orderGateway.register(order);
             }
             

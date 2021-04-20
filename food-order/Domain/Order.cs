@@ -1,21 +1,22 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace food_order.Domain
 {
     public class Order
     {
-        public string restaurantUuid { get; }
-        public List<Item> itens { get; }
-        public decimal total { get; }
+        public long? Id { get; }
+        public string Uuid { get; }
+        public Restaurant.Restaurant Restaurant { get; }
+        public List<OrderItem> Itens { get; }
+        public decimal Total { get; }
 
-        public Order(string restaurantUuid, List<Item> itens) 
+        public Order(long? id, string uuid, Restaurant.Restaurant restaurant, List<OrderItem> itens, decimal total) 
         {
-            this.restaurantUuid = restaurantUuid;
-            this.itens = new List<Item>(itens);
-
-            this.total = itens.Aggregate(0.0m, 
-                (decimal acc, Item value) => acc + value.Value);
+            this.Id = id;
+            this.Uuid = uuid;
+            this.Restaurant = restaurant;
+            this.Itens = itens;
+            this.Total = total;
         }
     }
 }

@@ -4,6 +4,6 @@ namespace food_order.Gateway
 {
     public interface IOrderGateway
     {
-        RequestedOrder register(Order Order);
+        Order register(Order ordered);
     }
 }
