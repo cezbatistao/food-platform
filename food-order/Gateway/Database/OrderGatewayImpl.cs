@@ -9,7 +9,7 @@ namespace food_order.Gateway.Database
         {
             Random random = new Random();
 
-            return new Order(random.Next(), order.Uuid, order.Restaurant, order.Itens, order.Total);
+            return new Order(random.Next(), order.Uuid, order.Restaurant, order.Items, order.Total);
         }
     }
 }

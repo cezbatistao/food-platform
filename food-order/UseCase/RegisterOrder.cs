@@ -23,10 +23,10 @@ namespace food_order.UseCase
         public Order Execute(Ordered ordered)
         {
             RestaurantDetail restaurantDetail = _restaurantGateway.findById(ordered.restaurantUuid);
-            List<MenuItem> itens = restaurantDetail.Itens;
+            List<MenuItem> items = restaurantDetail.Items;
 
-            bool orderOk = ordered.itens.TrueForAll(orderedItem => 
-                itens.Exists(menuItem => 
+            bool orderOk = ordered.items.TrueForAll(orderedItem => 
+                items.Exists(menuItem => 
                     menuItem.Uuid.Equals(orderedItem.Uuid) && menuItem.Value == orderedItem.UnitValue
                 )
             );
@@ -34,9 +34,9 @@ namespace food_order.UseCase
             if (orderOk)
             {
                 var restaurant = new Restaurant(restaurantDetail.Uuid, restaurantDetail.Name);
-                List<OrderItem> orderItems = ordered.itens.Select(orderedItem =>
+                List<OrderItem> orderItems = ordered.items.Select(orderedItem =>
                 {
-                    MenuItem menuItem = itens.Find(menuItem => menuItem.Uuid.Equals(orderedItem.Uuid));
+                    MenuItem menuItem = items.Find(menuItem => menuItem.Uuid.Equals(orderedItem.Uuid));
                     return new OrderItem(menuItem.Uuid, menuItem.Name, orderedItem.Amount, menuItem.Value);
                 }).ToList();
                 var order = new Order(null, Guid.NewGuid().ToString(), restaurant, orderItems, ordered.total);
@@ -46,7 +46,7 @@ namespace food_order.UseCase
             throw new InvalidOrderException(
                 "0002", 
                 "invalidOrderException", 
-                $"Order with invalid itens"
+                $"Order with invalid items"
             );
         }
     }

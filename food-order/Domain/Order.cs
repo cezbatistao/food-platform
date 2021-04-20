@@ -7,15 +7,15 @@ namespace food_order.Domain
         public long? Id { get; }
         public string Uuid { get; }
         public Restaurant.Restaurant Restaurant { get; }
-        public List<OrderItem> Itens { get; }
+        public List<OrderItem> Items { get; }
         public decimal Total { get; }
 
-        public Order(long? id, string uuid, Restaurant.Restaurant restaurant, List<OrderItem> itens, decimal total) 
+        public Order(long? id, string uuid, Restaurant.Restaurant restaurant, List<OrderItem> items, decimal total) 
         {
             this.Id = id;
             this.Uuid = uuid;
             this.Restaurant = restaurant;
-            this.Itens = itens;
+            this.Items = items;
             this.Total = total;
         }
     }

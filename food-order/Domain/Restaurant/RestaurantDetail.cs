@@ -7,15 +7,15 @@ namespace food_order.Domain.Restaurant
         public string Uuid { get; }
         public string Name { get; }
         public string Address { get; }
-        public List<MenuItem> Itens { get; }
+        public List<MenuItem> Items { get; }
         
         public RestaurantDetail(string uuid, string name, 
-            string address, List<MenuItem> itens)
+            string address, List<MenuItem> items)
         {
             Uuid = uuid;
             Name = name;
             Address = address;
-            Itens = itens;
+            Items = items;
         }
     }
 }

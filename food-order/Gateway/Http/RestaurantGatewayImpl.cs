@@ -10,7 +10,7 @@ namespace food_order.Gateway.Http
         {
             if (Uuid.Equals("cbb9c2bd-abde-48a3-891a-6229fc9b7c2f"))
             {
-                List<MenuItem> itens = new List<MenuItem>()
+                List<MenuItem> items = new List<MenuItem>()
                 {
                     new(1, 
                         "743b55f8-9543-11eb-a8b3-0242ac130003", 
@@ -33,7 +33,7 @@ namespace food_order.Gateway.Http
                     "cbb9c2bd-abde-48a3-891a-6229fc9b7c2f", 
                     "Pizza Hut", 
                     "Av. Nome da avenida, 123", 
-                    itens
+                    items
                 );                
             }
             else

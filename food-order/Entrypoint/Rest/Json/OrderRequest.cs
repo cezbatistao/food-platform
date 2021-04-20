@@ -7,6 +7,6 @@ namespace food_order.Entrypoint.Rest.Json
     {
         [JsonPropertyName("restaurant_uuid")]
         public string RestaurantUuid { get; set; }
-        public List<ItemRequest> Itens { get; set; }
+        public List<ItemRequest> Items { get; set; }
     }
 }
