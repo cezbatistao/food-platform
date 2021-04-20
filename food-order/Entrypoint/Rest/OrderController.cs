@@ -35,7 +35,7 @@ namespace food_order.Entrypoint.Rest
             OrderResponse orderResponse = new OrderResponse(requestedOrder.Uuid, 
                 requestedOrder.RestaurantUuid, requestedOrder.Total);
             
-            return Ok(orderResponse);
+            return Ok(new DataResponse<OrderResponse>(orderResponse));
         }
     }
 }

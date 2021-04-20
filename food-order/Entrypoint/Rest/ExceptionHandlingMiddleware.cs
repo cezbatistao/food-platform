@@ -2,9 +2,11 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using food_order.Domain.Exception;
+using food_order.Entrypoint.Rest.Json;
 using food_order.Entrypoint.Rest.Json.Error;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace food_order.Entrypoint.Rest
 {
@@ -46,10 +48,22 @@ namespace food_order.Entrypoint.Rest
                 message = exception.Message;
             }
             
-            var result = JsonConvert.SerializeObject(new ErrorDetailResponse(code, message));
+            DefaultContractResolver contractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy()
+            };
+            
+            var jsonErrorResponse = JsonConvert.SerializeObject(
+                new ErrorResponse(new ErrorDetailResponse(code, message)), 
+                new JsonSerializerSettings
+                {
+                    ContractResolver = contractResolver,
+                    Formatting = Formatting.Indented
+                });
+            
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)status;
-            return context.Response.WriteAsync(result);
+            return context.Response.WriteAsync(jsonErrorResponse);
         }
     }
 }
