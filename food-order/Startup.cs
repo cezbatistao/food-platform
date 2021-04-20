@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using food_order.Entrypoint.Rest;
+using food_order.Gateway;
+using food_order.Gateway.Database;
+using food_order.Gateway.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,6 +40,8 @@ namespace food_order
             });
 
             services.AddScoped<RegisterOrder, RegisterOrder>();
+            services.AddScoped<IOrderGateway, OrderGatewayImpl>();
+            services.AddScoped<IRestaurantGateway, RestaurantGatewayImpl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +59,8 @@ namespace food_order
             }
 
             app.UseRouting();
+            
+            app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 
             app.UseAuthorization();
 

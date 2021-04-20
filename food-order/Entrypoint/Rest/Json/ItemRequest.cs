@@ -6,6 +6,6 @@ namespace food_order.Entrypoint.Rest.Json
     {
         public string uuid { get; set; }
         public string name { get; set; }
-        public double value { get; set; }
+        public decimal value { get; set; }
     }
 }

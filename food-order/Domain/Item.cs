@@ -4,9 +4,10 @@ namespace food_order.Domain
     {
         public string uuid { get; }
         public string name { get; }
-        public double value { get; }
+        public decimal value { get; }
 
-        public Item(string uuid, string name, double value) {
+        public Item(string uuid, string name, decimal value) {
+            this.uuid = uuid;
             this.name = name;
             this.value = value;
         }

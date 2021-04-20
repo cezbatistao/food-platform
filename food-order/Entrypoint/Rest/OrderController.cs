@@ -30,9 +30,10 @@ namespace food_order.Entrypoint.Rest
                 new Item(itemRequest.uuid, itemRequest.name, itemRequest.value));
             Order orderToRegister = new Order(orderRequest.restaurantUuid, itens);
 
-            Order registeredOrder = this.registerOrder.Execute(orderToRegister);
+            RequestedOrder requestedOrder = this.registerOrder.Execute(orderToRegister);
 
-            OrderResponse orderResponse = new OrderResponse(registeredOrder.uuid, registeredOrder.restaurantUuid, registeredOrder.total);
+            OrderResponse orderResponse = new OrderResponse(requestedOrder.uuid, 
+                requestedOrder.restaurantUuid, requestedOrder.total);
             
             return Ok(orderResponse);
         }
