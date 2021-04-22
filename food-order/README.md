@@ -45,7 +45,7 @@ dotnet run
 ```
 Open [`http://localhost:5000/swagger/index.html`](http://localhost:5000/swagger/index.html) to use endpoints from application
 
-* default port restaurant app is `5000`
+* default port order app is `5000`
 
 #### Build application
 ```
