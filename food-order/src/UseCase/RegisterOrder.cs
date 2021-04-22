@@ -67,7 +67,7 @@ namespace food_order.UseCase
             RuleFor(ordered => ordered.items)
                 .Cascade(CascadeMode.Stop)
                 .NotNull()
-                .Must(items => items != null && items.Count > 0).WithMessage("'items' must not be empty.");
+                .Must(items => items is {Count: > 0}).WithMessage("'items' must not be empty.");
             RuleForEach(ordered => ordered.items).SetValidator(new OrderedItemValidator());
         }
     }
@@ -80,6 +80,12 @@ namespace food_order.UseCase
                 .Cascade(CascadeMode.Stop)
                 .NotNull()
                 .NotEmpty();
+            RuleFor(orderedItem => orderedItem.Amount)
+                .Cascade(CascadeMode.Stop)
+                .Must(amount => amount > 0).WithMessage("'amount' must greater than zero.");
+            RuleFor(orderedItem => orderedItem.UnitValue)
+                .Cascade(CascadeMode.Stop)
+                .Must(unitValue => unitValue > 0.0m).WithMessage("'unit Value' must greater than zero.");
         }
     }
 }

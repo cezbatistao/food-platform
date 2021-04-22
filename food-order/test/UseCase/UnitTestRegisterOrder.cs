@@ -32,39 +32,22 @@ namespace test.UseCase
             new List<object[]>
             {
                 new object[] { new Ordered(null, null), new VerifyValidation(2, 
-                    new List<string>
+                        new List<string> {"'restaurant Uuid' must not be empty.", "'items' must not be empty."})
+                },
+                new object[] { new Ordered("", null), new VerifyValidation(2,  
+                    new List<string> {"'restaurant Uuid' must not be empty.", "'items' must not be empty."})
+                },
+                new object[] { new Ordered("   ", null), new VerifyValidation(2,
+                    new List<string>{"'restaurant Uuid' must not be empty.", "'items' must not be empty."})
+                },
+                new object[] { new Ordered("fasdfdsa", new List<OrderedItem>()), new VerifyValidation(1, 
+                    new List<string>{"'items' must not be empty."})
+                },
+                new object[] { new Ordered("fasdfdsa", new List<OrderedItem>{new (null, 0, 0.0m)}), 
+                    new VerifyValidation(3, new List<string>
                     {
-                        "'restaurant Uuid' must not be empty.", "'items' must not be empty."
+                        "'Uuid' must not be empty.", "'amount' must greater than zero.", "'unit Value' must greater than zero."
                     })
-                },
-                new object[] { new Ordered("", null), new VerifyValidation(2, 
-                    new List<string>
-                    {
-                        "'restaurant Uuid' must not be empty.", "'items' must not be empty."
-                    })
-                },
-                new object[] { new Ordered("   ", null), new VerifyValidation(2, 
-                    new List<string>
-                    {
-                        "'restaurant Uuid' must not be empty.", "'items' must not be empty."
-                    })
-                },
-                new object[] { new Ordered("fasdfdsa", new List<OrderedItem>()), 
-                    new VerifyValidation(1,
-                        new List<string>
-                        {
-                            "'items' must not be empty."
-                        })
-                },
-                new object[] { new Ordered("fasdfdsa", new List<OrderedItem>
-                    {
-                        new (null, 0, 0.0m),
-                    }), 
-                    new VerifyValidation(1,
-                        new List<string>
-                        {
-                            "'Uuid' must not be empty."
-                        })
                 },
             };
 
