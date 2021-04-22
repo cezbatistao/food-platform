@@ -28,10 +28,10 @@ namespace food_order.UseCase
         {
             _validator.ValidateAndThrow(ordered);
                 
-            RestaurantDetail restaurantDetail = _restaurantGateway.findById(ordered.restaurantUuid);
+            RestaurantDetail restaurantDetail = _restaurantGateway.findById(ordered.RestaurantUuid);
             List<MenuItem> items = restaurantDetail.Items;
 
-            bool orderOk = ordered.items.TrueForAll(orderedItem => 
+            bool orderOk = ordered.Items.TrueForAll(orderedItem => 
                 items.Exists(menuItem => 
                     menuItem.Uuid.Equals(orderedItem.Uuid) && menuItem.Value == orderedItem.UnitValue
                 )
@@ -40,12 +40,12 @@ namespace food_order.UseCase
             if (orderOk)
             {
                 var restaurant = new Restaurant(restaurantDetail.Uuid, restaurantDetail.Name);
-                List<OrderItem> orderItems = ordered.items.Select(orderedItem =>
+                List<OrderItem> orderItems = ordered.Items.Select(orderedItem =>
                 {
                     MenuItem menuItem = items.Find(menuItem => menuItem.Uuid.Equals(orderedItem.Uuid));
                     return new OrderItem(menuItem.Uuid, menuItem.Name, orderedItem.Amount, menuItem.Value);
                 }).ToList();
-                var order = new Order(Guid.NewGuid().ToString(), restaurant, orderItems, ordered.total);
+                var order = new Order(Guid.NewGuid().ToString(), restaurant, orderItems, ordered.Total);
                 return _orderGateway.register(order);
             }
 
@@ -60,15 +60,15 @@ namespace food_order.UseCase
     {
         public OrderedValidator()
         {
-            RuleFor(ordered => ordered.restaurantUuid)
+            RuleFor(ordered => ordered.RestaurantUuid)
                 .Cascade(CascadeMode.Stop)
                 .NotNull()
                 .NotEmpty();
-            RuleFor(ordered => ordered.items)
+            RuleFor(ordered => ordered.Items)
                 .Cascade(CascadeMode.Stop)
                 .NotNull()
-                .Must(items => items is {Count: > 0}).WithMessage("'items' must not be empty.");
-            RuleForEach(ordered => ordered.items).SetValidator(new OrderedItemValidator());
+                .Must(items => items is {Count: > 0}).WithMessage("'Items' must not be empty.");
+            RuleForEach(ordered => ordered.Items).SetValidator(new OrderedItemValidator());
         }
     }
 
@@ -82,10 +82,10 @@ namespace food_order.UseCase
                 .NotEmpty();
             RuleFor(orderedItem => orderedItem.Amount)
                 .Cascade(CascadeMode.Stop)
-                .Must(amount => amount > 0).WithMessage("'amount' must greater than zero.");
+                .Must(amount => amount > 0).WithMessage("'Amount' must greater than zero.");
             RuleFor(orderedItem => orderedItem.UnitValue)
                 .Cascade(CascadeMode.Stop)
-                .Must(unitValue => unitValue > 0.0m).WithMessage("'unit Value' must greater than zero.");
+                .Must(unitValue => unitValue > 0.0m).WithMessage("'Unit Value' must greater than zero.");
         }
     }
 }
