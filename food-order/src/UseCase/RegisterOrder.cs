@@ -24,7 +24,7 @@ namespace food_order.UseCase
             this._validator = new OrderedValidator();
         }
         
-        public Order Execute(Ordered ordered)
+        public virtual Order Execute(Ordered ordered)
         {
             _validator.ValidateAndThrow(ordered);
                 

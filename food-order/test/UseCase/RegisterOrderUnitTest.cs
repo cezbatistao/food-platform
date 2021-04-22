@@ -22,7 +22,7 @@ namespace test.UseCase
         
         public UnitTestRegisterOrder()
         {
-            _mockIOrderGateway = new Mock<IOrderGateway>();  
+            _mockIOrderGateway = new Mock<IOrderGateway>();
             _mockIRestaurantGateway = new Mock<IRestaurantGateway>();
             
             _registerOrder = new RegisterOrder(_mockIOrderGateway.Object, _mockIRestaurantGateway.Object);
@@ -192,7 +192,7 @@ namespace test.UseCase
             ).Returns(restaurantDetail);
 
             var registeredOrder = new Order(1, 
-                "303f58dd-b5a4-496b-ae03-5510c1854acf", 
+                "9e814a9a-4465-4312-adee-a9d3af86d895", 
                 new Restaurant(restaurantDetail.Uuid, restaurantDetail.Name), 
                 new List<OrderItem>
                 {
@@ -243,7 +243,7 @@ namespace test.UseCase
             Assert.NotNull(order);
             
             Assert.NotNull(order.Id);
-            Assert.Equal("303f58dd-b5a4-496b-ae03-5510c1854acf", order.Uuid);
+            Assert.Equal("9e814a9a-4465-4312-adee-a9d3af86d895", order.Uuid);
             Assert.NotNull(order.Restaurant);
             Assert.Equal("36159a9b-f4d0-4f52-8d0f-3cd0dc702c1c", order.Restaurant.Uuid);
             Assert.Equal("Domino's Pizza", order.Restaurant.Name);

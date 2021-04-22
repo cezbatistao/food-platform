@@ -9,5 +9,12 @@ namespace food_order.Entrypoint.Rest.Json
         public int Amount { get; set; }
         [JsonPropertyName("unit_value")]
         public decimal UnitValue { get; set; }
+
+        public ItemRequest(string uuid, int amount, decimal unitValue)
+        {
+            Uuid = uuid;
+            Amount = amount;
+            UnitValue = unitValue;
+        }
     }
 }
