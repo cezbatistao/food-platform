@@ -10,6 +10,9 @@ namespace food_order.Domain
         public List<OrderItem> Items { get; }
         public decimal Total { get; }
 
+        public Order(string uuid, Restaurant.Restaurant restaurant, List<OrderItem> items, decimal total) : 
+            this(null, uuid, restaurant, items, total) { }
+        
         public Order(long? id, string uuid, Restaurant.Restaurant restaurant, List<OrderItem> items, decimal total) 
         {
             this.Id = id;

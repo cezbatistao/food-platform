@@ -12,18 +12,15 @@ namespace food_order.Gateway.Http
             {
                 List<MenuItem> items = new List<MenuItem>()
                 {
-                    new(1, 
-                        "743b55f8-9543-11eb-a8b3-0242ac130003", 
+                    new("743b55f8-9543-11eb-a8b3-0242ac130003", 
                         "Pepperoni", 
                         33.99m
                     ), 
-                    new(2, 
-                        "773712b0-9543-11eb-a8b3-0242ac130003", 
+                    new("773712b0-9543-11eb-a8b3-0242ac130003", 
                         "Meat", 
                         34.99m
                     ), 
-                    new(3, 
-                        "7d35de8a-9543-11eb-a8b3-0242ac130003", 
+                    new("7d35de8a-9543-11eb-a8b3-0242ac130003", 
                         "Supreme", 
                         35.99m
                     )

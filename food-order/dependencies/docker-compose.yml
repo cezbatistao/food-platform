@@ -20,6 +20,16 @@ services:
       - 8002:80
     environment:
       - PMA_ARBITRARY=1
+  stubby:
+    container_name: stubby_app
+    build: ./stubby/
+    volumes:
+      - ./stubby:/mocks
+    command: stubby -d /mocks/init.yml -s 8882 -t 7443 -a 8889 -w
+    ports:
+      - 8882:8882
+      - 7443:7443
+      - 8889:8889
 
 volumes:
   mysql-order-datavolume:

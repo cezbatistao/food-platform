@@ -39,15 +39,14 @@ namespace food_order.UseCase
                     MenuItem menuItem = items.Find(menuItem => menuItem.Uuid.Equals(orderedItem.Uuid));
                     return new OrderItem(menuItem.Uuid, menuItem.Name, orderedItem.Amount, menuItem.Value);
                 }).ToList();
-                var order = new Order(null, Guid.NewGuid().ToString(), restaurant, orderItems, ordered.total);
+                var order = new Order(Guid.NewGuid().ToString(), restaurant, orderItems, ordered.total);
                 return _orderGateway.register(order);
             }
-            
+
             throw new InvalidOrderException(
-                "0002", 
-                "invalidOrderException", 
-                $"Order with invalid items"
-            );
+                "0002",
+                "invalidOrderException",
+                "Order with invalid items");
         }
     }
 }

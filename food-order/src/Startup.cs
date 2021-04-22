@@ -55,7 +55,7 @@ namespace food_order
             }
             else
             {
-                // app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
             }
 
             app.UseRouting();

@@ -14,23 +14,29 @@ We are using
 
 #### Run tests and code coverage
 ```
-dotnet test test/test.csproj
-```
-
-#### Run components tests
-**TODO**
-
-#### Setup application
-```
 dotnet test test/test.csproj --logger:"junit;LogFilePath=TestResults/UnitTeststest-result.xml" --collect:"XPlat Code Coverage"
 ```
 \
 Generate HTML Coverage Report:
 ```
-reportgenerator "-reports:test/TestResults/$1/coverage.cobertura.xml" "-targetdir:test/TestResults/coveragereport" -reporttypes:Html
+reportgenerator "-reports:test/TestResults/{guuid}/coverage.cobertura.xml" "-targetdir:test/TestResults/coveragereport" -reporttypes:Html
 ```
 \
 Coverage HTML report: `test/TestResults/coveragereport/index.html`
+
+#### Run components tests
+**TODO**
+
+#### Setup application
+Go on folder `dependencies/` and start _docker-compose_
+```
+docker-compose up -d --build
+```
+\
+To turn off
+```
+docker-compose down
+```
 
 #### Start application
 * Needs execute command from: _Setup application_ start _docker-compose_
