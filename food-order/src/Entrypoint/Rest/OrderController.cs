@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using food_order.Domain;
+using food_order.Entrypoint.Rest.Exception;
 using food_order.UseCase;
 using food_order.Entrypoint.Rest.Json;
 
@@ -26,6 +27,11 @@ namespace food_order.Entrypoint.Rest
         [HttpPost("v1/orders")]
         public ActionResult<OrderResponse> RegisterOrder([FromBody] OrderRequest orderRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new BadRequestException("0003", "badRequestException", "Verify list of field with errors", ModelState);
+            }
+            
             List<OrderedItem> items = orderRequest.Items.ConvertAll(itemRequest => 
                 new OrderedItem(itemRequest.Uuid, itemRequest.Amount, itemRequest.UnitValue));
             Ordered orderToRegister = new Ordered(orderRequest.RestaurantUuid, items);

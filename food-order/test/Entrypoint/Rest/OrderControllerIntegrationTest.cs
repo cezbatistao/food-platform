@@ -3,11 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using AutoFixture;
 using food_order;
 using food_order.Domain;
-using food_order.Domain.Restaurant;
 using food_order.Entrypoint.Rest.Json;
 using food_order.Gateway;
 using food_order.UseCase;
@@ -39,7 +37,6 @@ namespace test.Entrypoint.Rest
             // Arrange
             var server = new TestServer(new WebHostBuilder()
                 .UseEnvironment("Testing")
-                // .UseContentRoot(projectDir) ?
                 .ConfigureTestServices(services => {
                     services.RemoveAll<RegisterOrder>();//Remove previous registration(s) of this service
                     services.RemoveAll<IOrderGateway>();//Remove previous registration(s) of this service
@@ -48,6 +45,42 @@ namespace test.Entrypoint.Rest
                 })
                 .UseStartup<Startup>());
             _client = server.CreateClient();
+        }
+        
+        [Fact]
+        public async void ShouldValidationInputBody()
+        {
+            // given
+            var orderRequest = new OrderRequest(null, null);
+            
+            var httpContent = new StringContent(JsonSerializer.Serialize(orderRequest), Encoding.UTF8, "application/json");
+            
+            // when
+            var response = await _client.PostAsync("/api/v1/orders", httpContent);
+            
+            // then
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            
+            // and
+            var jsonFromResponse = response.Content.ReadAsStringAsync().Result;
+            
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(jsonFromResponse);
+            
+            Assert.NotNull(errorResponse);
+            Assert.NotNull(errorResponse.Error);
+            Assert.Equal("0003", errorResponse.Error.Code);
+            Assert.Equal("Verify list of field with errors", errorResponse.Error.Message);
+            Assert.Equal(2, errorResponse.Error.FieldErrors.Count);
+            Assert.Collection(errorResponse.Error.FieldErrors,
+                fieldError =>
+                {
+                    Assert.Equal("Items", fieldError.Field);
+                    Assert.Equal(new List<string>() { "'Items' must not be empty." }, fieldError.Errors);
+                }, 
+                fieldError =>{
+                    Assert.Equal("RestaurantUuid", fieldError.Field);
+                    Assert.Equal(new List<string>() { "'Restaurant Uuid' must not be empty." }, fieldError.Errors);
+                });
         }
 
         [Fact]

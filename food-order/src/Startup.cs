@@ -1,22 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using FluentValidation.AspNetCore;
 using food_order.Entrypoint.Rest;
+using food_order.Entrypoint.Rest.Json;
 using food_order.Gateway;
 using food_order.Gateway.Database;
 using food_order.Gateway.Http;
+using food_order.UseCase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
-using food_order.UseCase;
+using Newtonsoft.Json;
 
 namespace food_order
 {
@@ -33,7 +30,14 @@ namespace food_order
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.Configure<ApiBehaviorOptions>(opt => { opt.SuppressModelStateInvalidFilter = true; });
+            services.AddControllers()
+                .AddFluentValidation(fv => 
+                    fv.RegisterValidatorsFromAssemblyContaining<OrderRequestValidator>())
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "food-order", Version = "1.0.0-0 " });

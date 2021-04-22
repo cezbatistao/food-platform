@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using food_order.Domain.Exception;
+using food_order.Entrypoint.Rest.Exception;
 using food_order.Entrypoint.Rest.Json;
 using food_order.Entrypoint.Rest.Json.Error;
 using Microsoft.AspNetCore.Http;
@@ -29,24 +32,31 @@ namespace food_order.Entrypoint.Rest
             {
                 await _next(context);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 _logger.LogError($"Error handler: {ex}", ex);
                 await HandleExceptionAsync(context, ex);
             }
         }
         
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, System.Exception exception)
         {
             var status = HttpStatusCode.InternalServerError; // 500 if unexpected
             var code = "9999";
             var message = exception.Message;
+            List<FieldErrorResponse> fieldErrorsResponse = null;
 
             if (exception is BaseException)
             {
                 var baseException = (BaseException)exception;
                 
-                if      (exception is EntityNotFoundException) status = HttpStatusCode.NotFound;
+                if(exception is BadRequestException)
+                {
+                    status = HttpStatusCode.BadRequest;
+                    fieldErrorsResponse = ((BadRequestException)exception).FieldErrors.Select(error => 
+                        new FieldErrorResponse(error.Field, error.Errors)).ToList();
+                }
+                else if (exception is EntityNotFoundException) status = HttpStatusCode.NotFound;
                 else if (exception is InvalidOrderException)   status = HttpStatusCode.UnprocessableEntity;
 
                 code = baseException.Code;
@@ -59,7 +69,7 @@ namespace food_order.Entrypoint.Rest
             };
             
             var jsonErrorResponse = JsonConvert.SerializeObject(
-                new ErrorResponse(new ErrorDetailResponse(code, message)), 
+                new ErrorResponse(new ErrorDetailResponse(code, message, fieldErrorsResponse)), 
                 new JsonSerializerSettings
                 {
                     ContractResolver = contractResolver,

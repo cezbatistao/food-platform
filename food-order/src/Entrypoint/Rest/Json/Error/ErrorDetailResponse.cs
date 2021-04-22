@@ -1,14 +1,21 @@
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace food_order.Entrypoint.Rest.Json.Error
 {
     public class ErrorDetailResponse
     {
-        public string code { get; set; }
-        public string message { get; set; }
+        public string Code { get; set; }
+        public string Message { get; set; }
+        
+        [JsonProperty("field_errors", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FieldErrorResponse> FieldErrors { get; set; }
 
-        public ErrorDetailResponse(string code, string message)
+        public ErrorDetailResponse(string code, string message, List<FieldErrorResponse> fieldErrors)
         {
-            this.code = code;
-            this.message = message;
+            this.Code = code;
+            this.Message = message;
+            this.FieldErrors = fieldErrors;
         }
     }
 }
