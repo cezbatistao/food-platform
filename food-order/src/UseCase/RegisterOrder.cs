@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentValidation;
 using food_order.Domain;
 using food_order.Domain.Exception;
 using food_order.Domain.Restaurant;
@@ -47,6 +48,14 @@ namespace food_order.UseCase
                 "0002",
                 "invalidOrderException",
                 "Order with invalid items");
+        }
+    }
+
+    class OrderedValidator : AbstractValidator<Ordered>
+    {
+        public OrderedValidator()
+        {
+            RuleFor(ordered => ordered.restaurantUuid).NotNull().NotEmpty();
         }
     }
 }

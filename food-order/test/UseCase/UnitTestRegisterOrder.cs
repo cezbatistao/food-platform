@@ -132,7 +132,7 @@ namespace test.UseCase
         }
         
         [Fact]
-        public void Should()
+        public void ShouldGenerateAOrder()
         {
             // given
             var restaurantDetail = new RestaurantDetail(
