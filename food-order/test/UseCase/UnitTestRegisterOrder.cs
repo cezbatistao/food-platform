@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using FluentValidation;
 using food_order.Domain;
 using food_order.Domain.Exception;
 using food_order.Domain.Restaurant;
 using food_order.Gateway;
 using food_order.UseCase;
 using Moq;
+using test.Support;
 using Xunit;
 
 namespace test.UseCase
@@ -25,6 +28,62 @@ namespace test.UseCase
             _registerOrder = new RegisterOrder(_mockIOrderGateway.Object, _mockIRestaurantGateway.Object);
         }
         
+        public static IEnumerable<object[]> Data =>
+            new List<object[]>
+            {
+                new object[] { new Ordered(null, null), new VerifyValidation(2, 
+                    new List<string>
+                    {
+                        "'restaurant Uuid' must not be empty.", "'items' must not be empty."
+                    })
+                },
+                new object[] { new Ordered("", null), new VerifyValidation(2, 
+                    new List<string>
+                    {
+                        "'restaurant Uuid' must not be empty.", "'items' must not be empty."
+                    })
+                },
+                new object[] { new Ordered("   ", null), new VerifyValidation(2, 
+                    new List<string>
+                    {
+                        "'restaurant Uuid' must not be empty.", "'items' must not be empty."
+                    })
+                },
+                new object[] { new Ordered("fasdfdsa", new List<OrderedItem>()), 
+                    new VerifyValidation(1,
+                        new List<string>
+                        {
+                            "'items' must not be empty."
+                        })
+                },
+                new object[] { new Ordered("fasdfdsa", new List<OrderedItem>
+                    {
+                        new (null, 0, 0.0m),
+                    }), 
+                    new VerifyValidation(1,
+                        new List<string>
+                        {
+                            "'Uuid' must not be empty."
+                        })
+                },
+            };
+
+        [Theory]
+        [MemberData(nameof(Data))]
+        public void ShouldVerifyValidation(Ordered ordered, VerifyValidation verifyValidation)
+        {
+            // when
+            Action act = () => _registerOrder.Execute(ordered);
+            
+            // then
+            ValidationException exception = Assert.Throws<ValidationException>(act);
+            Assert.NotNull(exception);
+            
+            Assert.Equal(verifyValidation.TotalErrors, exception.Errors.Count());
+            List<string> actualErrorMessages = exception.Errors.Select(error => error.ErrorMessage).ToList();
+            Assert.Equal(actualErrorMessages, verifyValidation.MessagesErrors);
+        }
+
         [Fact]
         public void ShouldStopExecuteWhenDontFindRestaurant()
         {
@@ -35,13 +94,13 @@ namespace test.UseCase
                 s.findById(invalidRestaurantUuid)
             ).Throws(new EntityNotFoundException(
                 "0001", "entityNotFoundException", $"Restaurant {invalidRestaurantUuid} don't exists"));
-
-            List<OrderedItem> items = new List<OrderedItem>
-            {
-                new ("843bfe62-9543-11eb-a8b3-0242ac130003", 1, 33.99m),
-                new ("88e3812e-9543-11eb-a8b3-0242ac130003", 2, 31.99m), 
-            };
-            Ordered ordered = new Ordered(invalidRestaurantUuid, items);
+            
+            Ordered ordered = new Ordered(invalidRestaurantUuid, 
+                new List<OrderedItem>
+                {
+                    new ("843bfe62-9543-11eb-a8b3-0242ac130003", 1, 33.99m),
+                    new ("88e3812e-9543-11eb-a8b3-0242ac130003", 2, 31.99m), 
+                });
             
             // when
             Action act = () => _registerOrder.Execute(ordered);

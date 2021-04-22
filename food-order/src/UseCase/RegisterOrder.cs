@@ -13,16 +13,21 @@ namespace food_order.UseCase
     {
         private readonly IOrderGateway _orderGateway;
         private readonly IRestaurantGateway _restaurantGateway;
+        private readonly OrderedValidator _validator;
         
         public RegisterOrder(IOrderGateway orderGateway, 
             IRestaurantGateway restaurantGateway)
         {
             this._orderGateway = orderGateway;
             this._restaurantGateway = restaurantGateway;
+
+            this._validator = new OrderedValidator();
         }
         
         public Order Execute(Ordered ordered)
         {
+            _validator.ValidateAndThrow(ordered);
+                
             RestaurantDetail restaurantDetail = _restaurantGateway.findById(ordered.restaurantUuid);
             List<MenuItem> items = restaurantDetail.Items;
 
@@ -55,7 +60,26 @@ namespace food_order.UseCase
     {
         public OrderedValidator()
         {
-            RuleFor(ordered => ordered.restaurantUuid).NotNull().NotEmpty();
+            RuleFor(ordered => ordered.restaurantUuid)
+                .Cascade(CascadeMode.Stop)
+                .NotNull()
+                .NotEmpty();
+            RuleFor(ordered => ordered.items)
+                .Cascade(CascadeMode.Stop)
+                .NotNull()
+                .Must(items => items != null && items.Count > 0).WithMessage("'items' must not be empty.");
+            RuleForEach(ordered => ordered.items).SetValidator(new OrderedItemValidator());
+        }
+    }
+
+    class OrderedItemValidator : AbstractValidator<OrderedItem>
+    {
+        public OrderedItemValidator()
+        {
+            RuleFor(orderedItem => orderedItem.Uuid)
+                .Cascade(CascadeMode.Stop)
+                .NotNull()
+                .NotEmpty();
         }
     }
 }
