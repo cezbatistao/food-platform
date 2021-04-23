@@ -8,8 +8,7 @@ namespace test.Fixture.Templates
     {
         public static Order GetWithTwoItems()
         {
-            return new Order(1,
-                "9e814a9a-4465-4312-adee-a9d3af86d895",
+            return new Order("9e814a9a-4465-4312-adee-a9d3af86d895",
                 new Restaurant("36159a9b-f4d0-4f52-8d0f-3cd0dc702c1c", "Domino's Pizza"),
                 new List<OrderItem>
                 {
