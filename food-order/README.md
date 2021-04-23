@@ -25,9 +25,7 @@ reportgenerator "-reports:test/TestResults/{guuid}/coverage.cobertura.xml" "-tar
 Coverage HTML report: `test/TestResults/coveragereport/index.html`
 
 #### Run components tests
-```
-dotnet ef database update --project src
-```
+**TODO**
 
 #### Setup application
 Go on folder `dependencies/` and start _docker-compose_
@@ -41,6 +39,11 @@ docker-compose down
 ```
 
 ##### Apply migrations
+Before needs install `tool ef`, follow this [steps](https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
+\
+```
+dotnet ef database update --project src
+```
 
 #### Start application
 * Needs execute command from: _Setup application_ start _docker-compose_
