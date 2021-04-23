@@ -27,6 +27,8 @@ namespace food_order.Entrypoint.Rest.Json
             RuleFor(orderRequest => orderRequest.Items)
                 .NotNull()
                 .NotEmpty();
+            RuleForEach(orderRequest => orderRequest.Items)
+                .SetValidator(new ItemRequest.ItemRequestValidator());
         }
     }
 }

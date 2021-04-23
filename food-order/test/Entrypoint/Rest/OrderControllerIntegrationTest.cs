@@ -6,6 +6,7 @@ using System.Text.Json;
 using AutoFixture;
 using food_order;
 using food_order.Domain;
+using food_order.Domain.Exception;
 using food_order.Entrypoint.Rest.Json;
 using food_order.Gateway;
 using food_order.UseCase;
@@ -47,11 +48,20 @@ namespace test.Entrypoint.Rest
             _client = server.CreateClient();
         }
         
-        [Fact]
-        public async void ShouldValidationInputBody()
+        public static IEnumerable<object[]> Data =>
+            new List<object[]>
+                {
+                    new object[] { null, null },
+                    new object[] { "", new List<ItemRequest>() },
+                    new object[] { "  ", null },
+            };
+        
+        [Theory]
+        [MemberData(nameof(Data))]
+        public async void ShouldValidationInputBody(string restaurantUuid, List<ItemRequest> itemsRequest)
         {
             // given
-            var orderRequest = new OrderRequest(null, null);
+            var orderRequest = new OrderRequest(restaurantUuid, itemsRequest);
             
             var httpContent = new StringContent(JsonSerializer.Serialize(orderRequest), Encoding.UTF8, "application/json");
             
@@ -82,9 +92,119 @@ namespace test.Entrypoint.Rest
                     Assert.Equal(new List<string>() { "'Restaurant Uuid' must not be empty." }, fieldError.Errors);
                 });
         }
+        
+        [Theory]
+        [InlineData(null, 0, 0.0)]
+        [InlineData("", -1, -0.1)]
+        [InlineData("    ", -23, -3243.98)]
+        public async void ShouldValidationInputBodyNestedItems(string itemUuid, int amount, decimal unitValue)
+        {
+            // given
+            var orderRequest = new OrderRequest("36159a9b-f4d0-4f52-8d0f-3cd0dc702c1c", 
+                new List<ItemRequest>
+                {
+                    new ItemRequest(itemUuid, amount, unitValue)
+                });
+            
+            var httpContent = new StringContent(JsonSerializer.Serialize(orderRequest), Encoding.UTF8, "application/json");
+            
+            // when
+            var response = await _client.PostAsync("/api/v1/orders", httpContent);
+            
+            // then
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            
+            // and
+            var jsonFromResponse = response.Content.ReadAsStringAsync().Result;
+            
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(jsonFromResponse);
+            
+            Assert.NotNull(errorResponse);
+            Assert.NotNull(errorResponse.Error);
+            Assert.Equal("0003", errorResponse.Error.Code);
+            Assert.Equal("Verify list of field with errors", errorResponse.Error.Message);
+            Assert.Equal(3, errorResponse.Error.FieldErrors.Count);
+            Assert.Collection(errorResponse.Error.FieldErrors,
+                fieldError =>
+                {
+                    Assert.Equal("Items[0].Uuid", fieldError.Field);
+                    Assert.Equal(new List<string>() { "'Uuid' must not be empty." }, fieldError.Errors);
+                }, 
+                fieldError => {
+                    Assert.Equal("Items[0].Amount", fieldError.Field);
+                    Assert.Equal(new List<string>() { "'Amount' must greater than zero." }, fieldError.Errors);
+                }, 
+                fieldError => {
+                    Assert.Equal("Items[0].UnitValue", fieldError.Field);
+                    Assert.Equal(new List<string>() { "'Unit Value' must greater than zero." }, fieldError.Errors);
+                }
+            );
+        }
+        
+        [Fact]
+        public async void ShouldReturnHttpStatus404()
+        {
+            // given
+            var orderRequest = _fixture.Create<OrderRequest>();
+            
+            _mockRegisterOrder.Setup(s => 
+                s.Execute(It.IsAny<Ordered>())
+            ).Throws(new EntityNotFoundException(
+                "0001", "entityNotFoundException", $"Restaurant {orderRequest.RestaurantUuid} don't exists"));
+
+            var httpContent = new StringContent(JsonSerializer.Serialize(orderRequest), Encoding.UTF8, "application/json");
+            
+            // when
+            var response = await _client.PostAsync("/api/v1/orders", httpContent);
+            
+            // then
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            
+            // and
+            var jsonFromResponse = await response.Content.ReadAsStringAsync();
+            
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(jsonFromResponse);
+            
+            Assert.NotNull(errorResponse);
+            Assert.NotNull(errorResponse.Error);
+            Assert.Equal("0001", errorResponse.Error.Code);
+            Assert.Equal($"Restaurant {orderRequest.RestaurantUuid} don't exists", errorResponse.Error.Message);
+            Assert.Null(errorResponse.Error.FieldErrors);
+        }
+        
+        [Fact]
+        public async void ShouldReturnHttpStatus422()
+        {
+            // given
+            var orderRequest = _fixture.Create<OrderRequest>();
+            
+            _mockRegisterOrder.Setup(s => 
+                s.Execute(It.IsAny<Ordered>())
+            ).Throws(new InvalidOrderException(
+                "0002", "invalidOrderException", "Order with invalid items"));
+
+            var httpContent = new StringContent(JsonSerializer.Serialize(orderRequest), Encoding.UTF8, "application/json");
+            
+            // when
+            var response = await _client.PostAsync("/api/v1/orders", httpContent);
+            
+            // then
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            
+            // and
+            var jsonFromResponse = await response.Content.ReadAsStringAsync();
+            
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(jsonFromResponse);
+            
+            Assert.NotNull(errorResponse);
+            Assert.NotNull(errorResponse.Error);
+            Assert.Equal("0002", errorResponse.Error.Code);
+            Assert.Equal("Order with invalid items", errorResponse.Error.Message);
+            Assert.Null(errorResponse.Error.FieldErrors);
+        }
 
         [Fact]
-        public async void ShouldReturnHttpStatus200OnRegisterAOrder()
+        public async void ShouldReturnHttpStatus20OAndRegisterAOrder()
         {
             // given
             var registeredOrder = _fixture.Create<Order>();
