@@ -29,7 +29,7 @@ namespace food_order.Gateway.Database
         }
     }
 
-    class OrderProfile : Profile
+    public class OrderProfile : Profile
     {
         public OrderProfile()
         {

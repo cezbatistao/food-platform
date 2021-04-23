@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using AutoFixture;
 using food_order;
 using food_order.Domain;
@@ -27,7 +26,7 @@ namespace test.Entrypoint.Rest
 
         private readonly HttpClient _client;
         
-        private Mock<RegisterOrder> _mockRegisterOrder;
+        private readonly Mock<RegisterOrder> _mockRegisterOrder;
 
         public OrderControllerIntegrationTest()
         {

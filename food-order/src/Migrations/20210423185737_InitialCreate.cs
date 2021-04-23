@@ -8,7 +8,6 @@ namespace food_order.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // migrationBuilder.Sql(File.ReadAllText("./Migrations/20210423175225_InitialCreate.sql"));
             migrationBuilder.CreateTable(
                 name: "db_order",
                 columns: table => new
