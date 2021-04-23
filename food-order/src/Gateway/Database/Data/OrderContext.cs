@@ -17,6 +17,8 @@ namespace food_order.Gateway.Database.Data
             modelBuilder.Entity<OrderModel>().ToTable("db_order")
                 .HasKey(orderModel => new { orderModel.Id });
             modelBuilder.Entity<OrderModel>()
+                .Property(orderModel => orderModel.RestaurantUuid).HasColumnName("restaurant_uuid");
+            modelBuilder.Entity<OrderModel>()
                 .HasMany(orderModel => orderModel.Items)
                 .WithOne()
                 .HasForeignKey(orderItemModel => orderItemModel.OrderId);
