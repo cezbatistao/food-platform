@@ -67,7 +67,7 @@ namespace food_order.UseCase
             RuleFor(ordered => ordered.Items)
                 .Cascade(CascadeMode.Stop)
                 .NotNull()
-                .Must(items => items is {Count: > 0}).WithMessage("'Items' must not be empty.");
+                .NotEmpty().WithMessage("'Items' must not be empty.");
             RuleForEach(ordered => ordered.Items).SetValidator(new OrderedItemValidator());
         }
     }

@@ -14,7 +14,7 @@ We are using
 
 #### Run tests and code coverage
 ```
-dotnet test test/test.csproj --logger:"junit;LogFilePath=TestResults/UnitTeststest-result.xml" --collect:"XPlat Code Coverage"
+dotnet test test/test.csproj --logger:"junit;LogFilePath=TestResults/UnitTeststest-result.xml" --collect:"XPlat Code Coverage" --settings:src/CodeCoverage.runsettings
 ```
 \
 Generate HTML Coverage Report:

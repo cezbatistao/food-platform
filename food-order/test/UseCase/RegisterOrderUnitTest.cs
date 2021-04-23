@@ -34,7 +34,7 @@ namespace test.UseCase
                 new object[] { new Ordered(null, null), new VerifyValidation(2, 
                         new List<string> {"'Restaurant Uuid' must not be empty.", "'Items' must not be empty."})
                 },
-                new object[] { new Ordered("", null), new VerifyValidation(2,  
+                new object[] { new Ordered("", new List<OrderedItem>()), new VerifyValidation(2,  
                     new List<string> {"'Restaurant Uuid' must not be empty.", "'Items' must not be empty."})
                 },
                 new object[] { new Ordered("   ", null), new VerifyValidation(2,
