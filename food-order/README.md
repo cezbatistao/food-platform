@@ -40,6 +40,7 @@ docker-compose down
 
 ##### Apply migrations
 Before needs install `tool ef`, follow this [steps](https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
+
 \
 ```
 dotnet ef database update --project src
