@@ -25,7 +25,9 @@ reportgenerator "-reports:test/TestResults/{guuid}/coverage.cobertura.xml" "-tar
 Coverage HTML report: `test/TestResults/coveragereport/index.html`
 
 #### Run components tests
-**TODO**
+```
+dotnet ef database update --project src
+```
 
 #### Setup application
 Go on folder `dependencies/` and start _docker-compose_
@@ -37,6 +39,8 @@ To turn off
 ```
 docker-compose down
 ```
+
+##### Apply migrations
 
 #### Start application
 * Needs execute command from: _Setup application_ start _docker-compose_
