@@ -18,5 +18,10 @@ namespace food_order.Domain
             this.Amount = amount;
             this.UnitValue = unitValue;
         }
+
+        OrderItem()
+        {
+            
+        }
     }
 }

@@ -4,11 +4,11 @@ namespace food_order.Domain
 {
     public class Order
     {
-        public long? Id { get; }
-        public string Uuid { get; }
-        public Restaurant.Restaurant Restaurant { get; }
-        public List<OrderItem> Items { get; }
-        public decimal Total { get; }
+        public long? Id { get; protected set; }
+        public string Uuid { get; protected set; }
+        public Restaurant.Restaurant Restaurant { get; protected set; }
+        public List<OrderItem> Items { get; protected set; }
+        public decimal Total { get; protected set; }
 
         public Order(string uuid, Restaurant.Restaurant restaurant, List<OrderItem> items, decimal total) : 
             this(null, uuid, restaurant, items, total) { }
@@ -20,6 +20,11 @@ namespace food_order.Domain
             this.Restaurant = restaurant;
             this.Items = items;
             this.Total = total;
+        }
+
+        protected Order()
+        {
+            
         }
     }
 }

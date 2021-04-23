@@ -4,15 +4,18 @@ using food_order.Entrypoint.Rest;
 using food_order.Entrypoint.Rest.Json;
 using food_order.Gateway;
 using food_order.Gateway.Database;
+using food_order.Gateway.Database.Data;
 using food_order.Gateway.Http;
 using food_order.UseCase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MySqlConnector;
 using Newtonsoft.Json;
 
 namespace food_order
@@ -29,7 +32,15 @@ namespace food_order
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddAutoMapper(typeof(Startup));
+            
+            string mySqlConnectionStr = Configuration.GetConnectionString("Default");  
+            services.AddTransient<MySqlConnection>(_ => new MySqlConnection(mySqlConnectionStr));
+            services.AddDbContext<OrderContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("Default"), ServerVersion.AutoDetect(mySqlConnectionStr)));
+            
+            // services.AddDatabaseDeveloperPageExceptionFilter();
+            
             services.Configure<ApiBehaviorOptions>(opt => { opt.SuppressModelStateInvalidFilter = true; });
             services.AddControllers()
                 .AddFluentValidation(fv => 
