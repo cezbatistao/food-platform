@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace food_order
 {
@@ -34,7 +34,7 @@ namespace food_order
         {
             services.AddAutoMapper(typeof(Startup));
             
-            string mySqlConnectionStr = Configuration.GetConnectionString("Default");  
+            string mySqlConnectionStr = Configuration.GetConnectionString("Default");
             services.AddTransient<MySqlConnection>(_ => new MySqlConnection(mySqlConnectionStr));
             services.AddDbContext<OrderContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("Default"), ServerVersion.AutoDetect(mySqlConnectionStr)));
@@ -61,9 +61,14 @@ namespace food_order
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, OrderContext orderContext, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment())
+            string mySqlConnectionStr = Configuration.GetConnectionString("Default");
+            
+            logger.LogError("*********************************************************** mySqlConnectionStr: "+mySqlConnectionStr);
+            logger.LogError("*********************************************************** orderContext: "+orderContext);
+            
+            if (env.IsDevelopment() || env.IsEnvironment("dce"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -72,6 +77,11 @@ namespace food_order
             else
             {
                 app.UseHttpsRedirection();
+            }
+
+            if (env.IsEnvironment("dce"))
+            {
+                orderContext.Database.Migrate();
             }
 
             app.UseRouting();

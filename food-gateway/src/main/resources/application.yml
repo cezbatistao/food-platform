@@ -7,6 +7,9 @@ application:
   food-platform:
     restaurant-app:
       url: http://localhost:8181
+    order-app:
+      url: http://localhost:5000
+
 info:
   app:
     group: ${group}
@@ -28,6 +31,12 @@ spring:
             - Path=/food/restaurant/**
           filters:
             - RewritePath=/food/restaurant/(?<path>.*), /\$\\{path}
+        - id: food-order-app
+          uri: \${application.food-platform.restaurant-app.url}
+          predicates:
+            - Path=/food/order/**
+          filters:
+            - RewritePath=/food/order/(?<path>.*), /\$\\{path}
 
 management:
   endpoints:

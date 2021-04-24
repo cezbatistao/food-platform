@@ -6,18 +6,20 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_DATABASE=db_dc_restaurant
       - MYSQL_ROOT_PASSWORD=root_dc_passwd
-      - MYSQL_USER=restaurant_dc_user
-      - MYSQL_PASSWORD=restaurant_dc_passwd
     volumes:
-      - mysql-ds-datavolume:/var/lib/mysql
+      - mysql-dc-datavolume:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     links:
       - mysql
     ports:
-      - 8336:80
+      - 8003:80
     environment:
       - PMA_ARBITRARY=1
   food-restaurant:
@@ -26,6 +28,15 @@ services:
       - mysql
     ports:
       - "8181:8080"
+    environment:
+      - ENVIRONMENT_APP=dce
+  food-order:
+    build: ../food-order
+    depends_on:
+      - mysql
+      - food-restaurant
+    ports:
+      - "5000:5000"
     environment:
       - ENVIRONMENT_APP=dce
   food-gateway:
@@ -47,4 +58,4 @@ services:
       - ENVIRONMENT_APP=dce
 
 volumes:
-  mysql-ds-datavolume:
+  mysql-dc-datavolume:

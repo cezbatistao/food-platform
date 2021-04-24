@@ -70,11 +70,19 @@ docker build -t food-order:1.0.0-[VERSION APP] .
 
 ### Run image
 ```
-docker run -p 5000:80 food-order:1.0.0-[VERSION APP]
+docker run -p 5000:5000 food-order:1.0.0-[VERSION APP]
 ```
 
 ### Publish image
-**TODO**
+```
+docker tag food-order:1.0.0-[VERSION APP] cezbatistao/food-order:1.0.0-[VERSION APP]
+```
+In order to push you’ll first have to authenticate with the Docker Hub:
+\
+And push image to Docker Hub
+```
+docker push cezbatistao/food-order:1.0.0-[VERSION APP]
+```
 
 ## Kubernetes
 **TODO**
