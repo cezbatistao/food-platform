@@ -39,7 +39,7 @@ namespace food_order
             services.AddDbContext<OrderContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("Default"), ServerVersion.AutoDetect(mySqlConnectionStr)));
             
-            // services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddHttpClient();
             
             services.Configure<ApiBehaviorOptions>(opt => { opt.SuppressModelStateInvalidFilter = true; });
             services.AddControllers()
@@ -57,6 +57,7 @@ namespace food_order
             services.AddScoped<RegisterOrder, RegisterOrder>();
             services.AddScoped<IOrderGateway, OrderGatewayImpl>();
             services.AddScoped<IRestaurantGateway, RestaurantGatewayImpl>();
+            services.AddScoped<RestaurantClient, RestaurantClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

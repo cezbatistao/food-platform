@@ -1,5 +1,5 @@
 - request:
-    url: ^api/v1/restaurants/cbb9c2bd-abde-48a3-891a-6229fc9b7c2f$
+    url: ^/api/v1/restaurants/cbb9c2bd-abde-48a3-891a-6229fc9b7c2f$
     method: GET
   response:
     status: 200
@@ -8,7 +8,7 @@
       Access-Control-Allow-Origin: "*"
     file: mocks/response/detail_restaurant.json
 - request:
-    url: ^api/v1/restaurants/([a-zA-Z0-9\-]+)$
+    url: ^/api/v1/restaurants/([a-zA-Z0-9\-]+)$
     method: GET
   response:
     status: 404

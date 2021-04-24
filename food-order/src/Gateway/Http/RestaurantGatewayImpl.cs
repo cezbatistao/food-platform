@@ -6,9 +6,18 @@ namespace food_order.Gateway.Http
 {
     public class RestaurantGatewayImpl: IRestaurantGateway
     {
-        public RestaurantDetail findById(string Uuid)
+        private RestaurantClient _restaurantClient;
+
+        public RestaurantGatewayImpl(RestaurantClient restaurantClient)
         {
-            if (Uuid.Equals("cbb9c2bd-abde-48a3-891a-6229fc9b7c2f"))
+            _restaurantClient = restaurantClient;
+        }
+
+        public RestaurantDetail findById(string uuid)
+        {
+            var byUuid = _restaurantClient.GetByUuid(uuid);
+
+            if (uuid.Equals("cbb9c2bd-abde-48a3-891a-6229fc9b7c2f"))
             {
                 List<MenuItem> items = new List<MenuItem>()
                 {
@@ -38,7 +47,7 @@ namespace food_order.Gateway.Http
                 throw new EntityNotFoundException(
                     "0001", 
                     "entityNotFoundException", 
-                    $"Restaurant {Uuid} don't exists"
+                    $"Restaurant {uuid} don't exists"
                 );
             }
         }

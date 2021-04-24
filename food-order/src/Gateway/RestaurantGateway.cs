@@ -4,6 +4,6 @@ namespace food_order.Gateway
 {
     public interface IRestaurantGateway
     {
-        RestaurantDetail findById(string Uuid);
+        RestaurantDetail findById(string uuid);
     }
 }
