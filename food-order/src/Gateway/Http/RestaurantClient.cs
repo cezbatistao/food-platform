@@ -1,27 +1,32 @@
-using System.IO;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
-using food_order.Domain.Exception;
-using food_order.Domain.Restaurant;
 using food_order.Gateway.Http.Exception;
 using food_order.Gateway.Http.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace food_order.Gateway.Http
 {
     public class RestaurantClient
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<RestaurantClient> _logger;
 
-        public RestaurantClient(IHttpClientFactory clientFactory)
+        public RestaurantClient(IConfiguration configuration, IHttpClientFactory clientFactory, 
+            ILogger<RestaurantClient> logger)
         {
             _clientFactory = clientFactory;
+            _configuration = configuration;
+            _logger = logger;
         }
 
         public DataRestaurantResponse GetByUuid(string uuid)
         {
+            var restaurantAppUrl = _configuration.GetValue<string>("RestaurantApp:Url");
+            
             var request = new HttpRequestMessage(HttpMethod.Get,
-                $"http://localhost:8882/api/v1/restaurants/{uuid}");
+                $"{restaurantAppUrl}/api/v1/restaurants/{uuid}");
             request.Headers.Add("Accept", "application/json; charset=utf-8");
             request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
             

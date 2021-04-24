@@ -38,7 +38,8 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - ENVIRONMENT_APP=dce
+      - ASPNETCORE_ENVIRONMENT=dce
+      - ASPNETCORE_URLS=http://+:5000
   food-gateway:
     build: ../food-gateway
     depends_on:
