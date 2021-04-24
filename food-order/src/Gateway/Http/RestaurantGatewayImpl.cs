@@ -1,55 +1,59 @@
 using System.Collections.Generic;
+using AutoMapper;
+using food_order.Domain;
 using food_order.Domain.Exception;
 using food_order.Domain.Restaurant;
+using food_order.Gateway.Database.Model;
+using food_order.Gateway.Http.Exception;
+using food_order.Gateway.Http.Json;
 
 namespace food_order.Gateway.Http
 {
     public class RestaurantGatewayImpl: IRestaurantGateway
     {
-        private RestaurantClient _restaurantClient;
+        private readonly RestaurantClient _restaurantClient;
+        private readonly IMapper _mapper;
 
-        public RestaurantGatewayImpl(RestaurantClient restaurantClient)
+        public RestaurantGatewayImpl(RestaurantClient restaurantClient, IMapper mapper)
         {
             _restaurantClient = restaurantClient;
+            _mapper = mapper;
         }
 
         public RestaurantDetail findById(string uuid)
         {
-            var byUuid = _restaurantClient.GetByUuid(uuid);
+            var dataRestaurantResponse = _restaurantClient.GetByUuid(uuid);
 
-            if (uuid.Equals("cbb9c2bd-abde-48a3-891a-6229fc9b7c2f"))
+            if (dataRestaurantResponse.Error is null)
             {
-                List<MenuItem> items = new List<MenuItem>()
-                {
-                    new("743b55f8-9543-11eb-a8b3-0242ac130003", 
-                        "Pepperoni", 
-                        33.99m
-                    ), 
-                    new("773712b0-9543-11eb-a8b3-0242ac130003", 
-                        "Meat", 
-                        34.99m
-                    ), 
-                    new("7d35de8a-9543-11eb-a8b3-0242ac130003", 
-                        "Supreme", 
-                        35.99m
-                    )
-                };
-            
-                return new RestaurantDetail( 
-                    "cbb9c2bd-abde-48a3-891a-6229fc9b7c2f", 
-                    "Pizza Hut", 
-                    "Av. Nome da avenida, 123", 
-                    items
-                );                
+                var restaurantDetail = _mapper.Map<RestaurantDetail>(dataRestaurantResponse.Restaurant);
+                return restaurantDetail;
             }
-            else
+
+            if (dataRestaurantResponse.Error.Code.Equals("0003"))
             {
                 throw new EntityNotFoundException(
                     "0001", 
                     "entityNotFoundException", 
                     $"Restaurant {uuid} don't exists"
-                );
+                );                    
             }
+            
+            throw new RequestRestApiException(
+                "9998", 
+                "requestRestApiException", 
+                "Unexpected request restaurant api error", 
+                dataRestaurantResponse.Error
+            );
+        }
+    }
+    
+    public class OrderProfile : Profile
+    {
+        public OrderProfile()
+        {
+            CreateMap<RestaurantResponse, RestaurantDetail>();
+            CreateMap<MenuItemResponse, MenuItem>();
         }
     }
 }

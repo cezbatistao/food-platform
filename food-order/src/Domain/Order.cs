@@ -22,9 +22,6 @@ namespace food_order.Domain
             this.Total = total;
         }
 
-        protected Order()
-        {
-            
-        }
+        protected Order() { }
     }
 }

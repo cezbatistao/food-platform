@@ -19,9 +19,6 @@ namespace food_order.Domain
             this.UnitValue = unitValue;
         }
 
-        OrderItem()
-        {
-            
-        }
+        OrderItem() { }
     }
 }

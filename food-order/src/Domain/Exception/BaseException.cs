@@ -11,5 +11,12 @@ namespace food_order.Domain.Exception
             this.Code = code;
             this.Error = error;
         }
+        
+        public BaseException(string code, string error, 
+            string description, System.Exception exception) : base(description, exception)
+        {
+            this.Code = code;
+            this.Error = error;
+        }
     }
 }

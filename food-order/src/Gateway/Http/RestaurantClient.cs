@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using food_order.Domain.Exception;
 using food_order.Domain.Restaurant;
+using food_order.Gateway.Http.Exception;
 using food_order.Gateway.Http.Json;
 
 namespace food_order.Gateway.Http
@@ -17,7 +18,7 @@ namespace food_order.Gateway.Http
             _clientFactory = clientFactory;
         }
 
-        public Restaurant GetByUuid(string uuid)
+        public DataRestaurantResponse GetByUuid(string uuid)
         {
             var request = new HttpRequestMessage(HttpMethod.Get,
                 $"http://localhost:8882/api/v1/restaurants/{uuid}");
@@ -25,21 +26,24 @@ namespace food_order.Gateway.Http
             request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
             
             var client = _clientFactory.CreateClient();
-            
-            var response = client.Send(request);
-            
-            if (response.IsSuccessStatusCode)
-            {
-                var stream = response.Content.ReadAsStream();
-                var jsonFromResponse = new StreamReader(stream).ReadToEnd();
-                var dataResponse = JsonSerializer.Deserialize<DataResponse<RestaurantResponse>>(jsonFromResponse);
 
-                // TODO if dataResponse is null?
-                
-                return new Restaurant(dataResponse.Data.Uuid, dataResponse.Data.Name);
+            HttpResponseMessage response = null;
+            try
+            {
+                response = client.Send(request);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new RequestRestApiException(
+                    "9998", 
+                    "requestRestApiException", 
+                    "Unexpected request restaurant api error", 
+                    ex
+                );
             }
 
-            throw new EntityNotFoundException("0000", "0000", "0000");
+            var jsonFromResponse = response.Content.ReadAsStringAsync().Result;
+            return JsonSerializer.Deserialize<DataRestaurantResponse>(jsonFromResponse);
         }
     }
 }
