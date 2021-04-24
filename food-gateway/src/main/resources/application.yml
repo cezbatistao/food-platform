@@ -32,7 +32,7 @@ spring:
           filters:
             - RewritePath=/food/restaurant/(?<path>.*), /\$\\{path}
         - id: food-order-app
-          uri: \${application.food-platform.restaurant-app.url}
+          uri: \${application.food-platform.order-app.url}
           predicates:
             - Path=/food/order/**
           filters:

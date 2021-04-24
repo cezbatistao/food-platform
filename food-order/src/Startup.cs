@@ -16,15 +16,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
-using Microsoft.Extensions.Logging;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace food_order
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        // public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            // Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -61,13 +69,10 @@ namespace food_order
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, OrderContext orderContext, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             string mySqlConnectionStr = Configuration.GetConnectionString("Default");
-            
-            logger.LogError("*********************************************************** mySqlConnectionStr: "+mySqlConnectionStr);
-            logger.LogError("*********************************************************** orderContext: "+orderContext);
-            
+
             if (env.IsDevelopment() || env.IsEnvironment("dce"))
             {
                 app.UseDeveloperExceptionPage();
@@ -81,7 +86,7 @@ namespace food_order
 
             if (env.IsEnvironment("dce"))
             {
-                orderContext.Database.Migrate();
+                UpdateDatabase(app);
             }
 
             app.UseRouting();
@@ -94,6 +99,19 @@ namespace food_order
             {
                 endpoints.MapControllers();
             });
+        }
+        
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<OrderContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }
