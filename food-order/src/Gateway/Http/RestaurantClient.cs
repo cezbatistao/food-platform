@@ -9,14 +9,14 @@ namespace food_order.Gateway.Http
 {
     public class RestaurantClient
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly HttpClient _client;
         private readonly IConfiguration _configuration;
         private readonly ILogger<RestaurantClient> _logger;
 
-        public RestaurantClient(IConfiguration configuration, IHttpClientFactory clientFactory, 
+        public RestaurantClient(IConfiguration configuration, HttpClient client, 
             ILogger<RestaurantClient> logger)
         {
-            _clientFactory = clientFactory;
+            _client = client;
             _configuration = configuration;
             _logger = logger;
         }
@@ -30,12 +30,10 @@ namespace food_order.Gateway.Http
             request.Headers.Add("Accept", "application/json; charset=utf-8");
             request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
             
-            var client = _clientFactory.CreateClient();
-
             HttpResponseMessage response = null;
             try
             {
-                response = client.Send(request);
+                response = _client.Send(request);
             }
             catch (HttpRequestException ex)
             {

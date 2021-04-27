@@ -36,7 +36,7 @@ namespace test.Entrypoint.Rest
             
             // Arrange
             var server = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Testing")
+                .UseEnvironment("test")
                 .ConfigureTestServices(services => {
                     services.RemoveAll<RegisterOrder>();//Remove previous registration(s) of this service
                     services.RemoveAll<IOrderGateway>();//Remove previous registration(s) of this service

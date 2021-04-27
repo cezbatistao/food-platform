@@ -31,15 +31,17 @@ services:
     environment:
       - ENVIRONMENT_APP=dce
   food-order:
-    build: ../food-order
+    build:
+      context: ../food-order
+      dockerfile: Dockerfile
+      args:
+        - ENVIRONMENT_APP=dce
+        - ENVIRONMENT_PORT=5000
     depends_on:
       - mysql
       - food-restaurant
     ports:
       - "5000:5000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=dce
-      - ASPNETCORE_URLS=http://+:5000
   food-gateway:
     build: ../food-gateway
     depends_on:
