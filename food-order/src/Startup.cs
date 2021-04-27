@@ -14,10 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace food_order
 {
@@ -69,15 +67,12 @@ namespace food_order
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "food_order v1"));
+                
+                UpdateDatabase(app);
             }
             else
             {
                 app.UseHttpsRedirection();
-            }
-
-            if (env.IsEnvironment("dce"))
-            {
-                UpdateDatabase(app);
             }
 
             app.UseRouting();

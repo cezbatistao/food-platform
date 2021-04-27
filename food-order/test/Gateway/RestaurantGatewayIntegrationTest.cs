@@ -1,15 +1,17 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using AutoFixture;
+using System.Threading;
+using System.Threading.Tasks;
+using food_order.Domain.Exception;
 using food_order.Domain.Restaurant;
 using food_order.Gateway;
-using food_order.Gateway.Database;
-using food_order.Gateway.Database.Data;
 using food_order.Gateway.Http;
-using Microsoft.EntityFrameworkCore;
+using food_order.Gateway.Http.Exception;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using test.Fixture;
+using Moq;
+using Moq.Protected;
 using test.Support;
 using Xunit;
 
@@ -17,19 +19,15 @@ namespace test.Gateway
 {
     public class RestaurantGatewayIntegrationTest : IClassFixture<MockServerFixture>
     {
-        private readonly IFixture _fixture;
-        private readonly MockServerFixture _mockServerFixture;
-        private readonly IRestaurantGateway _restaurantGateway;
+        private IRestaurantGateway _restaurantGateway;
+        private IConfiguration _configuration;
 
         public RestaurantGatewayIntegrationTest(MockServerFixture mockServerFixture)
         {
-            _mockServerFixture = mockServerFixture;
-            _fixture = new AutoFixture.Fixture().Customize(new GatewayIntegrationTestCustomization());
+            string hostname = mockServerFixture.Hostname;
+            ushort port = mockServerFixture.Port;
             
-            string hostname = _mockServerFixture.Hostname;
-            ushort port = _mockServerFixture.Port;
-            
-            var config =
+            _configuration =
                 new ConfigurationBuilder()
                     .AddInMemoryCollection(new List<KeyValuePair<string, string>>
                     {
@@ -38,22 +36,25 @@ namespace test.Gateway
                     .Build();
             
             var collection = new ServiceCollection()
-                .AddHttpClient("bbc_client")
+                .AddHttpClient("restaurant_client")
                 .Services
                 .BuildServiceProvider();
 
-            var httpClient =  collection.GetService<IHttpClientFactory>().CreateClient("bbc_client");
+            var httpClient =  collection.GetService<IHttpClientFactory>().CreateClient("restaurant_client");
             
-            var restaurantClient = new RestaurantClient(config, httpClient, null);
+            var restaurantClient = new RestaurantClient(_configuration, httpClient, null); // TODO add logger
 
-            _restaurantGateway = new RestaurantGatewayImpl(restaurantClient, _mockServerFixture.Mapper);
+            _restaurantGateway = new RestaurantGatewayImpl(restaurantClient, mockServerFixture.Mapper);
         }
 
         [Fact]
         public void ShouldGetARestaurantDetail()
         {
+            // given
+            var restaurantUuid = "cbb9c2bd-abde-48a3-891a-6229fc9b7c2f";
+            
             // when
-            RestaurantDetail restaurantDetail = _restaurantGateway.findById("cbb9c2bd-abde-48a3-891a-6229fc9b7c2f");
+            RestaurantDetail restaurantDetail = _restaurantGateway.findById(restaurantUuid);
             
             // then
             Assert.NotNull(restaurantDetail);
@@ -80,6 +81,56 @@ namespace test.Gateway
                     Assert.Equal("Supreme", menuItem.Name);
                     Assert.Equal(35.99m, menuItem.Value);
                 });
+        }
+        
+        [Fact]
+        public void ShouldThrowAEntityNotFoundExceptionWhenNotFoundRestaurant()
+        {
+            // given
+            var restaurantUuid = "b78bf49d-348e-417d-998e-c1053fceefa6";
+            
+            // when
+            Action act = () => _restaurantGateway.findById(restaurantUuid);
+
+            // then
+            EntityNotFoundException exception = Assert.Throws<EntityNotFoundException>(act);
+            Assert.NotNull(exception);
+            
+            Assert.Equal("0001", exception.Code);
+            Assert.Equal("entityNotFoundException", exception.Error);
+            Assert.Equal($"Restaurant {restaurantUuid} don't exists", exception.Message);
+        }
+        
+        [Fact]
+        public void ShouldThrowRequestRestApiExceptionOnRequestWithError()
+        {
+            // given
+            var handler = new Mock<HttpMessageHandler>();
+            handler.Protected()
+                .Setup<HttpResponseMessage>("Send", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .Throws(new HttpRequestException("Error on request http"));
+            
+            var client = new HttpClient(handler.Object, false);
+            // var handler = new Mock<HttpMessageHandler>();
+            // var client = handler.Object.CreateClient();
+            
+            var restaurantClient = new RestaurantClient(_configuration, client, null); // TODO add logger
+            _restaurantGateway = new RestaurantGatewayImpl(restaurantClient, null);
+            
+            var restaurantUuid = "b78bf49d-348e-417d-998e-c1053fceefa6";
+            
+            // when
+            Action act = () => _restaurantGateway.findById(restaurantUuid);
+
+            // then
+            RequestRestApiException exception = Assert.Throws<RequestRestApiException>(act);
+            Assert.NotNull(exception);
+            
+            Assert.Equal("9998", exception.Code);
+            Assert.Equal("requestRestApiException", exception.Error);
+            Assert.Equal("Unexpected request restaurant api error", exception.Message);
+            Assert.Null(exception.ErrorDetail);
+            Assert.NotNull(exception.InnerException);
         }
     }
 }

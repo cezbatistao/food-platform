@@ -34,6 +34,7 @@ const RestaurantCategory = ({ loading, categories, categoryFromParameter }: Prop
 
   return (
     <select 
+      data-test="select_category" 
       className="form-select" 
       aria-label="Selecione uma categoria" 
       onChange={ handleChangeCategory }

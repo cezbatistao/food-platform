@@ -35,7 +35,7 @@ namespace food_order.Gateway.Http
             {
                 response = _client.Send(request);
             }
-            catch (HttpRequestException ex)
+            catch (System.Exception ex)
             {
                 throw new RequestRestApiException(
                     "9998", 

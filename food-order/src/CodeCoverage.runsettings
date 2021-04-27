@@ -8,7 +8,7 @@
         <DataCollectors>
             <DataCollector friendlyName="XPlat code coverage">
                 <Configuration>
-                    <ExcludeByFile>**/Domain/**/*.cs,**/Entrypoint/Rest/Exception/*.cs,**/Entrypoint/Rest/Json/**/*.cs,**/Gateway/Database/Model/**/*.cs,**/Migrations/**/*.cs,**/Program.cs,**/Startup.cs</ExcludeByFile>
+                    <ExcludeByFile>**/Domain/**/*.cs,**/Entrypoint/Rest/Exception/*.cs,**/Entrypoint/Rest/Json/**/*.cs,**/Gateway/Database/Data/**/*.cs,**/Gateway/Database/Model/**/*.cs,**/Gateway/Http/Exception/**/*.cs,**/Gateway/Http/Json/**/*.cs,**/Migrations/**/*.cs,**/Program.cs,**/Startup.cs</ExcludeByFile>
                 </Configuration>
             </DataCollector>
         </DataCollectors>

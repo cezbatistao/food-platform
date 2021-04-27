@@ -16,13 +16,12 @@ export class RestaurantPage {
 
   fillCategory(category: string) {
     if (category != "") {
-      cy.get(this.pageFactor.selectCategory).type(`${category}{enter}`);
+      cy.get(this.pageFactor.selectCategory).select(category);
     }
   }
 
   verify(restaurantNames: string[]) {
     cy.get(this.pageFactor.cardHeaderRestaurant)
-    .find('div.MuiCardHeader-content')
     .should(($div) => {
       expect($div).to.have.length(restaurantNames.length);
       restaurantNames.forEach((restaurantName, index) => {

@@ -22,7 +22,7 @@ const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
       onClick={ () => handleClickCard(uuid) } 
       className="col"
     >
-      <div className="card h-100">
+      <div data-test="card_header_restaurant_data" className="card h-100">
         <div className="card-header bg-transparent"><h5>{ name }</h5></div>
         <img src={ logo } className="card-img-top" alt={ name } />
         <div className="card-body">
