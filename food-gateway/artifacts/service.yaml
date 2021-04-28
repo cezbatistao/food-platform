@@ -8,4 +8,5 @@ spec:
   ports:
     - name: http
       port: 8080
-  type: ClusterIP
+      nodePort: 30090
+  type: NodePort

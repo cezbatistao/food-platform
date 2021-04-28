@@ -44,24 +44,37 @@ spec:
       - name: mysql
         image: mysql:5.7
         env:
-        - name: MYSQL_DATABASE
-          value: db_k8s_restaurant
         - name: MYSQL_ROOT_PASSWORD
           value: root_k8s_passwd
-        - name: MYSQL_USER
-          value: restaurant_k8s_user
-        - name: MYSQL_PASSWORD
-          value: restaurant_k8s_passwd
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pv-claim
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  initdb.sql: |
+    CREATE DATABASE IF NOT EXISTS db_k8s_restaurant;
+    CREATE USER 'restaurant_k8s_user'@'%' IDENTIFIED BY 'restaurant_k8s_passwd' ;
+    GRANT ALL ON `db_k8s_restaurant`.* TO 'restaurant_k8s_user'@'%';
+
+    CREATE DATABASE IF NOT EXISTS db_k8s_order;
+    CREATE USER 'order_k8s_user'@'%' IDENTIFIED BY 'order_k8s_passwd' ;
+    GRANT ALL ON `db_k8s_order`.* TO 'order_k8s_user'@'%';
 ---
 apiVersion: v1
 kind: Service
@@ -76,3 +89,41 @@ spec:
       port: 3306
       targetPort: 3306
       nodePort: 30036
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+spec:
+  selector:
+    matchLabels:
+      app: phpmyadmin
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: phpmyadmin
+    spec:
+      containers:
+      - name: phpmyadmin
+        image: phpmyadmin/phpmyadmin:latest
+        env:
+        - name: PMA_ARBITRARY
+          value: "1"
+        ports:
+        - containerPort: 80
+          name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin-k8s
+spec:
+  type: NodePort
+  selector:
+    app: phpmyadmin
+  ports:
+    - protocol: TCP
+      port: 80
+      nodePort: 30004

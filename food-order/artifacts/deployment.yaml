@@ -18,4 +18,8 @@ spec:
         env:
         - name: ENVIRONMENT_APP
           value: k8s
+        - name: ASPNETCORE_ENVIRONMENT
+          value: k8s
+        - name: ASPNETCORE_URLS
+          value: http://+:5000
         imagePullPolicy: Always

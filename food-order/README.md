@@ -78,4 +78,7 @@ docker push cezbatistao/food-order:1.0.0-[VERSION APP]
 ```
 
 ## Kubernetes
-**TODO**
+```
+kubectl apply -f artifacts/deployment.yaml
+kubectl apply -f artifacts/service.yaml
+```

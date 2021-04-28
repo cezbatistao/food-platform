@@ -62,7 +62,7 @@ namespace food_order
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("dce"))
+            if (env.IsDevelopment() || env.IsEnvironment("dce") || env.IsEnvironment("k8s"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
