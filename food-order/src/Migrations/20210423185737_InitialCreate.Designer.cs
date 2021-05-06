@@ -24,6 +24,14 @@ namespace food_order.Migrations
                     b.Property<long?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+                    
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("timestamp")
+                        .HasColumnName("last_updated");
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
@@ -54,6 +62,14 @@ namespace food_order.Migrations
                     b.Property<long?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+                    
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("timestamp")
+                        .HasColumnName("last_updated");
 
                     b.Property<string>("RestaurantUuid")
                         .HasColumnType("binary(36)")

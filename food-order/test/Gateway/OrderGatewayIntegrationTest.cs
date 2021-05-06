@@ -65,6 +65,8 @@ namespace test.Gateway
                     Assert.Equal("843bfe62-9543-11eb-a8b3-0242ac130003", orderItem.Uuid);
                     Assert.Equal("Pepperoni", orderItem.Name);
                     Assert.Equal(33.99m, orderItem.UnitValue);
+                    Assert.NotNull(orderItem.CreatedAt);
+                    Assert.NotNull(orderItem.LastUpdated);
                 },
                 orderItem =>
                 {
@@ -72,8 +74,12 @@ namespace test.Gateway
                     Assert.Equal("88e3812e-9543-11eb-a8b3-0242ac130003", orderItem.Uuid);
                     Assert.Equal("Mussarela", orderItem.Name);
                     Assert.Equal(31.99m, orderItem.UnitValue);
+                    Assert.NotNull(orderItem.CreatedAt);
+                    Assert.NotNull(orderItem.LastUpdated);
                 });
             Assert.Equal(97.97m, orderModel.Total);
+            Assert.NotNull(orderModel.CreatedAt);
+            Assert.NotNull(orderModel.LastUpdated);
         }
     }
 }

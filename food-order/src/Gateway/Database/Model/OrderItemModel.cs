@@ -1,6 +1,5 @@
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace food_order.Gateway.Database.Model
 {
@@ -11,7 +10,12 @@ namespace food_order.Gateway.Database.Model
         public string Name { get; set; }
         public int Amount { get; set; }
         public decimal UnitValue { get; set; }
-        
         public long? OrderId { get; set; }
+        
+        [Timestamp]
+        public DateTime CreatedAt { get; set; }
+        
+        [Timestamp]
+        public DateTime LastUpdated { get; set; }
     }
 }

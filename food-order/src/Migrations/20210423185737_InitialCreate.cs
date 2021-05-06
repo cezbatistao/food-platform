@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -16,7 +17,9 @@ namespace food_order.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     uuid = table.Column<string>(type: "binary(36)", nullable: true),
                     restaurant_uuid = table.Column<string>(type: "binary(36)", nullable: true),
-                    total = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                    total = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    last_updated = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {
@@ -33,7 +36,9 @@ namespace food_order.Migrations
                     name = table.Column<string>(type: "varchar(150)", nullable: true),
                     amount = table.Column<int>(type: "int", nullable: false),
                     unit_value = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    order_id = table.Column<long>(type: "int", nullable: true)
+                    order_id = table.Column<long>(type: "int", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    last_updated = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {

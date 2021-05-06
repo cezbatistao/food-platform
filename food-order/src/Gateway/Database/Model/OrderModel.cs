@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace food_order.Gateway.Database.Model
 {
@@ -9,5 +11,11 @@ namespace food_order.Gateway.Database.Model
         public string RestaurantUuid { get; set; }
         public List<OrderItemModel> Items { get; set; }
         public decimal Total { get; set; }
+        
+        [Timestamp]
+        public DateTime CreatedAt { get; set; }
+        
+        [Timestamp]
+        public DateTime LastUpdated { get; set; }
     }
 }

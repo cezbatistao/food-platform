@@ -19,6 +19,10 @@ namespace food_order.Gateway.Database.Data
             modelBuilder.Entity<OrderModel>()
                 .Property(orderModel => orderModel.RestaurantUuid).HasColumnName("restaurant_uuid");
             modelBuilder.Entity<OrderModel>()
+                .Property(orderModel => orderModel.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<OrderModel>()
+                .Property(orderModel => orderModel.LastUpdated).HasColumnName("last_updated");
+            modelBuilder.Entity<OrderModel>()
                 .HasMany(orderModel => orderModel.Items)
                 .WithOne()
                 .HasForeignKey(orderItemModel => orderItemModel.OrderId);
@@ -32,6 +36,10 @@ namespace food_order.Gateway.Database.Data
                 .Property(orderItemModel => orderItemModel.OrderId).HasColumnName("order_id");
             modelBuilder.Entity<OrderItemModel>()
                 .Property(orderItemModel => orderItemModel.UnitValue).HasColumnName("unit_value");
+            modelBuilder.Entity<OrderItemModel>()
+                .Property(orderItemModel => orderItemModel.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<OrderItemModel>()
+                .Property(orderItemModel => orderItemModel.LastUpdated).HasColumnName("last_updated");
         }
     }
 }
