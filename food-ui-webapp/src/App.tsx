@@ -1,8 +1,8 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-import Header from './components/header/Header';
-import Notification from './components/notification/Notification';
+import Header from './components/Header/Header';
+import Notification from './components/Notification/Notification';
 
 type Props = {
 }
