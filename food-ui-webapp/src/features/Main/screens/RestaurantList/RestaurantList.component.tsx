@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import CategoryContext from '../../contexts/RestaurantCategory/RestaurantCategory.context';
 
 import { fetchRestaurantsByCategory } from "../../../../services/Restaurant.services";
-import RestaurantCard from "../RestaurantCard/RestaurantCard.component";
+import RestaurantCard from "../../components/RestaurantCard/RestaurantCard.component";
 import Restaurant from "../../../../services/Restaurant.model";
 
 const RestaurantList = () => {

@@ -1,5 +1,5 @@
-import RestaurantCategory from "../../components/RestaurantCategory/RestaurantCategory.component";
-import RestaurantList from '../../components/RestaurantList/RestaurantList.component';
+import RestaurantCategory from "../RestaurantCategory/RestaurantCategory.component";
+import RestaurantList from '../RestaurantList/RestaurantList.component';
 import CategoryContext from '../../contexts/RestaurantCategory/RestaurantCategory.context';
 
 import { useState } from "react";
