@@ -1,5 +1,3 @@
-import { Fragment } from "react";
-
 type Props = {
   uuid: string,
   name: string,

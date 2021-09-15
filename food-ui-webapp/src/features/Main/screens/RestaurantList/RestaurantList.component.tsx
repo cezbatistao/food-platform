@@ -1,9 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 
-import CategoryContext from '../../contexts/RestaurantCategory/RestaurantCategory.context';
-
-import { fetchRestaurantsByCategory } from "../../../../services/Restaurant.services";
 import RestaurantCard from "../../components/RestaurantCard/RestaurantCard.component";
+import CategoryContext from '../../contexts/RestaurantCategory/RestaurantCategory.context';
+import { fetchRestaurantsByCategory } from "../../../../services/Restaurant.services";
 import Restaurant from "../../../../services/Restaurant.model";
 
 const RestaurantList = () => {
@@ -14,16 +13,11 @@ const RestaurantList = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const getRestaurantsFromCategory = async () => {
-      if(category) {
-        const restaurantsFromCategory: Restaurant[] = await fetchRestaurantsByCategory(category);
-        setRestaurants(restaurantsFromCategory);
+    fetchRestaurantsByCategory(category)
+      .then(restaurants => {
+        setRestaurants(restaurants);
         setLoading(false);
-      }
-    }
-
-    setLoading(true);
-    getRestaurantsFromCategory();
+      });
   }, [category]);
 
   return (

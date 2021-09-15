@@ -1,20 +1,20 @@
-// import { axios } from './Api';
 import axios, { AxiosResponse } from 'axios';
 
 import Category from './Category.model';
 
 export const fetchCategories = async (): Promise<
-Category[]
+  Category[]
 > => {
+  try {
+    const response = await axios.get('/food/restaurant/api/v1/categories', {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
 
-  const response: AxiosResponse = await axios({
-    url: '/food/restaurant/api/v1/categories', 
-    method: 'get', 
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  });
-
-  const AxiosResponse: AxiosResponse<Category[]> = response?.data;
-  return AxiosResponse?.data;
+    return response.data.data as Category[];
+  } catch(err: any) {
+    const errorDomain: Error = err.response.data.error;
+    throw errorDomain;
+  }
 }

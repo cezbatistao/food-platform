@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import queryString from 'query-string';
 import { Location } from 'history';
 
@@ -13,38 +12,41 @@ const RestaurantCategory = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { setCategory } = useContext(CategoryContext);
+  const { category, setCategory } = useContext(CategoryContext);
+
+  const location = useLocation();
 
   useEffect(() => {
-    const getCategories = async () => {
-      const allCategories: Category[] = await fetchCategories();
-      setCategories(allCategories);
-      setLoading(false);
-    }
+    fetchCategories()
+      .then(categories => {
+        setCategories(categories);
+        setLoading(false);
+      });
 
-    setLoading(true);
-    getCategories();
-  }, []);
+    const categoryQueryString = getCategoryFromQueryString(location);
+    setCategory(categoryQueryString);
+  }, [location]);
+
+  const getCategoryFromQueryString = (location: Location<unknown>) => {
+    const parsed = queryString.parse(location.search);
+    return parsed.category ? parsed.category as string : "";
+  }
 
   const handleChangeCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const categorySelectedFromSelect = event.target.value as string;
-    setCategory(categorySelectedFromSelect)
-    // setCategorySelected(categorySelectedFromSelect);
-    // dispatch(getRestaurantsByCategory(categorySelectedFromSelect));
-    // var refresh = `${window.location.protocol}//${window.location.host + window.location.pathname}?category=${categorySelectedFromSelect}`;
-    // window.history.pushState({ path: refresh }, '', refresh);
+    const categorySelected = event.target.value as string;
+    setCategory(categorySelected);
+    var refresh = `${window.location.protocol}//${window.location.host + window.location.pathname}?category=${categorySelected}`;
+    window.history.pushState({ path: refresh }, '', refresh);
   }
 
   return (
     <select 
-      data-test="select_category" 
       className="form-select" 
       aria-label="Selecione uma categoria" 
       onChange={ handleChangeCategory }
-      defaultValue=''
-      // value= { categorySelected }
+      defaultValue={ category }
     >
-      <option value='' disabled selected>Selecione uma categoria</option>
+      <option data-testid="select-option" value="" disabled>Selecione uma categoria</option>
       {!loading && 
         categories.map(category => {
           return (

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 
+import RestaurantItem from '../../components/RestaurantItem/RestaurantItem.component';
 import { fetchRestaurantDetail } from '../../../../services/Restaurant.services';
 import { RestaurantDetail } from '../../../../services/RestaurantDetail.model';
-import RestaurantItem from '../../components/RestaurantItem/RestaurantItem.component';
 
 const Order = () => {
   const { uuid } = useParams<{ uuid: string }>();
@@ -13,18 +13,15 @@ const Order = () => {
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
-    const getRestaurantDetail = async () => {
-      try {
-        let restaurantDetail = await fetchRestaurantDetail(uuid);
+    fetchRestaurantDetail(uuid)
+      .then(restaurantDetail => {
         setRestaurant(restaurantDetail);
-      } catch(err: any) {
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
         setError(true); 
-      }
-
-      setLoading(false);
-    }
-
-    getRestaurantDetail();
+      });
   }, []);
 
   return (

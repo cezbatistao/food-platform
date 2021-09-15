@@ -1,5 +1,5 @@
-// import { axios } from './Api';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
+
 import { showError, showWarning } from './Notification.service';
 import Restaurant from './Restaurant.model';
 

@@ -1,8 +1,8 @@
+import { useState } from "react";
+
 import RestaurantCategory from "../RestaurantCategory/RestaurantCategory.component";
 import RestaurantList from '../RestaurantList/RestaurantList.component';
 import CategoryContext from '../../contexts/RestaurantCategory/RestaurantCategory.context';
-
-import { useState } from "react";
 
 const Main = () => {
 
