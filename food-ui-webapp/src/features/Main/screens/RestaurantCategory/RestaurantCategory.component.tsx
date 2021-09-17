@@ -41,16 +41,18 @@ const RestaurantCategory = () => {
 
   return (
     <select 
+      data-testid="select-option" 
       className="form-select" 
       aria-label="Selecione uma categoria" 
       onChange={ handleChangeCategory }
       defaultValue={ category }
     >
-      <option data-testid="select-option" value="" disabled>Selecione uma categoria</option>
+      <option data-testid="no-category" value="" disabled>Selecione uma categoria</option>
       {!loading && 
         categories.map(category => {
           return (
             <option 
+              data-testid={ category.code } 
               key={ category.uuid } 
               value={ category.code }
             >
