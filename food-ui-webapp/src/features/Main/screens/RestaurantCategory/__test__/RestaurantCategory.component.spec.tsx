@@ -8,15 +8,21 @@ import RestaurantCategory from '../RestaurantCategory.component';
 import Category from '../../../../../services/Category.model';
 import CategoryContext from '../../../contexts/RestaurantCategory/RestaurantCategory.context';
 import categoriesResponseJson from "../../../../../../dependencies/stubby/mocks/response/categories_response.json";
+import Error from '../../../../../services/Error.model';
+import { showWarning } from '../../../../../services/Notification.service';
 
 
 jest.mock('../../../../../services/Category.services');
+jest.mock('../../../../../services/Notification.service');
+
 
 let mockedFetchCategories: any
+let mockedShowWarning: any
 
 beforeEach(() => {
-  jest.clearAllMocks()
-  mockedFetchCategories = mocked(fetchCategories)
+  jest.clearAllMocks();
+  mockedFetchCategories = mocked(fetchCategories);
+  mockedShowWarning = mocked(showWarning);
 });
 
 it('should list category empty list on component', async () => {
@@ -154,4 +160,32 @@ it('should select category and change state selected', async () => {
   expect(brazilianOption.text).toEqual('Brasileira');
   expect(brazilianOption.value).toEqual('brasileira');
   expect(brazilianOption.selected).toBeFalsy();
+});
+
+it('should list category empty list on component2', async () => {
+
+  mockedFetchCategories.mockImplementationOnce(() => Promise.reject(
+    new Error("0001", "Error fetch categories")
+  ));
+
+  mockedShowWarning.mockImplementationOnce((message: string) => {
+    expect(message).toEqual('Error fetch categories');
+  });
+
+  const history = createMemoryHistory();
+
+  render(
+    <Router history={history}>
+      <RestaurantCategory />
+    </Router>
+  );
+
+  const categoriesSelect = await waitFor(() => screen.getByTestId('select-category')) as HTMLSelectElement;
+
+  expect(categoriesSelect.childElementCount).toEqual(1);
+
+  const defaultOption = categoriesSelect.children[0] as HTMLOptionElement;
+  expect(defaultOption.text).toEqual('Selecione uma categoria');
+  expect(defaultOption.value).toEqual('');
+  expect(defaultOption.selected).toBeTruthy();
 });

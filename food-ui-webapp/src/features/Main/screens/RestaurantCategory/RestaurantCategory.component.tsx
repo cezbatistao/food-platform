@@ -6,6 +6,8 @@ import { Location } from 'history';
 import { fetchCategories } from '../../../../services/Category.services';
 import CategoryContext from '../../contexts/RestaurantCategory/RestaurantCategory.context';
 import Category from '../../../../services/Category.model';
+import { showWarning } from '../../../../services/Notification.service';
+import Error from '../../../../services/Error.model';
 
 const RestaurantCategory = () => {
 
@@ -21,6 +23,10 @@ const RestaurantCategory = () => {
       .then(categories => {
         setCategories(categories);
         setLoading(false);
+      })
+      .catch((error: Error) => {
+        setLoading(false);
+        showWarning(error.message);
       });
 
     const categoryQueryString = getCategoryFromQueryString(location);
