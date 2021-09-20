@@ -41,7 +41,7 @@ const RestaurantCategory = () => {
 
   return (
     <select 
-      data-testid="select-option" 
+      data-testid="select-category" 
       className="form-select" 
       aria-label="Selecione uma categoria" 
       onChange={ handleChangeCategory }

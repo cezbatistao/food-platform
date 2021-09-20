@@ -33,7 +33,7 @@ it('should list category empty list on component', async () => {
     </Router>
   );
 
-  const categoriesSelect = await waitFor(() => screen.getByTestId('select-option')) as HTMLSelectElement;
+  const categoriesSelect = await waitFor(() => screen.getByTestId('select-category')) as HTMLSelectElement;
 
   expect(categoriesSelect.childElementCount).toEqual(1);
 
@@ -57,7 +57,7 @@ it('should list category list on component', async () => {
     </Router>
   );
 
-  const categoriesSelect = await waitFor(() => screen.getByTestId('select-option')) as HTMLSelectElement;
+  const categoriesSelect = await waitFor(() => screen.getByTestId('select-category')) as HTMLSelectElement;
 
   expect(categoriesSelect.childElementCount).toEqual(6);
 
@@ -114,14 +114,14 @@ it('should select category and change state selected', async () => {
   );
 
   await waitFor(() => {
-    fireEvent.change(screen.getByTestId('select-option'), { 
+    fireEvent.change(screen.getByTestId('select-category'), { 
       target: { value: 'pizza' } 
     });
 
     expect(categoryState.setCategory).toHaveBeenCalledWith('pizza');
   });
 
-  const categoriesSelect = screen.getByTestId('select-option') as HTMLSelectElement;
+  const categoriesSelect = screen.getByTestId('select-category') as HTMLSelectElement;
 
   expect(categoriesSelect.childElementCount).toEqual(6);
 
