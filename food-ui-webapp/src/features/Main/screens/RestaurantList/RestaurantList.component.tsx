@@ -4,6 +4,7 @@ import RestaurantCard from "../../components/RestaurantCard/RestaurantCard.compo
 import CategoryContext from '../../contexts/RestaurantCategory/RestaurantCategory.context';
 import { fetchRestaurantsByCategory } from "../../../../services/Restaurant.services";
 import Restaurant from "../../../../services/Restaurant.model";
+import { showWarning } from "../../../../services/Notification.service";
 
 const RestaurantList = () => {
 
@@ -17,15 +18,20 @@ const RestaurantList = () => {
       .then(restaurants => {
         setRestaurants(restaurants);
         setLoading(false);
+      })
+      .catch((error: Error) => {
+        setLoading(false);
+        showWarning(error.message);
       });
   }, [category]);
 
   return (
-    <div key="restaurant-list" className="row row-cols-1 row-cols-md-5 g-4">
+    <div data-testid="restaurant-list" key="restaurant-list" className="row row-cols-1 row-cols-md-5 g-4">
       {!loading &&
         restaurants.map(restaurant => {
           return(
             <RestaurantCard 
+              data-testid="restaurant-list2"
               key={ restaurant.uuid } 
               uuid={ restaurant.uuid } 
               name={ restaurant.name } 

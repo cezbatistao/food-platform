@@ -16,14 +16,17 @@ const RestaurantCard = ({uuid, name, logo, description, address}: Props) => {
     history.push(`/order/${uuidRestaurant}`);
   }
 
+  const dataTestId = `restaurant_card_${uuid}`;
+
   return (
     <div 
+      data-testid={dataTestId} 
       key={ uuid } 
       onClick={ () => handleClickCard(uuid) } 
       className="col"
       style={{cursor:'pointer'}} 
     >
-      <div data-test="card_header_restaurant_data" className="card h-100">
+      <div className="card h-100">
         <div className="card-header bg-transparent"><h5>{ name }</h5></div>
         <img src={ logo } className="card-img-top" alt={ name } />
         <div className="card-body">

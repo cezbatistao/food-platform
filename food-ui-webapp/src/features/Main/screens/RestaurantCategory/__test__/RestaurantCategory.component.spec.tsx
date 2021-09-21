@@ -162,7 +162,7 @@ it('should select category and change state selected', async () => {
   expect(brazilianOption.selected).toBeFalsy();
 });
 
-it('should list category empty list on component2', async () => {
+it('should show warning message when fetch get error', async () => {
 
   mockedFetchCategories.mockImplementationOnce(() => Promise.reject(
     new Error("0001", "Error fetch categories")
