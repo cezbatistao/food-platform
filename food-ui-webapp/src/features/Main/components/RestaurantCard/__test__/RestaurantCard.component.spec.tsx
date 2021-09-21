@@ -9,7 +9,7 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-it('should list restaurants empty list on component', async () => {
+it('should show restaurant card', async () => {
 
   const restaurant: Restaurant = restaurantsResponseJson.data[0] as Restaurant;
 
