@@ -23,9 +23,9 @@ it('should show restaurant main page with restaurant filter and restaurant list 
 
   const restaurantMain = await waitFor(() => screen.getByTestId('restaurant-main')) as HTMLDivElement;
   
-  const restaurantCategory = within(restaurantMain).getByTestId('select-category');
+  const restaurantCategory = within(restaurantMain).getAllByTestId('select-category') as HTMLSelectElement[];
   expect(restaurantCategory.length).toBe(1);
 
-  const restaurantList = within(restaurantMain).getByTestId('restaurant-list');
+  const restaurantList = within(restaurantMain).getAllByTestId('restaurant-list') as HTMLDivElement[];
   expect(restaurantList.length).toBe(1);
 });
