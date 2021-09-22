@@ -14,7 +14,8 @@ const RestaurantList = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetchRestaurantsByCategory(category)
+    if(category) {
+      fetchRestaurantsByCategory(category)
       .then(restaurants => {
         setRestaurants(restaurants);
         setLoading(false);
@@ -23,6 +24,7 @@ const RestaurantList = () => {
         setLoading(false);
         showWarning(error.message);
       });
+    }
   }, [category]);
 
   return (
@@ -31,7 +33,7 @@ const RestaurantList = () => {
         restaurants.map(restaurant => {
           return(
             <RestaurantCard 
-              data-testid="restaurant-list2"
+              data-testid="restaurant-card"
               key={ restaurant.uuid } 
               uuid={ restaurant.uuid } 
               name={ restaurant.name } 

@@ -4,7 +4,7 @@ import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 
 import { fetchCategories } from '../../../../../services/Category.services';
-import RestaurantCategory from '../RestaurantCategory.component';
+import RestaurantFilter from '../RestaurantFilter.component';
 import Category from '../../../../../services/Category.model';
 import CategoryContext from '../../../contexts/RestaurantCategory/RestaurantCategory.context';
 import categoriesResponseJson from "../../../../../../dependencies/stubby/mocks/response/categories_response.json";
@@ -35,7 +35,7 @@ it('should list category empty list on component', async () => {
 
   render(
     <Router history={history}>
-      <RestaurantCategory />
+      <RestaurantFilter />
     </Router>
   );
 
@@ -59,7 +59,7 @@ it('should list category list on component', async () => {
 
   render(
     <Router history={history}>
-      <RestaurantCategory />
+      <RestaurantFilter />
     </Router>
   );
 
@@ -114,7 +114,7 @@ it('should select category and change state selected', async () => {
   render(
     <CategoryContext.Provider value={ categoryState }>
       <Router history={history}>
-        <RestaurantCategory />
+        <RestaurantFilter />
       </Router>
     </CategoryContext.Provider>
   );
@@ -176,7 +176,7 @@ it('should show warning message when fetch get error', async () => {
 
   render(
     <Router history={history}>
-      <RestaurantCategory />
+      <RestaurantFilter />
     </Router>
   );
 

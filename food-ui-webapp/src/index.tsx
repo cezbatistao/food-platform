@@ -10,7 +10,7 @@ import App from './App';
 import Info from './components/Info/Info';
 import Health from './components/Health/Health';
 
-import Main from './features/Main/screens/Main/Main.component';
+import RestaurantMain from './features/SearchRestaurant/screens/RestaurantMain/RestaurantMain.component';
 import Order from './features/Order/screens/Order/Order.component';
 
 ReactDOM.render(
@@ -18,7 +18,7 @@ ReactDOM.render(
     <App>
       <Switch>
         <Route exact path="/" render={() => (<Redirect to="/home" />)} />
-        <Route exact path="/home" component={Main} />
+        <Route exact path="/home" component={RestaurantMain} />
         <Route exact path="/order/:uuid" component={Order} />
       </Switch>
     </App>

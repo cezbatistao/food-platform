@@ -9,7 +9,7 @@ import Category from '../../../../services/Category.model';
 import { showWarning } from '../../../../services/Notification.service';
 import Error from '../../../../services/Error.model';
 
-const RestaurantCategory = () => {
+const RestaurantFilter = () => {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -71,4 +71,4 @@ const RestaurantCategory = () => {
   );
 }
 
-export default RestaurantCategory;
+export default RestaurantFilter;
