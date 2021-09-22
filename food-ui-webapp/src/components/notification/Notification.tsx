@@ -1,4 +1,5 @@
 import ReactNotification from 'react-notifications-component';
+
 import './Notification.scss';
 
 const Notification = () => {

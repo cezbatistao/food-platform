@@ -5,29 +5,27 @@ import {
   Switch, 
   Redirect
 } from 'react-router-dom';
-import { Provider } from 'react-redux'
 
 import App from './App';
-import Main from './components/main/Main';
-import RestaurantOrder from './components/restaurant/order/RestaurantOrder';
-import Info from './components/info/Info';
-import Health from './components/health/Health';
+import Info from './components/Info/Info';
+import Health from './components/Health/Health';
 
-import { store } from './gateway'
+import RestaurantMain from './features/SearchRestaurant/screens/RestaurantMain/RestaurantMain.component';
+import Order from './features/Order/screens/Order/Order.component';
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router forceRefresh={true}>
-      <App>
-        <Switch>
-          <Route exact path="/" render={() => (<Redirect to="/home" />)} />
-          <Route exact path="/home" component={Main} />
-          <Route exact path="/order/:uuid" component={RestaurantOrder} />
-          <Route exact path="/info" component={Info} />
-          <Route exact path="/health" component={Health} />
-        </Switch>
-      </App>
-    </Router>
-  </Provider>,
+  <Router forceRefresh={true}>
+    <App>
+      <Switch>
+        <Route exact path="/" render={() => (<Redirect to="/home" />)} />
+        <Route exact path="/home" component={RestaurantMain} />
+        <Route exact path="/order/:uuid" component={Order} />
+      </Switch>
+    </App>
+    <Switch>
+      <Route exact path="/info" component={Info} />
+      <Route exact path="/health" component={Health} />
+    </Switch>
+  </Router>,
   document.getElementById('root')
 );
