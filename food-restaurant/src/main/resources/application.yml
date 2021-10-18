@@ -36,3 +36,10 @@ spring:
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
+
+springdoc:
+  apiDocs:
+    path: /api-docs
+  swaggerUi:
+    displayRequestDuration: true
+    disableSwaggerDefaultUrl: true

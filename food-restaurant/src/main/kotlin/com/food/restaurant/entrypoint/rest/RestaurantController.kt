@@ -9,9 +9,9 @@ import com.food.restaurant.entrypoint.rest.json.RestaurantDetailResponse
 import com.food.restaurant.entrypoint.rest.json.RestaurantResponse
 import com.food.restaurant.usecase.FindRestaurantsByCategory
 import com.food.restaurant.usecase.GetRestaurantDetail
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+//import io.swagger.annotations.ApiOperation
+//import io.swagger.annotations.ApiResponse
+//import io.swagger.annotations.ApiResponses
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -31,13 +31,13 @@ class RestaurantController(
         private val getRestaurantDetail: GetRestaurantDetail
 ) {
 
-    @ApiOperation(value = "Get list of restaurants from a category")
-    @ApiResponses(value = arrayOf(
-            ApiResponse(code = 200, message = "List of restaurants from a category"),
-            ApiResponse(code = 400, message = "Empty or null category"),
-            ApiResponse(code = 404, message = "Category don't exists"),
-            ApiResponse(code = 500, message = "Internal server error")
-    ))
+//    @ApiOperation(value = "Get list of restaurants from a category")
+//    @ApiResponses(value = arrayOf(
+//            ApiResponse(code = 200, message = "List of restaurants from a category"),
+//            ApiResponse(code = 400, message = "Empty or null category"),
+//            ApiResponse(code = 404, message = "Category don't exists"),
+//            ApiResponse(code = 500, message = "Internal server error")
+//    ))
     @GetMapping(
             path = arrayOf("/v1/restaurants"),
             produces = arrayOf(APPLICATION_JSON_VALUE)
@@ -65,13 +65,13 @@ class RestaurantController(
         return ResponseEntity.ok().body(DataResponse(restaurantResponse));
     }
 
-    @ApiOperation(value = "Get list of restaurants from a category")
-    @ApiResponses(value = arrayOf(
-            ApiResponse(code = 200, message = "Restaurant detail"),
-            ApiResponse(code = 400, message = "Invalid UUID"),
-            ApiResponse(code = 404, message = "Restaurant don't exists"),
-            ApiResponse(code = 500, message = "Internal server error")
-    ))
+//    @ApiOperation(value = "Get list of restaurants from a category")
+//    @ApiResponses(value = arrayOf(
+//            ApiResponse(code = 200, message = "Restaurant detail"),
+//            ApiResponse(code = 400, message = "Invalid UUID"),
+//            ApiResponse(code = 404, message = "Restaurant don't exists"),
+//            ApiResponse(code = 500, message = "Internal server error")
+//    ))
     @GetMapping(
             path = arrayOf("/v1/restaurants/{uuid}"),
             produces = arrayOf(APPLICATION_JSON_VALUE)

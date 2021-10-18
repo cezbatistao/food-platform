@@ -31,7 +31,7 @@ val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] =
 extra["springCloudVersion"] = "2020.0.2"
 extra["testcontainersVersion"] = "1.15.2"
 extra["sfmSpringjdbcVersion"] = "8.2.3"
-extra["springfoxVersion"] = "3.0.0"
+extra["springdocOpenapiUiVersion"] = "1.5.11"
 extra["springmockkVersion"] = "3.0.1"
 extra["mockitoKotlinVersion"] = "2.2.0"
 extra["fixtureFactoryVersion"] = "3.1.0"
@@ -74,8 +74,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-undertow")
 	implementation("org.simpleflatmapper:sfm-springjdbc:${property("sfmSpringjdbcVersion")}")
-	implementation("io.springfox:springfox-swagger2:${property("springfoxVersion")}")
-	implementation("io.springfox:springfox-swagger-ui:${property("springfoxVersion")}")
+	implementation("org.springdoc:springdoc-openapi-ui:${property("springdocOpenapiUiVersion")}")
+	implementation("org.springdoc:springdoc-openapi-kotlin:${property("springdocOpenapiUiVersion")}")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")

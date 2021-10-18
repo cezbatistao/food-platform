@@ -44,7 +44,7 @@ docker-compose down
 ```
 ./gradlew bootRun
 ```
-Open [`http://localhost:8181/swagger-ui/`](http://localhost:8181/swagger-ui/) to use endpoints from application
+Open [`http://localhost:8181/swagger-ui.html`](http://localhost:8181/swagger-ui.html) to use endpoints from application
 
 * default port restaurant app is `8181`
 

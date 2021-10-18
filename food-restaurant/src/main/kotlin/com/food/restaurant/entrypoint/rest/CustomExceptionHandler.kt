@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.ResponseStatus
 import javax.validation.ConstraintViolation
 import javax.validation.ConstraintViolationException
 
@@ -18,6 +19,7 @@ import javax.validation.ConstraintViolationException
 @ControllerAdvice
 class CustomExceptionHandler {
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException::class)
     @ResponseBody
     fun processException(ex: ConstraintViolationException): ResponseEntity<ErrorResponse> {
@@ -30,6 +32,7 @@ class CustomExceptionHandler {
         return this.buildErrorReponse(HttpStatus.BAD_REQUEST, "0001", "Parameter ${propertyName} ${message}")
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException::class)
     @ResponseBody
     fun processException(ex: EntityNotFoundException): ResponseEntity<ErrorResponse> {
@@ -37,6 +40,7 @@ class CustomExceptionHandler {
         return this.buildErrorReponse(HttpStatus.NOT_FOUND, ex.code, ex.message!!)
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception::class)
     @ResponseBody
     fun processException(ex: Exception): ResponseEntity<ErrorResponse> {
