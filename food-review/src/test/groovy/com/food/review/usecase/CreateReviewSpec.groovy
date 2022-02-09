@@ -46,7 +46,11 @@ class CreateReviewSpec extends UnitSpec {
                 .build()
 
         def fieldErrorsFixture = fieldErrors.collect {
-            this.fixture.giveMeOne(FieldError.class, it)
+            def fieldError = this.fixture.giveMeOne(FieldError.class, it)
+            if(fieldError.field == 'createdAt' && fieldError.messageTemplate.contains('PastOrPresent' )) { // I did this because of the seconds and milliseconds of createAt and invalidValue
+                fieldError = fieldError.toBuilder().invalidValue(createdAt).build()
+            }
+            fieldError
         }
 
         0 * orderGateway.getById(_)

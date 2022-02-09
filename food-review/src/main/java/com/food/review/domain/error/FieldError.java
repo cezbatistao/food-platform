@@ -17,7 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-@EqualsAndHashCode(exclude = "invalidValue")
+@EqualsAndHashCode
 public class FieldError implements Serializable {
 
     private static final long serialVersionUID = 750224378466802420L;
