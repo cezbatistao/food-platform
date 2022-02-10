@@ -7,12 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Singular;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -22,16 +19,11 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString(exclude = {"id"})
 @EqualsAndHashCode
-public class Order implements Serializable {
+public class Restaurant implements Serializable {
 
-    private static final long serialVersionUID = 4617741190503642139L;
+    private static final long serialVersionUID = 2941200712678646389L;
 
     private UUID id;
-    private Restaurant restaurant;
-
-    @Singular
-    private List<OrderItem> orderItems;
-
-    private BigDecimal total;
+    private String name;
 
 }

@@ -6,6 +6,8 @@ import com.food.review.domain.error.FieldError
 import com.food.review.gateway.OrderGateway
 import com.food.review.gateway.ReviewGateway
 import com.food.review.lang.UnitSpec
+import com.food.review.lang.customizer.OrderArbitraryCustomizer
+import com.food.review.usecase.exception.OrderNotFoundException
 import com.food.review.usecase.exception.ValidationException
 import spock.lang.Unroll
 
@@ -14,9 +16,16 @@ import javax.validation.Validator
 import javax.validation.ValidatorFactory
 import java.time.LocalDateTime
 
-import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.*
-import static com.food.review.lang.customizer.ReviewArbitraryCustomizer.reviewSaved
-import static com.food.review.lang.customizer.ReviewArbitraryCustomizer.reviewToSave
+import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.getFieldErrorFromCreatedAtNotNull
+import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.getFieldErrorFromCreatedAtPastOrPresent
+import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.getFieldErrorFromNameNotBlank
+import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.getFieldErrorFromOrderIdNotNull
+import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.getFieldErrorFromTextMin
+import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.getFieldErrorFromTextNotBlank
+import static com.food.review.lang.customizer.FieldErrorArbitraryCustomizer.getFieldErrorFromUsername
+import static com.food.review.lang.customizer.OrderArbitraryCustomizer.orderFixture
+import static com.food.review.lang.customizer.ReviewArbitraryCustomizer.reviewToSaveFixture
+import static com.food.review.lang.customizer.ReviewArbitraryCustomizer.reviewSavedFixture
 
 class CreateReviewSpec extends UnitSpec {
 
@@ -61,7 +70,8 @@ class CreateReviewSpec extends UnitSpec {
 
         then:
         def error = thrown(ValidationException)
-        error.message == "error.validationFields"
+        error.code == "error.validation_fields"
+        error.message == "Error on validation fields"
         error.fieldErrors.size() == totalErrors
         error.fieldErrors.every { fieldErrorsFixture.contains(it) }
 
@@ -71,12 +81,32 @@ class CreateReviewSpec extends UnitSpec {
         UUID.randomUUID() | "cezb"   | "Carlos Eduardo" | "Texto" | LocalDateTime.now().plusDays(1) | 2           | [fieldErrorFromTextMin, fieldErrorFromCreatedAtPastOrPresent]
     }
 
+    def "should be a order not found exception when order doesn't exists"() {
+        given:
+        Review reviewToSaveFixture = this.fixture.giveMeOne(Review.class, reviewToSaveFixture)
+
+        1 * orderGateway.getById(reviewToSaveFixture.getOrderId()) >> {UUID uuid ->
+            throw new OrderNotFoundException(reviewToSaveFixture.getOrderId(), "error.order_not_found", "Error on find order")
+        }
+        0 * reviewGateway.create(_)
+
+        when:
+        createReview.execute(reviewToSaveFixture)
+
+        then:
+        def error = thrown(OrderNotFoundException)
+        error.orderId == reviewToSaveFixture.getOrderId()
+        error.code == "error.order_not_found"
+        error.message == "Error on find order"
+    }
+
     def "should be a valid and saved review"() {
         given:
-        Review reviewToSaveFixture = this.fixture.giveMeOne(Review.class, reviewToSave)
-        Review reviewSavedFixture = this.fixture.giveMeOne(Review.class, reviewSaved)
+        Review reviewToSaveFixture = this.fixture.giveMeOne(Review.class, reviewToSaveFixture)
+        Review reviewSavedFixture = this.fixture.giveMeOne(Review.class, reviewSavedFixture)
+        Order orderFixture = this.fixture.giveMeOne(Order.class, orderFixture)
 
-        1 * orderGateway.getById(reviewToSaveFixture.getOrderId()) >> new Order()
+        1 * orderGateway.getById(reviewToSaveFixture.getOrderId()) >> orderFixture
         1 * reviewGateway.create(reviewToSaveFixture) >> reviewSavedFixture
 
         when:

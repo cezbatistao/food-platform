@@ -38,7 +38,7 @@ public class CreateReview {
 
             log.info("Validation error. Reason: {}", errors);
 
-            throw new ValidationException("error.validationFields", errors);
+            throw new ValidationException("error.validation_fields", "Error on validation fields", errors);
         }
 
         Order order = this.orderGateway.getById(review.getOrderId());

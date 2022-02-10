@@ -15,7 +15,7 @@ class ReviewArbitraryCustomizer {
                     "cursus auctor imperdiet mauris convallis vel nunc.")
             .createdAt(LocalDateTime.of(2022, 2, 7, 20, 21, 45));
 
-    static ArbitraryCustomizer<Review> reviewToSave = new ArbitraryCustomizer<Review>() {
+    static ArbitraryCustomizer<Review> reviewToSaveFixture = new ArbitraryCustomizer<Review>() {
         @Override
         Review customizeFixture(Review review) {
             return DEFAULT_REVIEW
@@ -23,7 +23,7 @@ class ReviewArbitraryCustomizer {
         }
     }
 
-    static ArbitraryCustomizer<Review> reviewSaved = new ArbitraryCustomizer<Review>() {
+    static ArbitraryCustomizer<Review> reviewSavedFixture = new ArbitraryCustomizer<Review>() {
         @Override
         Review customizeFixture(Review review) {
             return DEFAULT_REVIEW
