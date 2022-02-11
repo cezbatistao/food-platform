@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: ${spring.data.mongodb.ct.uri.container}
+
