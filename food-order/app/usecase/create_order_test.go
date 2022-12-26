@@ -3,12 +3,12 @@ package usecase
 import (
     "context"
     "database/sql"
-
     "errors"
+
     "github.com/cezbatistao/food-platform/food-order/app/domain"
     "github.com/cezbatistao/food-platform/food-order/app/gateway/mock"
     "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
-    "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
+    transactionMock "github.com/cezbatistao/food-platform/food-order/pkg/transaction/mock"
     "github.com/google/uuid"
     "testing"
 
@@ -23,7 +23,7 @@ func TestCreateOrderErrorWhenRestaurantGatewayRiseErr(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
-    transaction          := transaction.NewTransactionMock()
+    transaction          := transactionMock.NewTransactionMock()
 
     createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
 
@@ -62,7 +62,7 @@ func TestCreateOrderErrorWhenRestaurantNotFound(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
-    transaction          := transaction.NewTransactionMock()
+    transaction          := transactionMock.NewTransactionMock()
 
     createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
 
@@ -104,7 +104,7 @@ func TestCreateOrderErrorWhenSaveOrder(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
-    transaction          := transaction.NewTransactionMock()
+    transaction          := transactionMock.NewTransactionMock()
 
     createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
 
@@ -146,7 +146,7 @@ func TestCreateOrderSuccess(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
-    transaction          := transaction.NewTransactionMock()
+    transaction          := transactionMock.NewTransactionMock()
 
     createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
 

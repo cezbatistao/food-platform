@@ -4,12 +4,13 @@ import (
     "context"
     "database/sql"
     "fmt"
+
     "github.com/google/wire"
 )
 
 var (
     TransactionProviderSet = wire.NewSet(
-        wire.Bind(new(Transaction), new(*transactionDb)),
+        wire.Bind(new(Transaction), new(*transactionImpl)),
         NewTransaction,
     )
 )
@@ -21,15 +22,15 @@ type Transaction interface {
     ) error
 }
 
-type transactionDb struct {
+type transactionImpl struct {
     db *sql.DB
 }
 
-func NewTransaction(db *sql.DB) *transactionDb {
-    return &transactionDb{db: db}
+func NewTransaction(db *sql.DB) *transactionImpl {
+    return &transactionImpl{db: db}
 }
 
-func (t *transactionDb) WithTransaction(
+func (t *transactionImpl) WithTransaction(
     ctx context.Context,
     fn func(ctx context.Context, tx *sql.Tx) error,
 ) (err error) {
@@ -53,25 +54,5 @@ func (t *transactionDb) WithTransaction(
     }()
 
     err = fn(ctx, tx)
-    return
-}
-
-
-
-
-
-// TODO find another place to store this code!
-type transactionMock struct {
-}
-
-func NewTransactionMock() *transactionMock {
-    return &transactionMock{}
-}
-
-func (t *transactionMock) WithTransaction(
-    ctx context.Context,
-    fn func(ctx context.Context, tx *sql.Tx) error,
-) (err error) {
-    err = fn(ctx, nil)
     return
 }

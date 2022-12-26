@@ -5,16 +5,17 @@ import (
     "database/sql"
     "errors"
     "fmt"
-    "github.com/cezbatistao/food-platform/food-order/app/domain"
-    "github.com/cezbatistao/food-platform/food-order/app/gateway/mock"
-    "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
-    "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
-    "github.com/google/uuid"
-    "github.com/stretchr/testify/assert"
     "testing"
     "time"
 
+    "github.com/cezbatistao/food-platform/food-order/app/domain"
+    "github.com/cezbatistao/food-platform/food-order/app/gateway/mock"
+    "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
+    transactionMock "github.com/cezbatistao/food-platform/food-order/pkg/transaction/mock"
+
     "github.com/golang/mock/gomock"
+    "github.com/google/uuid"
+    "github.com/stretchr/testify/assert"
 )
 
 func TestProcessOrderPaymentErrorWhenOrderGatewayRiseErr(t *testing.T) {
@@ -23,7 +24,7 @@ func TestProcessOrderPaymentErrorWhenOrderGatewayRiseErr(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
-    transactionFake      := transaction.NewTransactionMock()
+    transactionFake      := transactionMock.NewTransactionMock()
 
     processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
 
@@ -54,7 +55,7 @@ func TestProcessOrderPaymentErrorWhenOrderNotFound(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
-    transactionFake      := transaction.NewTransactionMock()
+    transactionFake      := transactionMock.NewTransactionMock()
 
     processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
 
@@ -87,7 +88,7 @@ func TestProcessOrderPaymentErrorWhenOrderStatusDiffCreated(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
-    transactionFake      := transaction.NewTransactionMock()
+    transactionFake      := transactionMock.NewTransactionMock()
 
     processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
 
@@ -129,7 +130,7 @@ func TestProcessOrderPaymentPaidWhenErrorOrderGatewayUpdate(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
-    transactionFake      := transaction.NewTransactionMock()
+    transactionFake      := transactionMock.NewTransactionMock()
 
     processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
 
@@ -171,7 +172,7 @@ func TestProcessOrderPaymentPaidWhenErrorOrderSendGatewayUpdate(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
-    transactionFake      := transaction.NewTransactionMock()
+    transactionFake      := transactionMock.NewTransactionMock()
 
     processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
 
@@ -216,7 +217,7 @@ func TestProcessOrderPaymentPaidSuccess(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
-    transactionFake      := transaction.NewTransactionMock()
+    transactionFake      := transactionMock.NewTransactionMock()
 
     processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
 
@@ -293,7 +294,7 @@ func TestProcessOrderPaymentRefusedSuccess(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
-    transactionFake      := transaction.NewTransactionMock()
+    transactionFake      := transactionMock.NewTransactionMock()
 
     ctx := context.Background()
 
