@@ -1,6 +1,7 @@
 package usecase
 
 import (
+    "context"
     "errors"
     "github.com/cezbatistao/food-platform/food-order/app/domain"
     "github.com/cezbatistao/food-platform/food-order/app/gateway/mock"
@@ -21,13 +22,15 @@ func TestGetOrderByUuidErrorErrorWhenOrderGatewayRiseErr(t *testing.T) {
 
     getOrderByUuid := NewGetOrderByUuid(orderGatewayMock)
 
+    ctx := context.Background()
+
     var errOrderGateway = errors.New("unexpected error at order gateway")
 
     orderUuid := uuid.New()
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(nil, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(nil, errOrderGateway)
 
-    orderReturned, err := getOrderByUuid.Execute(&orderUuid)
+    orderReturned, err := getOrderByUuid.Execute(ctx, &orderUuid)
 
     assert.Nil(t, orderReturned)
 
@@ -41,15 +44,17 @@ func TestGetOrderByUuidErrorWhenOrderNotFound(t *testing.T) {
 
     orderGatewayMock := mock.NewMockOrderGateway(controller)
 
+    ctx := context.Background()
+
     getOrderByUuid := NewGetOrderByUuid(orderGatewayMock)
 
     var errOrderGateway error
 
     orderUuid := uuid.New()
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(nil, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(nil, errOrderGateway)
 
-    orderReturned, err := getOrderByUuid.Execute(&orderUuid)
+    orderReturned, err := getOrderByUuid.Execute(ctx, &orderUuid)
 
     orderNotFoundError := exceptions.OrderNotFoundError{OrderUuid: orderUuid}
 
@@ -67,6 +72,8 @@ func TestGetOrderByUuidSuccess(t *testing.T) {
 
     getOrderByUuid := NewGetOrderByUuid(orderGatewayMock)
 
+    ctx := context.Background()
+
     var errOrderGateway error
 
     orderUuid := uuid.New()
@@ -82,9 +89,9 @@ func TestGetOrderByUuidSuccess(t *testing.T) {
         DateCreated: time.Now(), DateUpdated: time.Now(),
     }
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(&order, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, errOrderGateway)
 
-    orderReturned, err := getOrderByUuid.Execute(&orderUuid)
+    orderReturned, err := getOrderByUuid.Execute(ctx, &orderUuid)
 
     assert.NotNil(t, orderReturned)
     assert.Nil(t, err)

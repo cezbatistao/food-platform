@@ -1,11 +1,14 @@
 package usecase
 
 import (
+    "context"
+    "database/sql"
     "errors"
     "fmt"
     "github.com/cezbatistao/food-platform/food-order/app/domain"
     "github.com/cezbatistao/food-platform/food-order/app/gateway/mock"
     "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
+    "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
     "github.com/google/uuid"
     "github.com/stretchr/testify/assert"
     "testing"
@@ -20,23 +23,26 @@ func TestProcessOrderPaymentErrorWhenOrderGatewayRiseErr(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
+    transactionFake      := transaction.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock)
+    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+
+    ctx := context.Background()
 
     transactionId := "1233211235"
     orderUuid := uuid.New()
 
     var errOrderGateway = errors.New("unexpected error at order gateway")
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(nil, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(ctx, &orderUuid).Return(nil, errOrderGateway)
 
-    orderGatewayMock.EXPECT().Update(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
     paymentOrder := domain.PaymentOrder{Status: domain.PAID, TransactionId: transactionId}
 
-    err := processOrderPayment.Execute(&orderUuid, &paymentOrder)
+    err := processOrderPayment.Execute(ctx, &orderUuid, &paymentOrder)
 
     assert.Error(t, err)
     assert.Contains(t, err.Error(), errOrderGateway.Error())
@@ -48,23 +54,26 @@ func TestProcessOrderPaymentErrorWhenOrderNotFound(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
+    transactionFake      := transaction.NewTransactionMock()
+
+    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+
+    ctx := context.Background()
 
     transactionId := "1233211235"
     orderUuid := uuid.New()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock)
-
     var errOrderGateway error
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(nil, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(nil, errOrderGateway)
 
-    orderGatewayMock.EXPECT().Update(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
     paymentOrder := domain.PaymentOrder{Status: domain.PAID, TransactionId: transactionId}
 
-    err := processOrderPayment.Execute(&orderUuid, &paymentOrder)
+    err := processOrderPayment.Execute(ctx, &orderUuid, &paymentOrder)
 
     orderNotFoundError := exceptions.OrderNotFoundError{OrderUuid: orderUuid}
 
@@ -78,8 +87,11 @@ func TestProcessOrderPaymentErrorWhenOrderStatusDiffCreated(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
+    transactionFake      := transaction.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock)
+    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+
+    ctx := context.Background()
 
     orderItems := []domain.OrderItem{
         {Id: 1, Uuid: uuid.New(), MenuItemUuid: uuid.New(), Name: "Pepperoni", Amount: 1, UnitValue: 33.99},
@@ -97,15 +109,15 @@ func TestProcessOrderPaymentErrorWhenOrderStatusDiffCreated(t *testing.T) {
         DateCreated: time.Now(), DateUpdated: time.Now(),
     }
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(&order, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, errOrderGateway)
 
-    orderGatewayMock.EXPECT().Update(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
     paymentOrder := domain.PaymentOrder{Status: domain.PAID, TransactionId: transactionId}
 
-    err := processOrderPayment.Execute(&orderUuid, &paymentOrder)
+    err := processOrderPayment.Execute(ctx, &orderUuid, &paymentOrder)
 
     assert.Error(t, err)
     assert.Contains(t, err.Error(), errStatusDiffCreated.Error())
@@ -117,8 +129,11 @@ func TestProcessOrderPaymentPaidWhenErrorOrderGatewayUpdate(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
+    transactionFake      := transaction.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock)
+    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+
+    ctx := context.Background()
 
     orderItems := []domain.OrderItem{
         {Id: 1, Uuid: uuid.New(), MenuItemUuid: uuid.New(), Name: "Pepperoni", Amount: 1, UnitValue: 33.99},
@@ -135,16 +150,16 @@ func TestProcessOrderPaymentPaidWhenErrorOrderGatewayUpdate(t *testing.T) {
         DateCreated: time.Now(), DateUpdated: time.Now(),
     }
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(&order, nil)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, nil)
 
-    orderGatewayMock.EXPECT().Update(gomock.Any()).Times(1).Return(nil, errOrderGateway)
+    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Return(nil, errOrderGateway)
 
-    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
     paymentOrder := domain.PaymentOrder{Status: domain.PAID, TransactionId: transactionId}
 
-    err := processOrderPayment.Execute(&orderUuid, &paymentOrder)
+    err := processOrderPayment.Execute(ctx, &orderUuid, &paymentOrder)
 
     assert.Error(t, err)
     assert.Contains(t, err.Error(), errOrderGateway.Error())
@@ -156,8 +171,11 @@ func TestProcessOrderPaymentPaidWhenErrorOrderSendGatewayUpdate(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
+    transactionFake      := transaction.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock)
+    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+
+    ctx := context.Background()
 
     orderItems := []domain.OrderItem{
         {Id: 1, Uuid: uuid.New(), MenuItemUuid: uuid.New(), Name: "Pepperoni", Amount: 1, UnitValue: 33.99},
@@ -175,18 +193,18 @@ func TestProcessOrderPaymentPaidWhenErrorOrderSendGatewayUpdate(t *testing.T) {
         DateCreated: time.Now(), DateUpdated: time.Now(),
     }
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(&order, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, errOrderGateway)
 
     var orderToReturn = new(domain.Order)
     orderToReturn.Status = domain.PROCESSING
-    orderGatewayMock.EXPECT().Update(gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
+    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
 
-    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any()).Times(1).Return(errOrderSendGatewayMock)
-    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(1).Return(errOrderSendGatewayMock)
+    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
     paymentOrder := domain.PaymentOrder{Status: domain.PAID, TransactionId: transactionId}
 
-    err := processOrderPayment.Execute(&orderUuid, &paymentOrder)
+    err := processOrderPayment.Execute(ctx, &orderUuid, &paymentOrder)
 
     assert.Error(t, err)
     assert.Contains(t, err.Error(), errOrderSendGatewayMock.Error())
@@ -198,8 +216,11 @@ func TestProcessOrderPaymentPaidSuccess(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
+    transactionFake      := transaction.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock)
+    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+
+    ctx := context.Background()
 
     orderItems := []domain.OrderItem{
         {Id: 1, Uuid: uuid.New(), MenuItemUuid: uuid.New(), Name: "Pepperoni", Amount: 1, UnitValue: 33.99},
@@ -219,22 +240,22 @@ func TestProcessOrderPaymentPaidSuccess(t *testing.T) {
     pizzaPepperoniItem := findOrderItemByName(orderItems, "Pepperoni")
     pizzaMozzarellaItem := findOrderItemByName(orderItems, "Mussarela")
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(&order, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, errOrderGateway)
 
     var orderArgumentCaptor *domain.Order
     var orderToReturn = new(domain.Order)
     orderToReturn.Status = domain.PROCESSING
 
-    orderGatewayMock.EXPECT().Update(gomock.Any()).Times(1).Do(func (orderParameter *domain.Order) {
+    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Do(func (ctx context.Context, tx *sql.Tx, orderParameter *domain.Order) {
         orderArgumentCaptor = orderParameter
     }).Return(orderToReturn, errOrderGateway)
 
-    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any()).Times(1)
-    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(1)
+    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
     paymentOrder := domain.PaymentOrder{Status: domain.PAID, TransactionId: transactionId}
 
-    err := processOrderPayment.Execute(&orderUuid, &paymentOrder)
+    err := processOrderPayment.Execute(ctx, &orderUuid, &paymentOrder)
 
     assert.Nil(t, err)
 
@@ -272,8 +293,11 @@ func TestProcessOrderPaymentRefusedSuccess(t *testing.T) {
 
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
+    transactionFake      := transaction.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock)
+    ctx := context.Background()
+
+    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
 
     orderItems := []domain.OrderItem{
         {Id: 1, Uuid: uuid.New(), MenuItemUuid: uuid.New(), Name: "Pepperoni", Amount: 1, UnitValue: 33.99},
@@ -293,22 +317,22 @@ func TestProcessOrderPaymentRefusedSuccess(t *testing.T) {
         DateCreated: time.Now(), DateUpdated: time.Now(),
     }
 
-    orderGatewayMock.EXPECT().GetByUuid(&orderUuid).Return(&order, errOrderGateway)
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, errOrderGateway)
 
     var orderArgumentCaptor *domain.Order
     var orderToReturn = new(domain.Order)
     orderToReturn.Status = domain.CANCELLED
 
-    orderGatewayMock.EXPECT().Update(gomock.Any()).Times(1).Do(func (orderParameter *domain.Order) {
+    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Do(func (ctx context.Context, tx *sql.Tx, orderParameter *domain.Order) {
         orderArgumentCaptor = orderParameter
     }).Return(orderToReturn, errOrderGateway)
 
-    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any()).Times(1)
+    orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(1)
 
     paymentOrder := domain.PaymentOrder{Status: domain.REFUSED, TransactionId: transactionId}
 
-    err := processOrderPayment.Execute(&orderUuid, &paymentOrder)
+    err := processOrderPayment.Execute(ctx, &orderUuid, &paymentOrder)
 
     assert.Nil(t, err)
 

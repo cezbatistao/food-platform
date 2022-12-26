@@ -1,10 +1,14 @@
 package usecase
 
 import (
+    "context"
+    "database/sql"
+
     "errors"
     "github.com/cezbatistao/food-platform/food-order/app/domain"
     "github.com/cezbatistao/food-platform/food-order/app/gateway/mock"
     "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
+    "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
     "github.com/google/uuid"
     "testing"
 
@@ -19,8 +23,11 @@ func TestCreateOrderErrorWhenRestaurantGatewayRiseErr(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
+    transaction          := transaction.NewTransactionMock()
 
-    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock)
+    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
+
+    ctx := context.Background()
 
     restaurantDetail, menuItems := buildRestaurantDetail()
     pizzaPepperoniItem := findMenuItemByName(menuItems, "Pepperoni")
@@ -36,14 +43,13 @@ func TestCreateOrderErrorWhenRestaurantGatewayRiseErr(t *testing.T) {
     restaurantGateayMock.EXPECT().GetDetailByUuid(
         restaurantUuid, menuItemsUuid).Return(
             nil, errRestaurantGateway)
-
-    orderGatewayMock.EXPECT().Save(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any(), gomock.Any()).Times(0)
 
     solicitationOrder := buildSolicitationOfOrder(restaurantUuid, userUuid,
         map[domain.MenuItem]int{ *pizzaPepperoniItem: 1, *pizzaMozzarellaItem: 2 })
 
-    _, err := createOrder.Execute(solicitationOrder)
+    _, err := createOrder.Execute(ctx, solicitationOrder)
 
     assert.Error(t, err)
     assert.Contains(t, err.Error(), errRestaurantGateway.Error())
@@ -56,8 +62,11 @@ func TestCreateOrderErrorWhenRestaurantNotFound(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
+    transaction          := transaction.NewTransactionMock()
 
-    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock)
+    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
+
+    ctx := context.Background()
 
     restaurantDetail, menuItems := buildRestaurantDetail()
     pizzaPepperoniItem := findMenuItemByName(menuItems, "Pepperoni")
@@ -74,13 +83,13 @@ func TestCreateOrderErrorWhenRestaurantNotFound(t *testing.T) {
         restaurantUuid, menuItemsUuid).Return(
             nil, errRestaurantGateway)
 
-    orderGatewayMock.EXPECT().Save(gomock.Any()).Times(0)
-    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any(), gomock.Any()).Times(0)
 
     solicitationOrder := buildSolicitationOfOrder(restaurantUuid, userUuid,
         map[domain.MenuItem]int{ *pizzaPepperoniItem: 1, *pizzaMozzarellaItem: 2 })
 
-    _, err := createOrder.Execute(solicitationOrder)
+    _, err := createOrder.Execute(ctx, solicitationOrder)
 
     restaurantNotFoundErrorExpected := exceptions.RestaurantNotFoundError{RestaurantUuid: restaurantUuid}
 
@@ -95,11 +104,14 @@ func TestCreateOrderErrorWhenSaveOrder(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
+    transaction          := transaction.NewTransactionMock()
 
-    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock)
+    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
+
+    ctx := context.Background()
 
     restaurantDetail, menuItems := buildRestaurantDetail()
-    pizzaPepperoniItem := findMenuItemByName(menuItems, "Pepperoni")
+    pizzaPepperoniItem  := findMenuItemByName(menuItems, "Pepperoni")
     pizzaMozzarellaItem := findMenuItemByName(menuItems, "Mussarela")
 
     var errRestaurantGateway error
@@ -114,14 +126,14 @@ func TestCreateOrderErrorWhenSaveOrder(t *testing.T) {
             &restaurantDetail, errRestaurantGateway)
 
     var orderToReturn = new(domain.Order)
-    orderGatewayMock.EXPECT().Save(gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
+    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
 
-    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any()).Times(0)
+    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any(), gomock.Any()).Times(0)
 
     solicitationOrder := buildSolicitationOfOrder(restaurantUuid, userUuid,
         map[domain.MenuItem]int{ *pizzaPepperoniItem: 1, *pizzaMozzarellaItem: 2 })
 
-    _, err := createOrder.Execute(solicitationOrder)
+    _, err := createOrder.Execute(ctx, solicitationOrder)
 
     assert.Error(t, err)
     assert.Contains(t, err.Error(), errOrderGateway.Error())
@@ -134,8 +146,11 @@ func TestCreateOrderSuccess(t *testing.T) {
     orderGatewayMock     := mock.NewMockOrderGateway(controller)
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     restaurantGateayMock := mock.NewMockRestaurantGateway(controller)
+    transaction          := transaction.NewTransactionMock()
 
-    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock)
+    createOrder := NewCreateOrder(orderGatewayMock, orderSendGatewayMock, restaurantGateayMock, transaction)
+
+    ctx := context.Background()
 
     restaurantDetail, menuItems := buildRestaurantDetail()
     pizzaPepperoniItem := findMenuItemByName(menuItems, "Pepperoni")
@@ -155,16 +170,16 @@ func TestCreateOrderSuccess(t *testing.T) {
     var orderArgumentCaptor *domain.Order
     var orderToReturn = new(domain.Order)
 
-    orderGatewayMock.EXPECT().Save(gomock.Any()).Times(1).Do(func (orderParameter *domain.Order) {
+    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Do(func (ctx context.Context, tx *sql.Tx, orderParameter *domain.Order) {
         orderArgumentCaptor = orderParameter
     }).Return(orderToReturn, errOrderGateway)
 
-    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any()).Times(1)
+    orderSendGatewayMock.EXPECT().SendCreated(gomock.Any(), gomock.Any()).Times(1)
 
     solicitationOrder := buildSolicitationOfOrder(restaurantUuid, userUuid,
         map[domain.MenuItem]int{ *pizzaPepperoniItem: 1, *pizzaMozzarellaItem: 2 })
 
-    _, err := createOrder.Execute(solicitationOrder)
+    _, err := createOrder.Execute(ctx, solicitationOrder)
 
     assert.Nil(t, err)
 

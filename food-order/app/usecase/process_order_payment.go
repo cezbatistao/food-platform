@@ -1,25 +1,33 @@
 package usecase
 
 import (
+    "context"
+    "database/sql"
     "errors"
     "fmt"
     "github.com/cezbatistao/food-platform/food-order/app/domain"
     "github.com/cezbatistao/food-platform/food-order/app/gateway"
     "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
+    "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
     "github.com/google/uuid"
 )
 
 type ProcessOrderPayment struct {
     orderGateway     gateway.OrderGateway
     orderSendGateway gateway.OrderSendGateway
+    transaction      transaction.Transaction
 }
 
-func NewProcessOrderPayment(orderGateway gateway.OrderGateway, orderSendGateway gateway.OrderSendGateway) *ProcessOrderPayment {
-    return &ProcessOrderPayment{orderGateway: orderGateway, orderSendGateway: orderSendGateway}
+func NewProcessOrderPayment(orderGateway gateway.OrderGateway,
+        orderSendGateway gateway.OrderSendGateway,
+        transaction transaction.Transaction) *ProcessOrderPayment {
+    return &ProcessOrderPayment{orderGateway: orderGateway,
+        orderSendGateway: orderSendGateway, transaction: transaction}
 }
 
-func (c *ProcessOrderPayment) Execute(orderUuid *uuid.UUID, paymentOrder *domain.PaymentOrder) error {
-    order, err := c.orderGateway.GetByUuid(orderUuid)
+func (c *ProcessOrderPayment) Execute(ctx context.Context, orderUuid *uuid.UUID,
+        paymentOrder *domain.PaymentOrder) error {
+    order, err := c.orderGateway.GetByUuid(ctx, orderUuid)
     if err != nil {
         return err
     }
@@ -39,20 +47,24 @@ func (c *ProcessOrderPayment) Execute(orderUuid *uuid.UUID, paymentOrder *domain
 
     paymentOrder.Uuid = uuid.New()
     order.Payment = *paymentOrder
-    order, err = c.orderGateway.Update(order)
-    if err != nil {
+    err = c.transaction.WithTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
+        order, err = c.orderGateway.UpdateWithTx(ctx, tx, order)
+        if err != nil {
+            return err
+        }
+
+        if order.Status == domain.PROCESSING {
+            err = c.orderSendGateway.SendProcessing(ctx, order)
+        } else {
+            err = c.orderSendGateway.SendCancelled(ctx, order)
+        }
+
+        if err != nil {
+            return err
+        }
+
         return err
-    }
+    })
 
-    if order.Status == domain.PROCESSING {
-        err = c.orderSendGateway.SendProcessing(order)
-    } else {
-        err = c.orderSendGateway.SendCancelled(order)
-    }
-
-    if err != nil {
-        return err
-    }
-
-    return nil
+    return err
 }

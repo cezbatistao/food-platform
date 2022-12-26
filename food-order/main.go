@@ -22,7 +22,6 @@ import (
 func main() {
     serverReady := make(chan bool)
 
-    ctx := context.Background()
     var db *sql.DB
     var err error
 
@@ -34,10 +33,10 @@ func main() {
     }
     defer db.Close()
 
-    e := routes.New(ctx, db)
+    e := routes.New(db)
 
-    paymentListener := wire.InitializePaymentListener(&ctx, db)
-    go paymentListener.ConsumePaymentEvent(ctx)
+    paymentListener := wire.InitializePaymentListener(db)
+    go paymentListener.ConsumePaymentEvent()
 
     go func() {
         if err := e.Start(fmt.Sprintf(":%d", config.Port())); err != nil {

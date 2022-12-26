@@ -1,7 +1,6 @@
 package routes
 
 import (
-    "context"
     "database/sql"
     "fmt"
 
@@ -25,7 +24,7 @@ import (
 
 // @produce	application/json
 // @consumes application/json
-func New(ctx context.Context, db *sql.DB) *echo.Echo {
+func New(db *sql.DB) *echo.Echo {
     e := echo.New()
 
     e.HTTPErrorHandler = func(err error, c echo.Context) {
@@ -45,7 +44,7 @@ func New(ctx context.Context, db *sql.DB) *echo.Echo {
     docs.SwaggerInfo.Description = config.AppDescription()
     docs.SwaggerInfo.Version = config.AppVersion()
 
-    orderHTTPHandler := wire.InitializeOrderHTTPHandler(&ctx, db)
+    orderHTTPHandler := wire.InitializeOrderHTTPHandler(db)
     healthCheckHTTPHandler := wire.InitializeHealthCheckHTTPHandler()
     infoHTTPHandler := wire.InitializeInfoHTTPHandler()
 

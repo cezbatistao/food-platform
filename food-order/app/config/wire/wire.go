@@ -4,9 +4,9 @@
 package wire
 
 import (
-    "context"
     "database/sql"
     "github.com/cezbatistao/food-platform/food-order/app/entrypoint/listener"
+    "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
 
     "github.com/cezbatistao/food-platform/food-order/app/gateway"
     "github.com/cezbatistao/food-platform/food-order/app/usecase"
@@ -15,12 +15,13 @@ import (
     "github.com/google/wire"
 )
 
-func InitializeOrderHTTPHandler(ctx *context.Context, db *sql.DB) *rest.OrderHTTPHandler {
+func InitializeOrderHTTPHandler(db *sql.DB) *rest.OrderHTTPHandler {
     panic(wire.Build(
         rest.NewOrderHTTPHandler,
         wire.Bind(new(gateway.OrderGateway), new(*gateway.OrderGatewayDatabase)),
         wire.Bind(new(gateway.OrderSendGateway), new(*gateway.OrderSendGatewayKafka)),
         wire.Bind(new(gateway.RestaurantGateway), new(*gateway.RestaurantGatewayHttp)),
+        transaction.TransactionProviderSet,
         usecase.NewCreateOrder,
         usecase.NewGetOrderByUuid,
         gateway.NewOrderGateway,
@@ -29,11 +30,12 @@ func InitializeOrderHTTPHandler(ctx *context.Context, db *sql.DB) *rest.OrderHTT
     ))
 }
 
-func InitializePaymentListener(ctx *context.Context, db *sql.DB) *listener.PaymentListener {
+func InitializePaymentListener(db *sql.DB) *listener.PaymentListener {
     panic(wire.Build(
         listener.NewPaymentListener,
         wire.Bind(new(gateway.OrderGateway), new(*gateway.OrderGatewayDatabase)),
         wire.Bind(new(gateway.OrderSendGateway), new(*gateway.OrderSendGatewayKafka)),
+        transaction.TransactionProviderSet,
         usecase.NewProcessOrderPayment,
         gateway.NewOrderGateway,
         gateway.NewOrderSendGateway,

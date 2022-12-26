@@ -45,20 +45,19 @@ type OrderEvent struct {
 }
 
 type OrderSendGateway interface {
-    SendCreated(order *domain.Order) error
-    SendProcessing(order *domain.Order) error
-    SendCancelled(order *domain.Order) error 
+    SendCreated(ctx context.Context, order *domain.Order) error
+    SendProcessing(ctx context.Context, order *domain.Order) error
+    SendCancelled(ctx context.Context, order *domain.Order) error
 }
 
 type OrderSendGatewayKafka struct {
-    ctx *context.Context
 }
 
-func NewOrderSendGateway(ctx *context.Context) *OrderSendGatewayKafka {
-    return &OrderSendGatewayKafka{ctx: ctx}
+func NewOrderSendGateway() *OrderSendGatewayKafka {
+    return &OrderSendGatewayKafka{}
 }
 
-func (g *OrderSendGatewayKafka) SendCreated(order *domain.Order) error {
+func (g *OrderSendGatewayKafka) SendCreated(ctx context.Context, order *domain.Order) error {
 	if order.Status != domain.CREATED {
 		return errors.New(fmt.Sprintf("Order %s with status different from CREATED", order.Status))
 	}
@@ -68,15 +67,15 @@ func (g *OrderSendGatewayKafka) SendCreated(order *domain.Order) error {
     orderCreatedEvent := mapToOrderCreatedEvent(order)
 
     log.Infof("send created order %+v to topic %s", orderCreatedEvent, topic)
-    return sendMessage(g.ctx, topic, order.Restaurant.Uuid.String(), orderCreatedEvent)
+    return sendMessage(&ctx, topic, order.Restaurant.Uuid.String(), orderCreatedEvent)
 }
 
-func (g *OrderSendGatewayKafka) SendProcessing(order *domain.Order) error {
-    return sendProcessingOrCancelled(g.ctx, order, domain.PROCESSING, config.TopicOrderProcessingEvent())
+func (g *OrderSendGatewayKafka) SendProcessing(ctx context.Context, order *domain.Order) error {
+    return sendProcessingOrCancelled(&ctx, order, domain.PROCESSING, config.TopicOrderProcessingEvent())
 }
 
-func (g *OrderSendGatewayKafka) SendCancelled(order *domain.Order) error {
-    return sendProcessingOrCancelled(g.ctx, order, domain.CANCELLED, config.TopicOrderCancelledEvent())
+func (g *OrderSendGatewayKafka) SendCancelled(ctx context.Context, order *domain.Order) error {
+    return sendProcessingOrCancelled(&ctx, order, domain.CANCELLED, config.TopicOrderCancelledEvent())
 }
 
 func sendProcessingOrCancelled(ctx *context.Context, order *domain.Order, orderStatus domain.OrderStatus, topic string) error {

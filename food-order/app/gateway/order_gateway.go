@@ -14,34 +14,32 @@ import (
 )
 
 type OrderGateway interface {
-    Save(order *domain.Order) (*domain.Order, error)
-    GetByUuid(orderUuid *uuid.UUID) (*domain.Order, error)
-    Update(order *domain.Order) (*domain.Order, error)
+    Save(ctx context.Context, order *domain.Order) (*domain.Order, error)
+    SaveWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error)
+    GetByUuid(ctx context.Context, orderUuid *uuid.UUID) (*domain.Order, error)
+    Update(ctx context.Context, order *domain.Order) (*domain.Order, error)
+    UpdateWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error)
 }
 
 type OrderGatewayDatabase struct {
-    ctx *context.Context
     db  *sql.DB
 }
 
-func NewOrderGateway(ctx *context.Context, db *sql.DB) *OrderGatewayDatabase {
-    return &OrderGatewayDatabase{ctx: ctx, db: db}
+func NewOrderGateway(db *sql.DB) *OrderGatewayDatabase {
+    return &OrderGatewayDatabase{db: db}
 }
 
-func (g *OrderGatewayDatabase) Save(order *domain.Order) (*domain.Order, error) {
+func (g *OrderGatewayDatabase) SaveWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error) {
     order.DateCreated = time.Now()
     order.DateUpdated = time.Now()
 
-    tx, err := g.db.BeginTx(*g.ctx, nil)
-    checkErr(err)
-
-    defer tx.Rollback()
+    var err error
 
     restaurantUuid := order.Restaurant.Uuid.String()
 
     lastInsertId := 0
     numberGenerated := 0
-    tx.QueryRowContext(*g.ctx, `INSERT INTO tb_order(uuid, user_uuid, restaurant_uuid, restaurant_name, number, status, total, created_at, last_updated)
+    tx.QueryRowContext(ctx, `INSERT INTO tb_order(uuid, user_uuid, restaurant_uuid, restaurant_name, number, status, total, created_at, last_updated)
 VALUES ($1, $2, $3, $4,(SELECT COALESCE(MAX(number)+1, 1) FROM tb_order WHERE restaurant_uuid = $5), $6, $7, $8, $9)
 RETURNING id, number`,
         order.Uuid.String(), order.UserUuid.String(), restaurantUuid, order.Restaurant.Name,restaurantUuid,
@@ -55,7 +53,7 @@ RETURNING id, number`,
         orderItem := &order.Items[index]
 
         lastInsertId := 0
-        tx.QueryRowContext(*g.ctx, `
+        tx.QueryRowContext(ctx, `
 INSERT INTO tb_order_item(order_id, uuid, menu_item_uuid, menu_item_name, amount, unit_value)
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id `,
@@ -66,24 +64,29 @@ RETURNING id `,
         orderItem.Id = lastInsertId
     }
 
-    // Commit the transaction.
-    if err = tx.Commit(); err != nil {
-        log.Errorf("error at save order: %+v", err)
-        return nil, err
-    }
-
 	log.Infof("order created: %+v", order)
 
 	return order, nil
 }
 
-func (g *OrderGatewayDatabase) GetByUuid(orderUuid *uuid.UUID) (*domain.Order, error) {
-    tx, err := g.db.BeginTx(*g.ctx, nil)
+func (g *OrderGatewayDatabase) Save(ctx context.Context, order *domain.Order) (*domain.Order, error) {
+    tx, err := g.db.BeginTx(ctx, nil)
     checkErr(err)
 
     defer tx.Rollback()
 
-    rows, err := tx.QueryContext(*g.ctx, `
+    order, err = g.SaveWithTx(ctx, tx, order)
+
+    // Commit the transaction.
+    if err = tx.Commit(); err != nil {
+        return nil, err
+    }
+
+    return order, nil
+}
+
+func (g *OrderGatewayDatabase) GetByUuid(ctx context.Context, orderUuid *uuid.UUID) (*domain.Order, error) {
+    rows, err := g.db.QueryContext(ctx, `
 SELECT torder.id AS order_id,
        torder.uuid AS order_uuid,
        torder.user_uuid AS order_user_uuid,
@@ -148,24 +151,19 @@ ORDER BY torderi.id `,
     }
     _ = rows.Close()
 
-    // Commit the transaction.
-    if err = tx.Commit(); err != nil {
-        return nil, err
-    }
-
     log.Infof("found order: +v", order)
 
     return order, nil
 }
 
-func (g *OrderGatewayDatabase) Update(order *domain.Order) (*domain.Order, error) {
+func (g *OrderGatewayDatabase) UpdateWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error) {
     log.Infof("update order: %+v", order)
 
-    tx, err := g.db.BeginTx(*g.ctx, nil)
+    var err error
 
     if order.Payment.Id == 0 {
         lastInsertId := 0
-        tx.QueryRowContext(*g.ctx, `
+        tx.QueryRowContext(ctx, `
 INSERT INTO tb_order_payment(uuid, status, transaction_id)
 VALUES ($1, $2, $3)
 RETURNING id `,
@@ -178,7 +176,7 @@ RETURNING id `,
 
     order.DateUpdated = time.Now()
 
-    result, err := tx.ExecContext(*g.ctx, "UPDATE tb_order SET status = $1, order_payment_id = $2, last_updated = $3 WHERE id = $4",
+    result, err := tx.ExecContext(ctx, "UPDATE tb_order SET status = $1, order_payment_id = $2, last_updated = $3 WHERE id = $4",
         order.Status.GetOrderStatus(), order.Payment.Id, order.DateUpdated, order.Id)
     if err != nil {
         log.Fatal(err)
@@ -191,6 +189,18 @@ RETURNING id `,
         log.Fatalf("expected single row affected, got %d rows affected", rows)
     }
 
+    return order, nil
+}
+
+func (g *OrderGatewayDatabase) Update(ctx context.Context, order *domain.Order) (*domain.Order, error) {
+    tx, err := g.db.BeginTx(ctx, nil)
+    checkErr(err)
+
+    defer tx.Rollback()
+
+    order, err = g.UpdateWithTx(ctx, tx, order)
+
+    // Commit the transaction.
     if err = tx.Commit(); err != nil {
         return nil, err
     }

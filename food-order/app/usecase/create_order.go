@@ -1,29 +1,34 @@
 package usecase
 
 import (
+    "context"
+    "database/sql"
     "github.com/cezbatistao/food-platform/food-order/app/domain"
 	"github.com/cezbatistao/food-platform/food-order/app/gateway"
     "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
+    "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
     "github.com/google/uuid"
 
     "github.com/labstack/gommon/log"
 )
 
 type CreateOrder struct {
-	orderGateway        gateway.OrderGateway
-    orderSendGateway    gateway.OrderSendGateway
-    restaurantGateway   gateway.RestaurantGateway
+	orderGateway      gateway.OrderGateway
+    orderSendGateway  gateway.OrderSendGateway
+    restaurantGateway gateway.RestaurantGateway
+    transaction       transaction.Transaction
 }
 
 func NewCreateOrder(orderGateway gateway.OrderGateway, orderSendGateway gateway.OrderSendGateway,
-        restaurantGateway gateway.RestaurantGateway) *CreateOrder {
-    return &CreateOrder{orderGateway: orderGateway, orderSendGateway: orderSendGateway, restaurantGateway: restaurantGateway}
+        restaurantGateway gateway.RestaurantGateway, transaction transaction.Transaction) *CreateOrder {
+    return &CreateOrder{orderGateway: orderGateway, orderSendGateway: orderSendGateway,
+        restaurantGateway: restaurantGateway, transaction: transaction}
 }
 
-func (c *CreateOrder) Execute(solicitationOfOrder *domain.SolicitationOfOrder) (*domain.Order, error) {
+func (c *CreateOrder) Execute(ctx context.Context, solicitationOfOrder *domain.SolicitationOfOrder) (*domain.Order, error) {
     log.Infof("order requested: %+v", solicitationOfOrder)
 
-	restaurantDetail, err := c.restaurantGateway.GetDetailByUuid(
+    restaurantDetail, err := c.restaurantGateway.GetDetailByUuid(
         solicitationOfOrder.RestaurantUuid, getMenuItems(&solicitationOfOrder.Items))
     if err != nil {
         return nil, err
@@ -41,14 +46,23 @@ func (c *CreateOrder) Execute(solicitationOfOrder *domain.SolicitationOfOrder) (
 
     log.Infof("new order: %+v", order)
 
-	orderCreated, err := c.orderGateway.Save(&order)
-    if err != nil {
-        return nil, err
-    }
+    var orderCreated *domain.Order
+    err = c.transaction.WithTransaction(ctx, func (ctx context.Context, tx *sql.Tx) error {
+        orderCreated, err = c.orderGateway.SaveWithTx(ctx, tx, &order)
+        if err != nil {
+            return err
+        }
 
-    c.orderSendGateway.SendCreated(orderCreated)
+        c.orderSendGateway.SendCreated(ctx, orderCreated)
 
-	return orderCreated, nil
+        return nil
+    })
+//
+//    if err != nil {
+//        return nil, err
+//    }
+
+    return orderCreated, err
 }
 
 func getMenuItems(solicitationItems *[]domain.SolicitationOrderItem) *[]uuid.UUID {

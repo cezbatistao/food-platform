@@ -29,12 +29,13 @@ func NewPaymentListener(processOrderPayment *usecase.ProcessOrderPayment) *Payme
     return &PaymentListener{processOrderPayment: processOrderPayment}
 }
 
-func (l *PaymentListener) ConsumePaymentEvent(ctx context.Context) {
+func (l *PaymentListener) ConsumePaymentEvent() {
     r := kafka.NewReader(kafka.ReaderConfig{
         Brokers: config.BootstrapServers(),
         Topic:   config.TopicPaymentEvent(),
         GroupID: config.TopicPaymentEventGroupId(),
     })
+    ctx := context.Background()
     for {
         // the `ReadMessage` method blocks until we receive the next event
         msg, err := r.ReadMessage(ctx)
@@ -51,7 +52,7 @@ func (l *PaymentListener) ConsumePaymentEvent(ctx context.Context) {
         if err != nil {
             log.Errorf("error processing message at topic [%s]: %v", config.TopicPaymentEvent(), err)
         } else {
-            err = l.processOrderPayment.Execute(orderUuid, paymentOrder)
+            err = l.processOrderPayment.Execute(ctx, orderUuid, paymentOrder)
             if err != nil {
                 log.Errorf("error processing message at topic [%s]: %v", config.TopicPaymentEvent(), err)
             }

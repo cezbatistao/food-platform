@@ -58,7 +58,7 @@ func Load() error {
     viper.SetDefault("DATABASE_URL", "postgresql://postgresuser:postgrespasswd@localhost:5432/db_order?sslmode=disable")
     viper.SetDefault("POSTGRES_DRIVER", "postgres")
     viper.SetDefault("DIRNAME", dirname)
-    viper.SetDefault("RESTAURANT_URL", "http://localhost:8181")
+    viper.SetDefault("RESTAURANT_URL", "http://localhost:8882")
 
 	appConfig = config{
 		appPort: viper.GetInt("PORT"),

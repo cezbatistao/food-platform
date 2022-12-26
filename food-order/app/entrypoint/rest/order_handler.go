@@ -53,7 +53,9 @@ func (h *OrderHTTPHandler) CreateOrder(c echo.Context) error {
 
 	solicitationOfOrder := mapOrderRequestToSolicitation(orderRequest)
 
-	order, err := h.createOrderUseCase.Execute(solicitationOfOrder)
+    r := c.Request()
+
+    order, err := h.createOrderUseCase.Execute(r.Context(), solicitationOfOrder)
     if err != nil {
         switch t := err.(type) {
             case *exceptions.RestaurantNotFoundError:
@@ -85,7 +87,9 @@ func (h *OrderHTTPHandler) GetOrderByUuid(c echo.Context) error {
     uuidString := c.Param("uuid")
     orderUuid, _ := uuid.Parse(uuidString)
 
-    order, err := h.getOrderByUuidUseCase.Execute(&orderUuid)
+    r := c.Request()
+
+    order, err := h.getOrderByUuidUseCase.Execute(r.Context(), &orderUuid)
     if err != nil {
         switch t := err.(type) { //t := err.(type)
             case *exceptions.RestaurantNotFoundError:
