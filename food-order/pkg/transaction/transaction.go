@@ -18,7 +18,7 @@ var (
 type Transaction interface {
     WithTransaction(
         ctx context.Context,
-        fn func(ctx context.Context, tx *sql.Tx) error,
+        fn func(ctxFn context.Context) error,
     ) error
 }
 
@@ -32,7 +32,7 @@ func NewTransaction(db *sql.DB) *transactionImpl {
 
 func (t *transactionImpl) WithTransaction(
     ctx context.Context,
-    fn func(ctx context.Context, tx *sql.Tx) error,
+    fn func(ctxFn context.Context) error,
 ) (err error) {
     tx, err := t.db.BeginTx(ctx, &sql.TxOptions{})
     if err != nil {
@@ -53,6 +53,7 @@ func (t *transactionImpl) WithTransaction(
         }
     }()
 
-    err = fn(ctx, tx)
+    ctxTx := context.WithValue(ctx, "TxKey", tx)
+    err = fn(ctxTx)
     return
 }

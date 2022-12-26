@@ -2,7 +2,6 @@ package usecase
 
 import (
     "context"
-    "database/sql"
     "errors"
     "fmt"
     "testing"
@@ -36,7 +35,7 @@ func TestProcessOrderPaymentErrorWhenOrderGatewayRiseErr(t *testing.T) {
 
     orderGatewayMock.EXPECT().GetByUuid(ctx, &orderUuid).Return(nil, errOrderGateway)
 
-    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().Update(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
@@ -67,7 +66,7 @@ func TestProcessOrderPaymentErrorWhenOrderNotFound(t *testing.T) {
 
     orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(nil, errOrderGateway)
 
-    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().Update(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
@@ -111,7 +110,7 @@ func TestProcessOrderPaymentErrorWhenOrderStatusDiffCreated(t *testing.T) {
 
     orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, errOrderGateway)
 
-    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().Update(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
 
@@ -152,7 +151,7 @@ func TestProcessOrderPaymentPaidWhenErrorOrderGatewayUpdate(t *testing.T) {
 
     orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &orderUuid).Return(&order, nil)
 
-    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Return(nil, errOrderGateway)
+    orderGatewayMock.EXPECT().Update(gomock.Any(), gomock.Any()).Times(1).Return(nil, errOrderGateway)
 
     orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
@@ -197,7 +196,7 @@ func TestProcessOrderPaymentPaidWhenErrorOrderSendGatewayUpdate(t *testing.T) {
 
     var orderToReturn = new(domain.Order)
     orderToReturn.Status = domain.PROCESSING
-    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
+    orderGatewayMock.EXPECT().Update(gomock.Any(), gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
 
     orderSendGatewayMock.EXPECT().SendProcessing(gomock.Any(), gomock.Any()).Times(1).Return(errOrderSendGatewayMock)
     orderSendGatewayMock.EXPECT().SendCancelled(gomock.Any(), gomock.Any()).Times(0)
@@ -246,7 +245,7 @@ func TestProcessOrderPaymentPaidSuccess(t *testing.T) {
     var orderToReturn = new(domain.Order)
     orderToReturn.Status = domain.PROCESSING
 
-    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Do(func (ctx context.Context, tx *sql.Tx, orderParameter *domain.Order) {
+    orderGatewayMock.EXPECT().Update(gomock.Any(), gomock.Any()).Times(1).Do(func (ctx context.Context, orderParameter *domain.Order) {
         orderArgumentCaptor = orderParameter
     }).Return(orderToReturn, errOrderGateway)
 
@@ -323,7 +322,7 @@ func TestProcessOrderPaymentRefusedSuccess(t *testing.T) {
     var orderToReturn = new(domain.Order)
     orderToReturn.Status = domain.CANCELLED
 
-    orderGatewayMock.EXPECT().UpdateWithTx(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Do(func (ctx context.Context, tx *sql.Tx, orderParameter *domain.Order) {
+    orderGatewayMock.EXPECT().Update(gomock.Any(), gomock.Any()).Times(1).Do(func (ctx context.Context, orderParameter *domain.Order) {
         orderArgumentCaptor = orderParameter
     }).Return(orderToReturn, errOrderGateway)
 

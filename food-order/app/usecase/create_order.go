@@ -2,9 +2,8 @@ package usecase
 
 import (
     "context"
-    "database/sql"
     "github.com/cezbatistao/food-platform/food-order/app/domain"
-	"github.com/cezbatistao/food-platform/food-order/app/gateway"
+    "github.com/cezbatistao/food-platform/food-order/app/gateway"
     "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
     "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
     "github.com/google/uuid"
@@ -47,8 +46,8 @@ func (c *CreateOrder) Execute(ctx context.Context, solicitationOfOrder *domain.S
     log.Infof("new order: %+v", order)
 
     var orderCreated *domain.Order
-    err = c.transaction.WithTransaction(ctx, func (ctx context.Context, tx *sql.Tx) error {
-        orderCreated, err = c.orderGateway.SaveWithTx(ctx, tx, &order)
+    err = c.transaction.WithTransaction(ctx, func (ctxTx context.Context) error {
+        orderCreated, err = c.orderGateway.Save(ctxTx, &order)
         if err != nil {
             return err
         }
@@ -57,10 +56,6 @@ func (c *CreateOrder) Execute(ctx context.Context, solicitationOfOrder *domain.S
 
         return nil
     })
-//
-//    if err != nil {
-//        return nil, err
-//    }
 
     return orderCreated, err
 }

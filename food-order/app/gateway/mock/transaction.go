@@ -2,7 +2,6 @@ package mock
 
 import (
     "context"
-    "database/sql"
 )
 type transactionMock struct {
 }
@@ -13,8 +12,8 @@ func NewTransactionMock() *transactionMock {
 
 func (t *transactionMock) WithTransaction(
     ctx context.Context,
-    fn func(ctx context.Context, tx *sql.Tx) error,
+    fn func(ctxTx context.Context) error,
 ) (err error) {
-    err = fn(ctx, nil)
+    err = fn(ctx)
     return
 }

@@ -15,10 +15,8 @@ import (
 
 type OrderGateway interface {
     Save(ctx context.Context, order *domain.Order) (*domain.Order, error)
-    SaveWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error)
     GetByUuid(ctx context.Context, orderUuid *uuid.UUID) (*domain.Order, error)
     Update(ctx context.Context, order *domain.Order) (*domain.Order, error)
-    UpdateWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error)
 }
 
 type OrderGatewayDatabase struct {
@@ -29,7 +27,16 @@ func NewOrderGateway(db *sql.DB) *OrderGatewayDatabase {
     return &OrderGatewayDatabase{db: db}
 }
 
-func (g *OrderGatewayDatabase) SaveWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error) {
+func (g *OrderGatewayDatabase) Save(ctx context.Context, order *domain.Order) (*domain.Order, error) {
+    tx, ok := ctx.Value("TxKey").(*sql.Tx)
+    if !ok {
+        var err error
+        tx, err = g.db.BeginTx(ctx, &sql.TxOptions{})
+        if err != nil {
+            return nil, err
+        }
+    }
+
     order.DateCreated = time.Now()
     order.DateUpdated = time.Now()
 
@@ -67,22 +74,6 @@ RETURNING id `,
 	log.Infof("order created: %+v", order)
 
 	return order, nil
-}
-
-func (g *OrderGatewayDatabase) Save(ctx context.Context, order *domain.Order) (*domain.Order, error) {
-    tx, err := g.db.BeginTx(ctx, nil)
-    checkErr(err)
-
-    defer tx.Rollback()
-
-    order, err = g.SaveWithTx(ctx, tx, order)
-
-    // Commit the transaction.
-    if err = tx.Commit(); err != nil {
-        return nil, err
-    }
-
-    return order, nil
 }
 
 func (g *OrderGatewayDatabase) GetByUuid(ctx context.Context, orderUuid *uuid.UUID) (*domain.Order, error) {
@@ -156,8 +147,17 @@ ORDER BY torderi.id `,
     return order, nil
 }
 
-func (g *OrderGatewayDatabase) UpdateWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error) {
+func (g *OrderGatewayDatabase) Update(ctx context.Context, order *domain.Order) (*domain.Order, error) {
     log.Infof("update order: %+v", order)
+
+    tx, ok := ctx.Value("TxKey").(*sql.Tx)
+    if !ok {
+        var err error
+        tx, err = g.db.BeginTx(ctx, &sql.TxOptions{})
+        if err != nil {
+            return nil, err
+        }
+    }
 
     var err error
 
@@ -187,22 +187,6 @@ RETURNING id `,
     }
     if rows != 1 {
         log.Fatalf("expected single row affected, got %d rows affected", rows)
-    }
-
-    return order, nil
-}
-
-func (g *OrderGatewayDatabase) Update(ctx context.Context, order *domain.Order) (*domain.Order, error) {
-    tx, err := g.db.BeginTx(ctx, nil)
-    checkErr(err)
-
-    defer tx.Rollback()
-
-    order, err = g.UpdateWithTx(ctx, tx, order)
-
-    // Commit the transaction.
-    if err = tx.Commit(); err != nil {
-        return nil, err
     }
 
     return order, nil

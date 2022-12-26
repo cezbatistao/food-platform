@@ -2,13 +2,14 @@ package usecase
 
 import (
     "context"
-    "database/sql"
     "errors"
     "fmt"
+
     "github.com/cezbatistao/food-platform/food-order/app/domain"
     "github.com/cezbatistao/food-platform/food-order/app/gateway"
     "github.com/cezbatistao/food-platform/food-order/pkg/exceptions"
     "github.com/cezbatistao/food-platform/food-order/pkg/transaction"
+    
     "github.com/google/uuid"
 )
 
@@ -47,8 +48,8 @@ func (c *ProcessOrderPayment) Execute(ctx context.Context, orderUuid *uuid.UUID,
 
     paymentOrder.Uuid = uuid.New()
     order.Payment = *paymentOrder
-    err = c.transaction.WithTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
-        order, err = c.orderGateway.UpdateWithTx(ctx, tx, order)
+    err = c.transaction.WithTransaction(ctx, func(ctxTx context.Context) error {
+        order, err = c.orderGateway.Update(ctxTx, order)
         if err != nil {
             return err
         }

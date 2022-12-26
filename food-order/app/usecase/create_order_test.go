@@ -2,7 +2,6 @@ package usecase
 
 import (
     "context"
-    "database/sql"
     "errors"
 
     "github.com/cezbatistao/food-platform/food-order/app/domain"
@@ -42,7 +41,7 @@ func TestCreateOrderErrorWhenRestaurantGatewayRiseErr(t *testing.T) {
     restaurantGateayMock.EXPECT().GetDetailByUuid(
         restaurantUuid, menuItemsUuid).Return(
             nil, errRestaurantGateway)
-    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().Save(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendCreated(gomock.Any(), gomock.Any()).Times(0)
 
     solicitationOrder := buildSolicitationOfOrder(restaurantUuid, userUuid,
@@ -82,7 +81,7 @@ func TestCreateOrderErrorWhenRestaurantNotFound(t *testing.T) {
         restaurantUuid, menuItemsUuid).Return(
             nil, errRestaurantGateway)
 
-    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Times(0)
+    orderGatewayMock.EXPECT().Save(gomock.Any(), gomock.Any()).Times(0)
     orderSendGatewayMock.EXPECT().SendCreated(gomock.Any(), gomock.Any()).Times(0)
 
     solicitationOrder := buildSolicitationOfOrder(restaurantUuid, userUuid,
@@ -125,7 +124,7 @@ func TestCreateOrderErrorWhenSaveOrder(t *testing.T) {
             &restaurantDetail, errRestaurantGateway)
 
     var orderToReturn = new(domain.Order)
-    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
+    orderGatewayMock.EXPECT().Save(gomock.Any(), gomock.Any()).Times(1).Return(orderToReturn, errOrderGateway)
 
     orderSendGatewayMock.EXPECT().SendCreated(gomock.Any(), gomock.Any()).Times(0)
 
@@ -169,7 +168,7 @@ func TestCreateOrderSuccess(t *testing.T) {
     var orderArgumentCaptor *domain.Order
     var orderToReturn = new(domain.Order)
 
-    orderGatewayMock.EXPECT().SaveWithTx(gomock.Any(), gomock.Nil(), gomock.Any()).Do(func (ctx context.Context, tx *sql.Tx, orderParameter *domain.Order) {
+    orderGatewayMock.EXPECT().Save(gomock.Any(), gomock.Any()).Do(func (ctx context.Context, orderParameter *domain.Order) {
         orderArgumentCaptor = orderParameter
     }).Return(orderToReturn, errOrderGateway)
 

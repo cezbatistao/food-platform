@@ -6,7 +6,6 @@ package mock
 
 import (
 	context "context"
-	sql "database/sql"
 	reflect "reflect"
 
 	domain "github.com/cezbatistao/food-platform/food-order/app/domain"
@@ -67,21 +66,6 @@ func (mr *MockOrderGatewayMockRecorder) Save(ctx, order interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockOrderGateway)(nil).Save), ctx, order)
 }
 
-// SaveWithTx mocks base method.
-func (m *MockOrderGateway) SaveWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveWithTx", ctx, tx, order)
-	ret0, _ := ret[0].(*domain.Order)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// SaveWithTx indicates an expected call of SaveWithTx.
-func (mr *MockOrderGatewayMockRecorder) SaveWithTx(ctx, tx, order interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveWithTx", reflect.TypeOf((*MockOrderGateway)(nil).SaveWithTx), ctx, tx, order)
-}
-
 // Update mocks base method.
 func (m *MockOrderGateway) Update(ctx context.Context, order *domain.Order) (*domain.Order, error) {
 	m.ctrl.T.Helper()
@@ -95,19 +79,4 @@ func (m *MockOrderGateway) Update(ctx context.Context, order *domain.Order) (*do
 func (mr *MockOrderGatewayMockRecorder) Update(ctx, order interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockOrderGateway)(nil).Update), ctx, order)
-}
-
-// UpdateWithTx mocks base method.
-func (m *MockOrderGateway) UpdateWithTx(ctx context.Context, tx *sql.Tx, order *domain.Order) (*domain.Order, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateWithTx", ctx, tx, order)
-	ret0, _ := ret[0].(*domain.Order)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UpdateWithTx indicates an expected call of UpdateWithTx.
-func (mr *MockOrderGatewayMockRecorder) UpdateWithTx(ctx, tx, order interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateWithTx", reflect.TypeOf((*MockOrderGateway)(nil).UpdateWithTx), ctx, tx, order)
 }
