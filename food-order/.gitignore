@@ -38,7 +38,6 @@ docs/
 coverage.out
 coverage.html
 test_report.html
-*/gateway/mock/
 junit-report.xml
 
 # Output of the go coverage tool, specifically when used with LiteIDE
