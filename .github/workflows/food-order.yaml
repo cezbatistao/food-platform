@@ -44,13 +44,10 @@ jobs:
           make test-generate-report
 
       - name: Publish test report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
         with:
-          name: Tests Report
-          path: 'junit-*.xml'
-          reporter: java-junit
-          working-directory: './food-order'
+          report_paths: '**food-order/junit-*.xml'
 
       # - name: Build application
       #   working-directory: ./food-order
