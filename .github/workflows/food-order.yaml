@@ -43,21 +43,12 @@ jobs:
           make test-mockgen
           make test-generate-report
 
-      - name: list root folder
-        run: |
-          ls -la
-
-      - name: list food-order folder
-        working-directory: ./food-order
-        run: |
-          ls -la
-
       - name: Publish test report
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
           name: Tests Report
-          path: '**food-order/junit-*.xml'
+          path: './food-order/junit-report.xml'
           reporter: java-junit
 
       # - name: Build application

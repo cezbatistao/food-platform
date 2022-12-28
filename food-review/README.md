@@ -50,7 +50,7 @@ Open [`http://localhost:8183/swagger-ui/`](http://localhost:8183/swagger-ui/) to
 
 #### Build application
 ```
-./gradlew clean build -x test -x componentTest -Pbuild.number=[VERSION APP]
+./gradlew clean build -x test -Pbuild.number=[VERSION APP]
 ```
 
 ## Docker

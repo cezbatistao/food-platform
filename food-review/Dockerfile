@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk17:alpine-jre
+FROM eclipse-temurin:17-jre-alpine
 VOLUME /tmp
 
 RUN apk add --no-cache curl
