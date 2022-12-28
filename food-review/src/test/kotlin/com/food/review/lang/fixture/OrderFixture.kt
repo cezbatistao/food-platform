@@ -2,7 +2,6 @@ package com.food.review.lang.fixture
 
 import com.food.review.domain.Order
 import com.food.review.domain.OrderItem
-import java.math.BigDecimal
 import java.util.UUID
 
 class OrderFixture {
@@ -17,19 +16,14 @@ class OrderFixture {
                     OrderItem(
                         UUID.fromString("843bfe62-9543-11eb-a8b3-0242ac130003"),
                         UUID.fromString("f4f08147-4d1d-4067-92fe-32e5ef411151"),
-                        "Pepperoni",
-                        1,
-                        BigDecimal("33.99")
+                        "Pepperoni"
                     ),
                     OrderItem(
                         UUID.fromString("88e3812e-9543-11eb-a8b3-0242ac130003"),
                         UUID.fromString("9243b2c5-9050-4e81-b559-36cda7595a78"),
-                        "Mussarela",
-                        2,
-                        BigDecimal("31.99")
+                        "Mussarela"
                     )
-                ),
-                BigDecimal("97.97")
+                )
             )
         }
     }

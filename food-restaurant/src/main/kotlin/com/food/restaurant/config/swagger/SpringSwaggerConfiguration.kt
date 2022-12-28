@@ -19,14 +19,14 @@ class SpringSwaggerConfiguration {
     @Value("\${spring.application.description:}")
     private val applicationDescription: String? = null
 
-    @Value("\${info.build.version:}")
+    @Value("\${spring.application.version:}")
     private val applicationVersion: String? = null
 
     @Value("\${spring.profiles.active:}")
     private val profile: String? = null
 
     @Bean
-    fun publicApi(): GroupedOpenApi? {
+    fun publicApi(): GroupedOpenApi {
         return GroupedOpenApi.builder()
                 .group(applicationName)
                 .pathsToMatch("/api/**")
@@ -34,7 +34,7 @@ class SpringSwaggerConfiguration {
     }
 
     @Bean
-    fun springShopOpenAPI(): OpenAPI? {
+    fun springShopOpenAPI(): OpenAPI {
         return OpenAPI()
                 .info(Info().title(applicationName)
                         .description(applicationDescription)

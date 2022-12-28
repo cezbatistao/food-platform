@@ -1,7 +1,7 @@
 package com.food.review.lang.fixture
 
-import com.food.review.entrypoint.listener.resource.OrderDeliveredEventResource
-import com.food.review.entrypoint.listener.resource.OrderItemResource
+import com.food.review.gateway.kafka.resource.listener.OrderDeliveredEventResource
+import com.food.review.gateway.kafka.resource.listener.OrderItemResource
 import java.time.LocalDateTime
 
 class OrderDeliveredEventResourceFixture {

@@ -1,6 +1,6 @@
 FROM golang:1.17-alpine AS build_base
 
-RUN apk add --no-cache git && apk update && apk upgrade && apk add --no-cache make
+RUN apk add --no-cache git && apk update && apk upgrade && apk add --no-cache make && apk add build-base
 
 ENV GOPATH /go
 # Set the Current Working Directory inside the container
@@ -10,14 +10,9 @@ WORKDIR /go/src/food-order
 COPY go.mod .
 COPY go.sum .
 
-RUN go mod download && \
-    go get -u github.com/swaggo/swag/cmd/swag && \
-    go get -u github.com/google/wire/cmd/wire
+RUN go mod download
 
 COPY . .
-
-# Unit tests
-# RUN CGO_ENABLED=0 go test -v
 
 # Build the Go app
 RUN make build

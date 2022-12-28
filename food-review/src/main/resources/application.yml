@@ -44,8 +44,12 @@ spring:
               packages: com.food.review.entrypoint.listener.resource
             value:
               default:
-                type: com.food.review.entrypoint.listener.resource.DataResource
+                type: com.food.review.gateway.kafka.resource.DataResource
     producer:
       retries: 10
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+mongock:
+  migration-scan-package:
+    - com.food.review.config.mongock.migration

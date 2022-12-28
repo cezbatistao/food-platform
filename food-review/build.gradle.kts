@@ -29,13 +29,16 @@ apply(plugin = "com.palantir.docker")
 
 val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] = it }
 
-extra["springCloudVersion"] = "2021.0.5"
+extra["springdocOpenapiUiVersion"] = "1.6.14"
 extra["kotlinLoggingJvmVersion"] = "3.0.4"
 extra["mapstructVersion"] = "1.5.3.Final"
 extra["guavaVersion"] = "31.1-jre"
 extra["logstashLogbackencoderVersion"] = "7.2"
 extra["assertjCoreVersion"] = "3.23.1"
 extra["springMockkVersion"] = "4.0.0"
+
+extra["springCloudVersion"] = "2021.0.5"
+extra["mongockVersion"] = "5.2.2"
 extra["testcontainersVersion"] = "1.16.2"
 
 dependencies {
@@ -45,6 +48,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-undertow")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springdoc:springdoc-openapi-ui:${property("springdocOpenapiUiVersion")}")
+	implementation("org.springdoc:springdoc-openapi-kotlin:${property("springdocOpenapiUiVersion")}")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
@@ -52,6 +57,9 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.springframework.kafka:spring-kafka")
+
+	implementation("io.mongock:mongock-springboot")
+	implementation("io.mongock:mongodb-springdata-v3-driver")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -67,6 +75,7 @@ dependencies {
 		exclude("org.mockito", "mockito-core")
 	}
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.instancio:instancio-junit:2.0.0")
 	testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
 	testImplementation("org.testcontainers:mongodb")
 	testImplementation("org.testcontainers:kafka")
@@ -76,6 +85,7 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+		mavenBom("io.mongock:mongock-bom:${property("mongockVersion")}")
 		mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
 	}
 }
@@ -120,10 +130,12 @@ tasks.withType<JacocoCoverageVerification> {
 		classDirectories.setFrom(files(classDirectories.files.map {
 			fileTree(it).apply {
 				exclude("**/config/**")
+				exclude("**/json/**")
 				exclude("**/domain/**")
 				exclude("**/entity/**")
+				exclude("**/resource/**")
 				exclude("**/mapper/**")
-				exclude("**/FoodReviewApplication.class")
+				exclude("**/FoodReviewApplicationKt.class")
 			}
 		}))
 	}
@@ -133,10 +145,12 @@ tasks.withType<JacocoReport> {
 		classDirectories.setFrom(files(classDirectories.files.map {
 			fileTree(it).apply {
 				exclude("**/config/**")
+				exclude("**/json/**")
 				exclude("**/domain/**")
 				exclude("**/entity/**")
+				exclude("**/resource/**")
 				exclude("**/mapper/**")
-				exclude("**/FoodReviewApplication.class")
+				exclude("**/FoodReviewApplicationKt.class")
 			}
 		}))
 	}

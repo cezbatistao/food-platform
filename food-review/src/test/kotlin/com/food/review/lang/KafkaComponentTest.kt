@@ -2,7 +2,6 @@ package com.food.review.lang
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.food.review.config.kafka.KafkaConfiguration
-import com.food.review.lang.config.KafkaTestConfiguration
 import java.time.Duration
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -12,28 +11,28 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestComponent
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 
 @ExtendWith(SpringExtension::class)
 @DirtiesContext
-@SpringBootTest(classes = [KafkaTestConfiguration::class, KafkaConfiguration::class, KafkaAutoConfiguration::class])
+@TestComponent
+@SpringBootTest(classes = [KafkaConfiguration::class, KafkaAutoConfiguration::class, JacksonAutoConfiguration::class])
 @ActiveProfiles("component-test")
 @IfProfileValue(name = "spring.profiles.active", value = "component-test")
-//@TestPropertySource(properties = ["spring.config.location=classpath:bootstrap.yml",
-//    "spring.config.location=classpath:application-component-test.yml"])
-class KafkaComponentTest {
+abstract class KafkaComponentTest {
 
     companion object {
         lateinit var kafkaContainer: KafkaContainer
