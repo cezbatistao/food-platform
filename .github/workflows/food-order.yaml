@@ -32,7 +32,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '^1.17.13'
-          cache: true
 
       - name: Install Tools
         run: go install gotest.tools/gotestsum@latest
