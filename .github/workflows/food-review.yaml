@@ -35,8 +35,6 @@ jobs:
           distribution: 'adopt'
           cache: gradle
 
-      - run: chmod +x gradlew
-
       - name: Run tests
         working-directory: ./food-restaurant
         run: ./gradlew clean test
