@@ -37,11 +37,19 @@ jobs:
         working-directory: ./food-order
         run: make init-app
 
+      - name: Generate mocks
+        working-directory: ./food-order
+        run: make test-mockgen
+
+      - name: Run tests
+        working-directory: ./food-order
+        run: make test-generate-report
+
       - name: Run tests
         working-directory: ./food-order
         run: |
-          make test-mockgen
-          make test-generate-report
+          ls -la
+          cat junit-report.xml
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v3
