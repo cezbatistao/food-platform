@@ -50,6 +50,14 @@ jobs:
         working-directory: ./food-restaurant
         run: ./gradlew componentTest
 
+      - name: Publish test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Tests Report
+          path: '**food-restaurant/build/test-results/componentTest/TEST-*.xml'
+          reporter: java-junit
+
       - name: Build application
         working-directory: ./food-restaurant
         run: ./gradlew clean build -x test -x componentTest -Pbuild.number=$VERSION
