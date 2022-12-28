@@ -17,6 +17,7 @@ test-mockgen:
 	mockgen -source=app/gateway/order_send_gateway.go -destination=app/gateway/mock/order_send_gateway.go -package=mock
 
 run-test:
+	pwd
 	go test ./app/gateway/... ./app/entrypoint/... ./app/usecase/...
 
 test-generate-report:

@@ -41,6 +41,10 @@ jobs:
         working-directory: ./food-order
         run: make test-mockgen
 
+      - name: Run tests text output
+        working-directory: ./food-order
+        run: make run-test
+
       - name: Run tests
         working-directory: ./food-order
         run: make test-generate-report
