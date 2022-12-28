@@ -241,11 +241,6 @@ spec:
       - name: mongo-db
         image: mongo:5.0.14
         imagePullPolicy: Always
-        env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          value: root
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          value: root
         ports:
         - containerPort: 27017
           name: mongodb
@@ -267,6 +262,7 @@ spec:
   ports:
   - name: mongodb
     port: 27017
+    targetPort: 27017
     nodePort: 30017
   type: NodePort
   selector:

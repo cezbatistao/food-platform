@@ -2,4 +2,7 @@ spring:
   data:
     mongodb:
       uri: ${spring.data.mongodb.ct.uri.container}
-
+  kafka:
+    consumer:
+      group-id: food-review-ct
+      auto-offset-reset: earliest

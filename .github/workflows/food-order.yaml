@@ -11,8 +11,8 @@ on:
     branches:
       - main
     paths:
-      - 'food-gateway/**'
-      - '!food-gateway/artifacts/**'
+      - 'food-order/**'
+      - '!food-order/artifacts/**'
   workflow_dispatch:
 
 jobs:

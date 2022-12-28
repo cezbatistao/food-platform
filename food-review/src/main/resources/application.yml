@@ -1,4 +1,51 @@
+server:
+  port: 8182
+  shutdown: graceful
+
+#info:
+#  app:
+#    group: ${group}
+#    name: ${name}
+#    description: ${description}
+#    version: ${version}
+#    environment: \${spring.profiles.active}
+#  javaVendor: \${java.specification.vendor}
+
 spring:
+#  application:
+#    name: \${info.app.name}
+#    description: \${info.app.description}
+#    version: \${info.app.version}
   data:
     mongodb:
       uri: mongodb://localhost:27017/review_db
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      concurrency: 10
+      missing-topics-fatal: false
+    consumer:
+      group-id: food-review
+      bootstrapServers: ${spring.kafka.bootstrap-servers}
+      enableAutoCommit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.food.review.entrypoint.listener.resource
+            value:
+              default:
+                type: com.food.review.entrypoint.listener.resource.DataResource
+    producer:
+      retries: 10
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,gateway,metrics
