@@ -41,9 +41,9 @@ jobs:
 
       - name: Publish test report
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: success() || failure()
         with:
-          name: Junit Tests            # Name of the check run which will be created
+          name: Tests Report
           path: '**food-review/build/test-results/test/TEST-*.xml'
           reporter: java-junit
 
