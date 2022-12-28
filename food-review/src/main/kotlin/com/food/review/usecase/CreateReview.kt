@@ -14,7 +14,7 @@ class CreateReview(
 ) {
 
     fun execute(order: Order) {
-        val review = Review(ReviewStatus.CREATED, order)
+        val review = Review(ReviewStatus.CREATED, order.restaurant, order.uuid, order.userUuid, order.items)
         val savedReview = this.reviewGateway.save(review)
         this.reviewSendGateway.sendCreated(savedReview)
     }

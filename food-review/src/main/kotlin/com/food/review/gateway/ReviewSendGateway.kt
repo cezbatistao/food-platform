@@ -6,4 +6,6 @@ interface ReviewSendGateway {
 
     fun sendCreated(review: Review)
 
+    fun sendVerified(review: Review)
+
 }

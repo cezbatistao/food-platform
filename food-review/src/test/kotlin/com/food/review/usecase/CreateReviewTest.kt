@@ -42,9 +42,12 @@ class CreateReviewTest {
         //and
         val reviewCaptured = reviewToSaveSlot.captured
         assertThat(reviewCaptured.id).isNull()
-        assertThat(reviewCaptured.uuid).isNotNull()
+        assertThat(reviewCaptured.uuid).isNotNull
         assertThat(reviewCaptured.status).isEqualTo(reviewSaved.status)
-        assertThat(reviewCaptured.order).isEqualTo(reviewSaved.order)
+        assertThat(reviewCaptured.restaurant).isEqualTo(reviewSaved.restaurant)
+        assertThat(reviewCaptured.orderUuid).isEqualTo(reviewSaved.orderUuid)
+        assertThat(reviewCaptured.userUuid).isEqualTo(reviewSaved.userUuid)
+        assertThat(reviewCaptured.items).isEqualTo(reviewSaved.items)
         assertThat(reviewCaptured.text).isNullOrEmpty()
         assertThat(reviewCaptured.createdAt).isNull()
         assertThat(reviewCaptured.updatedAt).isNull()

@@ -10,6 +10,7 @@ info:
     name: ${name}
     description: ${description}
     version: ${version}
+    environment: \${spring.profiles.active}
   javaVendor: \${java.specification.vendor}
 
 application:

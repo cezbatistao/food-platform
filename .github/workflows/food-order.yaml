@@ -33,47 +33,26 @@ jobs:
         with:
           go-version: '^1.17.13'
 
-      - name: Install Tools
-        run: go install gotest.tools/gotestsum@latest
-      - name: Download swaggo
-        run: go install github.com/swaggo/swag/cmd/swag@latest
-
       - name: Prepare project
         working-directory: ./food-order
-        run: |
-          make init-app
-          make build-dev
-
-      - name: Generate mocks
-        working-directory: ./food-order
-        run: make test-mockgen
-
-      - name: Run tests text output
-        working-directory: ./food-order
-        run: make run-test
+        run: make init-app
 
       - name: Run tests
         working-directory: ./food-order
-        run: make test-generate-report
-
-      - name: Run tests
-        working-directory: ./food-order
-        run: |
-          ls -la
-          cat junit-report.xml
+        run: make run-tests-junit-reports
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
         with:
           report_paths: '**/food-order/junit-*.xml'
-          fail_on_failure: true
+          fail_on_failure: false
           include_passed: true
           detailed_summary: true
 
-      # - name: Build application
-      #   working-directory: ./food-order
-      #   run: make build
+      - name: Build application
+        working-directory: ./food-order
+        run: make build-app
 
       - name: Build docker image
         working-directory: ./food-order

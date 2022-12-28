@@ -1,7 +1,7 @@
 package com.food.review.entrypoint.listener.mapper
 
 import com.food.review.domain.Order
-import com.food.review.entrypoint.listener.resource.OrderDeliveredEventResource
+import com.food.review.gateway.kafka.resource.listener.OrderDeliveredEventResource
 import org.mapstruct.Mapper
 import org.mapstruct.factory.Mappers
 

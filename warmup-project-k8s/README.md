@@ -7,6 +7,11 @@
 minikube start --memory=4096
 ```
 
+After minikube started, *enable* **ingress** at minikube:
+```
+minikube addons enable ingress
+```
+
 ### Startup application
 ```
 kubectl apply -f 1-istio-init.yaml

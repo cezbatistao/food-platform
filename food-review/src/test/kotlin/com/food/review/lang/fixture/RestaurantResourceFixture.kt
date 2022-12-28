@@ -1,6 +1,6 @@
 package com.food.review.lang.fixture
 
-import com.food.review.entrypoint.listener.resource.RestaurantResource
+import com.food.review.gateway.kafka.resource.listener.RestaurantResource
 
 class RestaurantResourceFixture {
 

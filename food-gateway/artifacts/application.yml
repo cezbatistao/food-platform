@@ -11,3 +11,5 @@ application:
       url: http://food-restaurant-svc:8080
     order-app:
       url: http://food-order-svc:8080
+    review-app:
+      url: http://food-review-svc:8080

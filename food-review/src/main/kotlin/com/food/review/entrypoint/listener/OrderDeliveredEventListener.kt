@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.food.review.config.log.LogKey.DATA
 import com.food.review.config.log.LogKey.TOPIC
 import com.food.review.entrypoint.listener.mapper.OrderDeliveredEventResourceMapper
-import com.food.review.entrypoint.listener.resource.DataResource
-import com.food.review.entrypoint.listener.resource.OrderDeliveredEventResource
+import com.food.review.gateway.kafka.resource.DataResource
+import com.food.review.gateway.kafka.resource.listener.OrderDeliveredEventResource
 import com.food.review.usecase.CreateReview
 import java.util.concurrent.CountDownLatch
 import mu.KotlinLogging
