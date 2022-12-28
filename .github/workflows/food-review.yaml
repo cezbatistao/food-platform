@@ -44,8 +44,9 @@ jobs:
         if: success() || failure()
         with:
           name: Tests Report
-          path: '**food-review/build/test-results/test/TEST-*.xml'
+          path: 'build/test-results/test/TEST-*.xml'
           reporter: java-junit
+          working-directory: './food-review'
 
       - name: Build application
         working-directory: ./food-review

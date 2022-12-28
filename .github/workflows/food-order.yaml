@@ -48,8 +48,9 @@ jobs:
         if: success() || failure()
         with:
           name: Tests Report
-          path: './food-order/junit-report.xml'
+          path: 'junit-*.xml'
           reporter: java-junit
+          working-directory: './food-order'
 
       # - name: Build application
       #   working-directory: ./food-order
