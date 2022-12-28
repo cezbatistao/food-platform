@@ -44,7 +44,7 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: Junit Tests            # Name of the check run which will be created
-          path: '**food-restaurant/build/test-results/test/TEST-*.xml'
+          path: '**food-review/build/test-results/test/TEST-*.xml'
           reporter: java-junit
 
       # - name: Run componente tests
