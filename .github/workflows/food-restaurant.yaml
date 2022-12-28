@@ -54,7 +54,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: Tests Report
+          name: Integration Tests Report
           path: '**food-restaurant/build/test-results/componentTest/TEST-*.xml'
           reporter: java-junit
 
