@@ -43,7 +43,7 @@ jobs:
           make test-mockgen
           make test-generate-report
 
-      - name: Publish integration test report
+      - name: Publish test report
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:

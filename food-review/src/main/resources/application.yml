@@ -1,21 +1,29 @@
 server:
-  port: 8182
+  port: 8183
   shutdown: graceful
+  use-forward-headers: true
+  forward-headers-strategy: framework
 
-#info:
-#  app:
-#    group: ${group}
-#    name: ${name}
-#    description: ${description}
-#    version: ${version}
-#    environment: \${spring.profiles.active}
-#  javaVendor: \${java.specification.vendor}
+info:
+  app:
+    group: ${group}
+    name: ${name}
+    description: ${description}
+    version: ${version}
+    environment: \${spring.profiles.active}
+  javaVendor: \${java.specification.vendor}
+
+application:
+  async:
+    corePoolSize: 100
 
 spring:
-#  application:
-#    name: \${info.app.name}
-#    description: \${info.app.description}
-#    version: \${info.app.version}
+  application:
+    name: \${info.app.name}
+    description: \${info.app.description}
+    version: \${info.app.version}
+  thymeleaf:
+    enabled: false
   data:
     mongodb:
       uri: mongodb://localhost:27017/review_db
@@ -26,7 +34,6 @@ spring:
       missing-topics-fatal: false
     consumer:
       group-id: food-review
-      bootstrapServers: ${spring.kafka.bootstrap-servers}
       enableAutoCommit: true
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -40,12 +47,5 @@ spring:
                 type: com.food.review.entrypoint.listener.resource.DataResource
     producer:
       retries: 10
-      bootstrap-servers: ${spring.kafka.bootstrap-servers}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringDeserializer
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: info,health,gateway,metrics

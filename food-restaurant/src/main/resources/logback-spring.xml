@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>
-                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%-15.15thread]) %highlight(%-5level) %yellow(%-40.40C{40}) - %msg%n%throwable
-            </pattern>
-        </encoder>
-    </appender>
+    <property name="APP_NAME" value= "food-restaurant"/>
+    <property name="ENVIRONMENT" value="${spring.profiles.active}"/>
 
-    <root level="INFO">
-        <appender-ref ref="STDOUT" />
-    </root>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="hmg || prd">
+        <jmxConfigurator />
+
+        <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <jsonGeneratorDecorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
+                    <defaultMask>****</defaultMask>
+
+                    <path>id</path>
+                    <path>name</path>
+                </jsonGeneratorDecorator>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="jsonConsoleAppender"/>
+        </root>
+    </springProfile>
 </configuration>

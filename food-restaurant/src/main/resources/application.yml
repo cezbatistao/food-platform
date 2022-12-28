@@ -15,10 +15,6 @@ info:
 application:
   async:
     corePoolSize: 100
-  swagger:
-    apis:
-      path: /api/.*
-      base-package: com.food.restaurant.entrypoint.rest
 
 spring:
   application:

@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+info:
+  app:
+    version: {{ .Values.image.tag }}
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongo-db:27017/${DATABASE_TABLENAME}
+  kafka:
+    bootstrap-servers: kafka-k8s:9092

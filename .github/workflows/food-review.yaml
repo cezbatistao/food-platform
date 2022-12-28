@@ -47,35 +47,31 @@ jobs:
           path: '**food-review/build/test-results/test/TEST-*.xml'
           reporter: java-junit
 
-      # - name: Run componente tests
-      #   working-directory: ./food-review
-      #   run: ./gradlew componentTest
+      - name: Build application
+        working-directory: ./food-review
+        run: ./gradlew clean build -x test -Pbuild.number=$VERSION
 
-      # - name: Build application
-      #   working-directory: ./food-review
-      #   run: ./gradlew clean build -x test -x componentTest -Pbuild.number=$VERSION
-      #
-      # - name: Build docker image
-      #   working-directory: ./food-review
-      #   run: ./gradlew docker -Pbuild.number=$VERSION
-      #
-      # - name: Docker hub login
-      #   working-directory: ./food-review
-      #   run: |
-      #     docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
-      #
-      # - name: Tag docker image
-      #   working-directory: ./food-review
-      #   run: ./gradlew dockerTagDockerHub -Pbuild.number=$VERSION
-      #
-      # - name: Push docker image
-      #   working-directory: ./food-review
-      #   run: ./gradlew dockerPushDockerHub -Pbuild.number=$VERSION
-      #
-      # - name: Docker hub logout
-      #   working-directory: ./food-review
-      #   run: |
-      #     docker logout
+      - name: Build docker image
+        working-directory: ./food-review
+        run: ./gradlew docker -Pbuild.number=$VERSION
+
+      - name: Docker hub login
+        working-directory: ./food-review
+        run: |
+          docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+
+      - name: Tag docker image
+        working-directory: ./food-review
+        run: ./gradlew dockerTagDockerHub -Pbuild.number=$VERSION
+
+      - name: Push docker image
+        working-directory: ./food-review
+        run: ./gradlew dockerPushDockerHub -Pbuild.number=$VERSION
+
+      - name: Docker hub logout
+        working-directory: ./food-review
+        run: |
+          docker logout
 
       # - name: "Publish HTML test result"
       #   uses: peaceiris/actions-gh-pages@v3.7.3

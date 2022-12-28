@@ -31,6 +31,7 @@ val snippetsDir = file("build/generated-snippets").also { extra["snippetsDir"] =
 extra["springCloudVersion"] = "2020.0.2"
 extra["testcontainersVersion"] = "1.15.2"
 extra["sfmSpringjdbcVersion"] = "8.2.3"
+extra["logstashLogbackencoderVersion"] = "7.2"
 extra["springdocOpenapiUiVersion"] = "1.6.14"
 extra["springmockkVersion"] = "3.0.1"
 extra["mockitoKotlinVersion"] = "2.2.0"
@@ -67,22 +68,24 @@ configurations[componentTest.implementationConfigurationName].extendsFrom(config
 configurations[componentTest.runtimeOnlyConfigurationName].extendsFrom(configurations.testRuntimeOnly.get())
 
 dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-undertow")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-hateoas")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter-undertow")
+
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 	implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8-config")
 
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.simpleflatmapper:sfm-springjdbc:${property("sfmSpringjdbcVersion")}")
 	implementation("org.springdoc:springdoc-openapi-ui:${property("springdocOpenapiUiVersion")}")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation("net.logstash.logback:logstash-logback-encoder:${property("logstashLogbackencoderVersion")}")
 
 	runtimeOnly("mysql:mysql-connector-java")
 	
