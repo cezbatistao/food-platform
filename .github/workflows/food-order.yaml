@@ -35,7 +35,9 @@ jobs:
 
       - name: Prepare project
         working-directory: ./food-order
-        run: make init-app
+        run: |
+          make init-app
+          make build-dev
 
       - name: Generate mocks
         working-directory: ./food-order
