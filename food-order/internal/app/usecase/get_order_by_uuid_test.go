@@ -50,12 +50,12 @@ func TestGetOrderByUuidErrorWhenOrderNotFound(t *testing.T) {
 
     getOrderByUuid := NewGetOrderByUuid(orderGatewayMock)
 
-    var errOrderGateway error
-
     userUuid := uuid.New()
     orderUuid := uuid.New()
 
-    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &userUuid, &orderUuid).Return(nil, errOrderGateway)
+    errOrderGateway := exceptions.OrderNotFoundError{OrderUuid: orderUuid}
+
+    orderGatewayMock.EXPECT().GetByUuid(gomock.Any(), &userUuid, &orderUuid).Return(nil, &errOrderGateway)
 
     orderReturned, err := getOrderByUuid.Execute(ctx, &userUuid, &orderUuid)
 

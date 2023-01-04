@@ -10,22 +10,25 @@ import (
 var appConfig config
 
 type config struct {
-	appPort                   int
-    appName                   string
-    appDescription            string
-    appVersion                string
-	logLevel                  string
-    bootstrapServers          []string
-    topicOrderCreatedEvent    string
-    topicOrderProcessingEvent string
-    topicOrderCancelledEvent  string
-    topicPaymentEvent         string
-    topicPaymentEventGroupId  string
-    databaseName              string
-    databaseUrl               string
-    postgresDriver            string
-    dirname                   string
-    restaurantUrl             string
+	appPort                    int
+    appName                    string
+    appDescription             string
+    appVersion                 string
+	logLevel                   string
+    bootstrapServers           []string
+    topicOrderCreatedEvent     string
+    topicOrderProcessingEvent  string
+    topicOrderCancelledEvent   string
+    topicOrderShippedEvent     string
+    topicOrderDeliveredEvent   string
+    topicDeliveredEventGroupId string
+    topicPaymentEvent          string
+    topicPaymentEventGroupId   string
+    databaseName               string
+    databaseUrl                string
+    postgresDriver             string
+    dirname                    string
+    restaurantUrl              string
 }
 
 // Load load config
@@ -54,6 +57,9 @@ func Load() error {
     viper.SetDefault("TOPIC_ORDER_CREATED_EVENT", "order-created-event")
     viper.SetDefault("TOPIC_ORDER_PROCESSING_EVENT", "order-processing-event")
     viper.SetDefault("TOPIC_ORDER_CANCELLED_EVENT", "order-cancelled-event")
+    viper.SetDefault("TOPIC_ORDER_SHIPPED_EVENT", "order-shipped-event")
+    viper.SetDefault("TOPIC_ORDER_DELIVERED_EVENT", "order-delivered-event")
+    viper.SetDefault("TOPIC_DELIVERED_EVENT_GROUP_ID", "DeliveredOrderGroupId")
     viper.SetDefault("TOPIC_PAYMENT_EVENT", "payment-event")
     viper.SetDefault("TOPIC_PAYMENT_EVENT_GROUP_ID", "PaymentOrderGroupId")
     viper.SetDefault("DATABASE_NAME", "db_order")
@@ -72,6 +78,9 @@ func Load() error {
         topicOrderCreatedEvent: viper.GetString("TOPIC_ORDER_CREATED_EVENT"),
         topicOrderProcessingEvent: viper.GetString("TOPIC_ORDER_PROCESSING_EVENT"),
         topicOrderCancelledEvent: viper.GetString("TOPIC_ORDER_CANCELLED_EVENT"),
+        topicOrderShippedEvent: viper.GetString("TOPIC_ORDER_SHIPPED_EVENT"),
+        topicOrderDeliveredEvent: viper.GetString("TOPIC_ORDER_DELIVERED_EVENT"),
+        topicDeliveredEventGroupId: viper.GetString("TOPIC_DELIVERED_EVENT_GROUP_ID"),
         topicPaymentEvent: viper.GetString("TOPIC_PAYMENT_EVENT"),
         topicPaymentEventGroupId: viper.GetString("TOPIC_PAYMENT_EVENT_GROUP_ID"),
         databaseUrl: viper.GetString("DATABASE_URL"),
@@ -115,6 +124,18 @@ func TopicOrderProcessingEvent() string {
 
 func TopicOrderCancelledEvent() string {
     return appConfig.topicOrderCancelledEvent
+}
+
+func TopicOrderShippedEvent() string {
+    return appConfig.topicOrderShippedEvent
+}
+
+func TopicOrderDeliveredEvent() string {
+    return appConfig.topicOrderDeliveredEvent
+}
+
+func TopicDeliveredEventGroupId() string {
+    return appConfig.topicDeliveredEventGroupId
 }
 
 func TopicPaymentEvent() string {

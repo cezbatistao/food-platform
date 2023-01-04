@@ -2,9 +2,10 @@ package usecase
 
 import (
     "context"
+    
     "github.com/cezbatistao/food-platform/food-order/internal/app/domain"
     "github.com/cezbatistao/food-platform/food-order/internal/app/gateway"
-    "github.com/cezbatistao/food-platform/food-order/internal/pkg/exceptions"
+
     "github.com/google/uuid"
 )
 
@@ -20,9 +21,6 @@ func (u *GetOrderByUuid) Execute(ctx context.Context, userUuid *uuid.UUID, order
     order, err := u.orderGateway.GetByUuid(ctx, userUuid, orderUuid)
     if err != nil {
         return nil, err
-    }
-    if order == nil {
-        return nil, &exceptions.OrderNotFoundError{OrderUuid: *orderUuid}
     }
 
     return order, nil

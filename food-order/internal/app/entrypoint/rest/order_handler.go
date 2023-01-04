@@ -30,12 +30,17 @@ type OrderHTTPHandler struct {
 	createOrderUseCase       *usecase.CreateOrder
     getOrdersFromUserUseCase *usecase.GetOrdersFromUser
     getOrderByUuidUseCase    *usecase.GetOrderByUuid
+    updateOrderStatus        *usecase.UpdateOrderStatus
+}
+
+type OrderChangeRequest struct {
+    Status string `json:"status"`
 }
 
 func NewOrderHTTPHandler(createOrder *usecase.CreateOrder, getOrdersFromUserUseCase *usecase.GetOrdersFromUser,
-        getOrderByUuidUseCase *usecase.GetOrderByUuid) *OrderHTTPHandler {
+        getOrderByUuidUseCase *usecase.GetOrderByUuid, updateOrderStatus *usecase.UpdateOrderStatus) *OrderHTTPHandler {
     return &OrderHTTPHandler{createOrderUseCase: createOrder, getOrdersFromUserUseCase: getOrdersFromUserUseCase,
-        getOrderByUuidUseCase: getOrderByUuidUseCase}
+        getOrderByUuidUseCase: getOrderByUuidUseCase, updateOrderStatus: updateOrderStatus}
 }
 
 // CreateOrder godoc
@@ -145,9 +150,7 @@ func (h *OrderHTTPHandler) GetOrderByUuid(c echo.Context) error {
     order, err := h.getOrderByUuidUseCase.Execute(r.Context(), &userUuid, &orderUuid)
     if err != nil {
         switch t := err.(type) { //t := err.(type)
-            case *exceptions.RestaurantNotFoundError:
-                return c.JSON(http.StatusNotFound, utils.NotFound(t.Error()))
-            case *exceptions.MenuItemFromRestaurantNotFoundError:
+            case *exceptions.OrderNotFoundError:
                 return c.JSON(http.StatusNotFound, utils.NotFound(t.Error()))
             default:
                 return c.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -159,6 +162,46 @@ func (h *OrderHTTPHandler) GetOrderByUuid(c echo.Context) error {
     return c.JSON(http.StatusOK, &json.DataResponse{
         Data: orderResponse,
     })
+}
+
+// PatchToShipped godoc
+// @Summary Patch status of a food order from a user.
+// @Description Update a food order by order uuid from a user.
+// @Accept application/json
+// @Consume application/json
+// @Produce application/json
+// @Param userUuid path string true  "User UUID"
+// @Param uuid path string true  "Order UUID"
+// @Param order body OrderChangeRequest true "Update Order"
+// @Success 204
+// @Router /api/v1/{userUuid}/orders/{uuid} [patch]
+func (h *OrderHTTPHandler) PatchOrder(c echo.Context) error {
+    uuidString := c.Param("uuid")
+    orderUuid, _ := uuid.Parse(uuidString)
+
+    userUuidString := c.Param("userUuid")
+    userUuid, _ := uuid.Parse(userUuidString)
+
+    orderChangeRequest := new(OrderChangeRequest)
+    if err := c.Bind(orderChangeRequest); err != nil {
+        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+    }
+
+    r := c.Request()
+
+    orderStatus := domain.GetOrderStatusByCode(orderChangeRequest.Status)
+
+    err := h.updateOrderStatus.Execute(r.Context(), &userUuid, &orderUuid, *orderStatus)
+    if err != nil {
+        switch t := err.(type) { //t := err.(type)
+            case *exceptions.OrderNotFoundError:
+                return c.JSON(http.StatusNotFound, utils.NotFound(t.Error()))
+            default:
+                return c.JSON(http.StatusInternalServerError, utils.NewError(err))
+        }
+    }
+
+    return c.NoContent(204)
 }
 
 func mapOrderRequestToSolicitation(userUuid *uuid.UUID, orderRequest *OrderRequest) *domain.SolicitationOfOrder {

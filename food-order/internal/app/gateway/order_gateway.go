@@ -3,8 +3,11 @@ package gateway
 import (
     "context"
     "database/sql"
+    "fmt"
     "github.com/cezbatistao/food-platform/food-order/internal/app/gateway/repository"
+    "github.com/cezbatistao/food-platform/food-order/internal/pkg/exceptions"
     "math"
+    "strings"
     "time"
 
     "github.com/cezbatistao/food-platform/food-order/internal/app/domain"
@@ -206,6 +209,10 @@ ORDER BY torderi.id `,
     }
     _ = rows.Close()
 
+    if order == nil {
+        return nil, &exceptions.OrderNotFoundError{OrderUuid: *orderUuid}
+    }
+
     log.Infof("found order: +v", order)
 
     return order, nil
@@ -221,7 +228,14 @@ func (g *OrderGatewayDatabase) Update(ctx context.Context, order *domain.Order) 
         if err != nil {
             return nil, err
         }
+
+        defer tx.Rollback()
     }
+
+    order.DateUpdated = time.Now()
+
+    updateSets := []string { "status = $2", "last_updated = $3" }
+    args := []interface{} { order.Id, order.Status.GetOrderStatus(), order.DateUpdated }
 
     var err error
 
@@ -236,12 +250,17 @@ RETURNING id `,
         checkErr(err)
 
         order.Payment.Id = lastInsertId
+
+        updateSets = append(updateSets, "order_payment_id = $4")
+        args = append(args, lastInsertId)
     }
 
     order.DateUpdated = time.Now()
+    //"UPDATE tb_order SET status = $1, order_payment_id = $2, last_updated = $3 WHERE id = $4 "
 
-    result, err := tx.ExecContext(ctx, "UPDATE tb_order SET status = $1, order_payment_id = $2, last_updated = $3 WHERE id = $4",
-        order.Status.GetOrderStatus(), order.Payment.Id, order.DateUpdated, order.Id)
+    updateSqlUpdate := fmt.Sprintf("UPDATE tb_order SET %s WHERE id = $1 ", strings.Join(updateSets, ", "))
+
+    result, err := tx.ExecContext(ctx, updateSqlUpdate, args...)
     if err != nil {
         log.Fatal(err)
     }
@@ -251,6 +270,13 @@ RETURNING id `,
     }
     if rows != 1 {
         log.Fatalf("expected single row affected, got %d rows affected", rows)
+    }
+
+    if !ok {
+        if err = tx.Commit(); err != nil {
+            log.Errorf("error at update order: %+v", err)
+            return nil, err
+        }
     }
 
     return order, nil

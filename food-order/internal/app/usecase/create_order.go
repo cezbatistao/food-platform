@@ -19,10 +19,10 @@ type CreateOrder struct {
 }
 
 func NewCreateOrder(orderGateway gateway.OrderGateway, orderSendGateway gateway.OrderSendGateway,
-    restaurantGateway gateway.RestaurantGateway, transaction transaction.Transaction) *CreateOrder {
+        restaurantGateway gateway.RestaurantGateway, transaction transaction.Transaction) *CreateOrder {
     return &CreateOrder{orderGateway: orderGateway, orderSendGateway: orderSendGateway,
         restaurantGateway: restaurantGateway, transaction: transaction}
-    }
+}
 
 func (c *CreateOrder) Execute(ctx context.Context, solicitationOfOrder *domain.SolicitationOfOrder) (*domain.Order, error) {
     log.Infof("order requested: %+v", solicitationOfOrder)

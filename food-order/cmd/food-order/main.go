@@ -4,19 +4,17 @@ import (
     "context"
     "database/sql"
     "fmt"
-    "github.com/cezbatistao/food-platform/food-order/internal/app/config/database"
-    "github.com/cezbatistao/food-platform/food-order/internal/app/config/wire"
-
     "os"
     "os/signal"
     "time"
 
-    "github.com/sirupsen/logrus"
+    "github.com/cezbatistao/food-platform/food-order/internal/app/config"
+    "github.com/cezbatistao/food-platform/food-order/internal/app/config/database"
+    "github.com/cezbatistao/food-platform/food-order/internal/app/config/routes"
+    "github.com/cezbatistao/food-platform/food-order/internal/app/config/wire"
 
     _ "github.com/lib/pq"
-
-    "github.com/cezbatistao/food-platform/food-order/internal/app/config"
-    "github.com/cezbatistao/food-platform/food-order/internal/app/config/routes"
+    "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -37,6 +35,9 @@ func main() {
 
     paymentListener := wire.InitializePaymentListener(db)
     go paymentListener.ConsumePaymentEvent()
+
+    deliveredListener := wire.InitializeDeliveredListener(db)
+    go deliveredListener.ConsumeEvent()
 
     go func() {
         if err := e.Start(fmt.Sprintf(":%d", config.Port())); err != nil {

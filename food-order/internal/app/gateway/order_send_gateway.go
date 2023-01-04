@@ -48,6 +48,7 @@ type OrderSendGateway interface {
     SendCreated(ctx context.Context, order *domain.Order) error
     SendProcessing(ctx context.Context, order *domain.Order) error
     SendCancelled(ctx context.Context, order *domain.Order) error
+    SendTo(ctx context.Context, order *domain.Order) error
 }
 
 type OrderSendGatewayKafka struct {
@@ -71,17 +72,36 @@ func (g *OrderSendGatewayKafka) SendCreated(ctx context.Context, order *domain.O
 }
 
 func (g *OrderSendGatewayKafka) SendProcessing(ctx context.Context, order *domain.Order) error {
-    return sendProcessingOrCancelled(&ctx, order, domain.PROCESSING, config.TopicOrderProcessingEvent())
+    if order.Status != domain.PROCESSING {
+        return errors.New(fmt.Sprintf("order status not was PROCESSING, couldn't accepted value %s", order.Status))
+    }
+
+    return sendToTopic(&ctx, order, domain.PROCESSING, config.TopicOrderProcessingEvent())
 }
 
 func (g *OrderSendGatewayKafka) SendCancelled(ctx context.Context, order *domain.Order) error {
-    return sendProcessingOrCancelled(&ctx, order, domain.CANCELLED, config.TopicOrderCancelledEvent())
+    if order.Status != domain.CANCELLED {
+        return errors.New(fmt.Sprintf("order status not was CANCELLED, couldn't accepted value %s", order.Status))
+    }
+
+    return sendToTopic(&ctx, order, domain.CANCELLED, config.TopicOrderCancelledEvent())
 }
 
-func sendProcessingOrCancelled(ctx *context.Context, order *domain.Order, orderStatus domain.OrderStatus, topic string) error {
-    if orderStatus != domain.PROCESSING && orderStatus != domain.CANCELLED {
-        return errors.New(fmt.Sprintf("order status may be PROCESSING or CANCELLED, couldn't accepted value %s", orderStatus))
+func (g *OrderSendGatewayKafka) SendTo(ctx context.Context, order *domain.Order) error {
+    topic := ""
+    if order.Status == domain.SHIPPED {
+        topic = config.TopicOrderShippedEvent()
     }
+
+    if topic == "" {
+        return errors.New(fmt.Sprintf("was not configured topic to %s order status", order.Status))
+    }
+
+    return sendToTopic(&ctx, order, order.Status, topic)
+}
+
+func sendToTopic(ctx *context.Context, order *domain.Order, orderStatus domain.OrderStatus, topic string) error {
+
     if order.Status != orderStatus {
         return errors.New(fmt.Sprintf("order %s with status different from %s", order.Status, orderStatus))
     }

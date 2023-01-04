@@ -35,5 +35,11 @@ kafka-topic-creator:
       - name: order-cancelled-event
         replicationFactor: 1
         partitions: 1
+      - name: order-shipped-event
+        replicationFactor: 1
+        partitions: 1
+      - name: order-delivered-event
+        replicationFactor: 1
+        partitions: 1
   zookeeper:
     address: 192.168.49.2:30181
