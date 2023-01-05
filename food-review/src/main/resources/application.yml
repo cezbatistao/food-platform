@@ -34,6 +34,7 @@ spring:
       missing-topics-fatal: false
     consumer:
       group-id: food-review
+      auto-offset-reset: earliest
       enableAutoCommit: true
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer

@@ -24,7 +24,8 @@ func TestProcessOrderPaymentErrorWhenOrderGatewayRiseErr(t *testing.T) {
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     transactionFake      := mock.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    updateOrderAndNotify := NewUpdateOrderAndNotify(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    processOrderPayment  := NewProcessOrderPayment(updateOrderAndNotify, orderGatewayMock)
 
     ctx := context.Background()
 
@@ -56,7 +57,8 @@ func TestProcessOrderPaymentErrorWhenOrderNotFound(t *testing.T) {
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     transactionFake      := mock.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    updateOrderAndNotify := NewUpdateOrderAndNotify(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    processOrderPayment  := NewProcessOrderPayment(updateOrderAndNotify, orderGatewayMock)
 
     ctx := context.Background()
 
@@ -90,7 +92,8 @@ func TestProcessOrderPaymentErrorWhenOrderStatusDiffCreated(t *testing.T) {
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     transactionFake      := mock.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    updateOrderAndNotify := NewUpdateOrderAndNotify(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    processOrderPayment  := NewProcessOrderPayment(updateOrderAndNotify, orderGatewayMock)
 
     ctx := context.Background()
 
@@ -133,7 +136,8 @@ func TestProcessOrderPaymentPaidWhenErrorOrderGatewayUpdate(t *testing.T) {
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     transactionFake      := mock.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    updateOrderAndNotify := NewUpdateOrderAndNotify(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    processOrderPayment  := NewProcessOrderPayment(updateOrderAndNotify, orderGatewayMock)
 
     ctx := context.Background()
 
@@ -176,7 +180,8 @@ func TestProcessOrderPaymentPaidWhenErrorOrderSendGatewayUpdate(t *testing.T) {
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     transactionFake      := mock.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    updateOrderAndNotify := NewUpdateOrderAndNotify(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    processOrderPayment  := NewProcessOrderPayment(updateOrderAndNotify, orderGatewayMock)
 
     ctx := context.Background()
 
@@ -222,7 +227,8 @@ func TestProcessOrderPaymentPaidSuccess(t *testing.T) {
     orderSendGatewayMock := mock.NewMockOrderSendGateway(controller)
     transactionFake      := mock.NewTransactionMock()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    updateOrderAndNotify := NewUpdateOrderAndNotify(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    processOrderPayment  := NewProcessOrderPayment(updateOrderAndNotify, orderGatewayMock)
 
     ctx := context.Background()
 
@@ -302,7 +308,8 @@ func TestProcessOrderPaymentRefusedSuccess(t *testing.T) {
 
     ctx := context.Background()
 
-    processOrderPayment := NewProcessOrderPayment(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    updateOrderAndNotify := NewUpdateOrderAndNotify(orderGatewayMock, orderSendGatewayMock, transactionFake)
+    processOrderPayment  := NewProcessOrderPayment(updateOrderAndNotify, orderGatewayMock)
 
     orderItems := []domain.OrderItem{
         {Id: 1, Uuid: uuid.New(), MenuItemUuid: uuid.New(), Name: "Pepperoni", Amount: 1, UnitValue: 33.99},

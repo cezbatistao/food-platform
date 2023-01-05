@@ -37,7 +37,7 @@ class ReviewSendGatewayImpl(
             kv(REVIEW.toString(), review))
 
         val reviewEvent = ReviewEvent(review.uuid.toString(), review.userUuid.toString(),
-            review.orderUuid.toString(), review.restaurant.uuid.toString(), review.text!!)
+            review.orderUuid.toString(), review.restaurant.uuid.toString(), review.text ?: "")
 
         val message = objectMapper.writeValueAsString(DataResponse(reviewEvent))
         this.kafkaTemplate.send(topic, review.orderUuid.toString(), message)

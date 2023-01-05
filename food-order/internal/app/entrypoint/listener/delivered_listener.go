@@ -5,7 +5,6 @@ import (
     "encoding/json"
 
     "github.com/cezbatistao/food-platform/food-order/internal/app/config"
-    "github.com/cezbatistao/food-platform/food-order/internal/app/domain"
     "github.com/cezbatistao/food-platform/food-order/internal/app/usecase"
 
     "github.com/google/uuid"
@@ -13,17 +12,21 @@ import (
     "github.com/segmentio/kafka-go"
 )
 
+type DataEvent struct {
+    Data DeliveredEvent `json:"data"`
+}
+
 type DeliveredEvent struct {
     UserUuid  string `json:"user_uuid"`
-    OrderUuid string `json:"order_uuid"`
+    OrderUuid string `json:"uuid"`
 }
 
 type DeliveredListener struct {
-    markOrderDone *usecase.MarkOrderDone
+    processDeliveredOrder *usecase.ProcessDeliveredOrder
 }
 
-func NewDeliveredListener(markOrderDone *usecase.MarkOrderDone) *DeliveredListener {
-    return &DeliveredListener{markOrderDone: markOrderDone}
+func NewDeliveredListener(processDeliveredOrder *usecase.ProcessDeliveredOrder) *DeliveredListener {
+    return &DeliveredListener{processDeliveredOrder: processDeliveredOrder}
 }
 
 func (l *DeliveredListener) ConsumeEvent() {
@@ -40,14 +43,16 @@ func (l *DeliveredListener) ConsumeEvent() {
             panic("could not read message " + err.Error())
         }
 
-        var deliveredEvent DeliveredEvent
-        json.Unmarshal(msg.Value, &deliveredEvent)
+        var dataEvent DataEvent
+        json.Unmarshal(msg.Value, &dataEvent)
+
+        deliveredEvent := dataEvent.Data
 
         log.Infof("listener delivered event: %+v", deliveredEvent)
 
         userUuid, _ := uuid.Parse(deliveredEvent.UserUuid)
         orderUuid, _ := uuid.Parse(deliveredEvent.OrderUuid)
-        err = l.markOrderDone.Execute(ctx, &userUuid, &orderUuid, domain.DELIVERED)
+        err = l.processDeliveredOrder.Execute(ctx, &userUuid, &orderUuid)
         if err != nil {
             log.Errorf("error processing message at topic [%s]: %v", config.TopicOrderDeliveredEvent(), err)
         }

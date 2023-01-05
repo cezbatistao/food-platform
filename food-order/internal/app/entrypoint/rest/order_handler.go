@@ -1,7 +1,6 @@
 package rest
 
 import (
-    "fmt"
     "net/http"
     "strconv"
 
@@ -31,17 +30,13 @@ type OrderHTTPHandler struct {
 	createOrderUseCase       *usecase.CreateOrder
     getOrdersFromUserUseCase *usecase.GetOrdersFromUser
     getOrderByUuidUseCase    *usecase.GetOrderByUuid
-    markOrderDone            *usecase.MarkOrderDone
-}
-
-type OrderChangeRequest struct {
-    Status string `json:"status"`
+    markOrderAsShipped       *usecase.MarkOrderAsShipped
 }
 
 func NewOrderHTTPHandler(createOrder *usecase.CreateOrder, getOrdersFromUserUseCase *usecase.GetOrdersFromUser,
-    getOrderByUuidUseCase *usecase.GetOrderByUuid, markOrderDone *usecase.MarkOrderDone) *OrderHTTPHandler {
+    getOrderByUuidUseCase *usecase.GetOrderByUuid, markOrderAsShipped *usecase.MarkOrderAsShipped) *OrderHTTPHandler {
     return &OrderHTTPHandler{createOrderUseCase: createOrder, getOrdersFromUserUseCase: getOrdersFromUserUseCase,
-        getOrderByUuidUseCase: getOrderByUuidUseCase, markOrderDone: markOrderDone}
+        getOrderByUuidUseCase: getOrderByUuidUseCase, markOrderAsShipped: markOrderAsShipped}
 }
 
 // CreateOrder godoc
@@ -166,14 +161,13 @@ func (h *OrderHTTPHandler) GetOrderByUuid(c echo.Context) error {
 }
 
 // PatchToShipped godoc
-// @Summary Patch status of a food order from a user.
-// @Description Update a food order by order uuid from a user.
+// @Summary Mark status as shipped of a food order from a user.
+// @Description Mark a food order as shipped by order uuid from a user.
 // @Accept application/json
 // @Consume application/json
 // @Produce application/json
 // @Param userUuid path string true  "User UUID"
 // @Param uuid path string true  "Order UUID"
-// @Param order body OrderChangeRequest true "Update Order"
 // @Success 204
 // @Router /api/v1/{userUuid}/orders/{uuid} [patch]
 func (h *OrderHTTPHandler) PatchOrder(c echo.Context) error {
@@ -183,19 +177,9 @@ func (h *OrderHTTPHandler) PatchOrder(c echo.Context) error {
     userUuidString := c.Param("userUuid")
     userUuid, _ := uuid.Parse(userUuidString)
 
-    orderChangeRequest := new(OrderChangeRequest)
-    if err := c.Bind(orderChangeRequest); err != nil {
-        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    }
-
     r := c.Request()
 
-    orderStatus := domain.GetOrderStatusByCode(orderChangeRequest.Status)
-    if orderStatus == nil {
-        return c.JSON(http.StatusBadRequest, utils.HttpErrorResponse(fmt.Sprintf("doesn't exist order status %s", orderChangeRequest.Status)))
-    }
-
-    err := h.markOrderDone.Execute(r.Context(), &userUuid, &orderUuid, *orderStatus)
+    err := h.markOrderAsShipped.Execute(r.Context(), &userUuid, &orderUuid)
     if err != nil {
         switch t := err.(type) { //t := err.(type)
             case *exceptions.OrderNotFoundError:

@@ -35,10 +35,6 @@ func NewUpdateOrderAndNotify(orderGateway gateway.OrderGateway, orderSendGateway
 func (c *UpdateOrderAndNotify) Execute(ctx context.Context, order *domain.Order) error {
     log.Infof("order to update: %+v", order)
 
-    if order.Status == domain.CREATED {
-        return errors.New(fmt.Sprintf("order %s with status CREATED cannot be processed", order.Uuid))
-    }
-
     err := c.transaction.WithTransaction(ctx, func (ctxTx context.Context) error {
         order, err := c.orderGateway.Update(ctxTx, order)
         if err != nil {
