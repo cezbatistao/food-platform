@@ -48,7 +48,7 @@ type OrderSendGateway interface {
     SendCreated(ctx context.Context, order *domain.Order) error
     SendProcessing(ctx context.Context, order *domain.Order) error
     SendCancelled(ctx context.Context, order *domain.Order) error
-    SendTo(ctx context.Context, order *domain.Order) error
+    SendShipped(ctx context.Context, order *domain.Order) error
 }
 
 type OrderSendGatewayKafka struct {
@@ -87,21 +87,14 @@ func (g *OrderSendGatewayKafka) SendCancelled(ctx context.Context, order *domain
     return sendToTopic(&ctx, order, domain.CANCELLED, config.TopicOrderCancelledEvent())
 }
 
-func (g *OrderSendGatewayKafka) SendTo(ctx context.Context, order *domain.Order) error {
-    topic := ""
-    if order.Status == domain.SHIPPED {
-        topic = config.TopicOrderShippedEvent()
+func (g *OrderSendGatewayKafka) SendShipped(ctx context.Context, order *domain.Order) error {
+    if order.Status != domain.SHIPPED {
+        return errors.New(fmt.Sprintf("order status not was SHIPPED, couldn't accepted value %s", order.Status))
     }
-
-    if topic == "" {
-        return errors.New(fmt.Sprintf("was not configured topic to %s order status", order.Status))
-    }
-
-    return sendToTopic(&ctx, order, order.Status, topic)
+    return sendToTopic(&ctx, order, order.Status, config.TopicOrderShippedEvent())
 }
 
 func sendToTopic(ctx *context.Context, order *domain.Order, orderStatus domain.OrderStatus, topic string) error {
-
     if order.Status != orderStatus {
         return errors.New(fmt.Sprintf("order %s with status different from %s", order.Status, orderStatus))
     }

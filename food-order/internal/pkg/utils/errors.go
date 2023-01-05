@@ -26,3 +26,10 @@ func NotFound(message string) Error {
     e.Errors["body"] = message
     return e
 }
+
+func HttpErrorResponse(message string) Error {
+    e := Error{}
+    e.Errors = make(map[string]interface{})
+    e.Errors["body"] = message
+    return e
+}

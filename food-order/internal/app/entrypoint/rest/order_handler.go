@@ -1,6 +1,7 @@
 package rest
 
 import (
+    "fmt"
     "net/http"
     "strconv"
 
@@ -30,7 +31,7 @@ type OrderHTTPHandler struct {
 	createOrderUseCase       *usecase.CreateOrder
     getOrdersFromUserUseCase *usecase.GetOrdersFromUser
     getOrderByUuidUseCase    *usecase.GetOrderByUuid
-    updateOrderStatus        *usecase.UpdateOrderStatus
+    markOrderDone            *usecase.MarkOrderDone
 }
 
 type OrderChangeRequest struct {
@@ -38,9 +39,9 @@ type OrderChangeRequest struct {
 }
 
 func NewOrderHTTPHandler(createOrder *usecase.CreateOrder, getOrdersFromUserUseCase *usecase.GetOrdersFromUser,
-        getOrderByUuidUseCase *usecase.GetOrderByUuid, updateOrderStatus *usecase.UpdateOrderStatus) *OrderHTTPHandler {
+    getOrderByUuidUseCase *usecase.GetOrderByUuid, markOrderDone *usecase.MarkOrderDone) *OrderHTTPHandler {
     return &OrderHTTPHandler{createOrderUseCase: createOrder, getOrdersFromUserUseCase: getOrdersFromUserUseCase,
-        getOrderByUuidUseCase: getOrderByUuidUseCase, updateOrderStatus: updateOrderStatus}
+        getOrderByUuidUseCase: getOrderByUuidUseCase, markOrderDone: markOrderDone}
 }
 
 // CreateOrder godoc
@@ -190,8 +191,11 @@ func (h *OrderHTTPHandler) PatchOrder(c echo.Context) error {
     r := c.Request()
 
     orderStatus := domain.GetOrderStatusByCode(orderChangeRequest.Status)
+    if orderStatus == nil {
+        return c.JSON(http.StatusBadRequest, utils.HttpErrorResponse(fmt.Sprintf("doesn't exist order status %s", orderChangeRequest.Status)))
+    }
 
-    err := h.updateOrderStatus.Execute(r.Context(), &userUuid, &orderUuid, *orderStatus)
+    err := h.markOrderDone.Execute(r.Context(), &userUuid, &orderUuid, *orderStatus)
     if err != nil {
         switch t := err.(type) { //t := err.(type)
             case *exceptions.OrderNotFoundError:

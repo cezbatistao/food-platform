@@ -19,11 +19,11 @@ type DeliveredEvent struct {
 }
 
 type DeliveredListener struct {
-    updateOrderStatus *usecase.UpdateOrderStatus
+    markOrderDone *usecase.MarkOrderDone
 }
 
-func NewDeliveredListener(updateOrderStatus *usecase.UpdateOrderStatus) *DeliveredListener {
-    return &DeliveredListener{updateOrderStatus: updateOrderStatus}
+func NewDeliveredListener(markOrderDone *usecase.MarkOrderDone) *DeliveredListener {
+    return &DeliveredListener{markOrderDone: markOrderDone}
 }
 
 func (l *DeliveredListener) ConsumeEvent() {
@@ -47,7 +47,7 @@ func (l *DeliveredListener) ConsumeEvent() {
 
         userUuid, _ := uuid.Parse(deliveredEvent.UserUuid)
         orderUuid, _ := uuid.Parse(deliveredEvent.OrderUuid)
-        err = l.updateOrderStatus.Execute(ctx, &userUuid, &orderUuid, domain.DELIVERED)
+        err = l.markOrderDone.Execute(ctx, &userUuid, &orderUuid, domain.DELIVERED)
         if err != nil {
             log.Errorf("error processing message at topic [%s]: %v", config.TopicOrderDeliveredEvent(), err)
         }

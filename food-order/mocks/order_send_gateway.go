@@ -77,16 +77,16 @@ func (mr *MockOrderSendGatewayMockRecorder) SendProcessing(ctx, order interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendProcessing", reflect.TypeOf((*MockOrderSendGateway)(nil).SendProcessing), ctx, order)
 }
 
-// SendTo mocks base method.
-func (m *MockOrderSendGateway) SendTo(ctx context.Context, order *domain.Order) error {
+// SendShipped mocks base method.
+func (m *MockOrderSendGateway) SendShipped(ctx context.Context, order *domain.Order) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendTo", ctx, order)
+	ret := m.ctrl.Call(m, "SendShipped", ctx, order)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// SendTo indicates an expected call of SendTo.
-func (mr *MockOrderSendGatewayMockRecorder) SendTo(ctx, order interface{}) *gomock.Call {
+// SendShipped indicates an expected call of SendShipped.
+func (mr *MockOrderSendGatewayMockRecorder) SendShipped(ctx, order interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendTo", reflect.TypeOf((*MockOrderSendGateway)(nil).SendTo), ctx, order)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendShipped", reflect.TypeOf((*MockOrderSendGateway)(nil).SendShipped), ctx, order)
 }
