@@ -48,6 +48,7 @@ type OrderSendGateway interface {
     SendCreated(ctx context.Context, order *domain.Order) error
     SendProcessing(ctx context.Context, order *domain.Order) error
     SendCancelled(ctx context.Context, order *domain.Order) error
+    SendAccepted(ctx context.Context, order *domain.Order) error
     SendShipped(ctx context.Context, order *domain.Order) error
 }
 
@@ -85,6 +86,13 @@ func (g *OrderSendGatewayKafka) SendCancelled(ctx context.Context, order *domain
     }
 
     return sendToTopic(&ctx, order, domain.CANCELLED, config.TopicOrderCancelledEvent())
+}
+
+func (g *OrderSendGatewayKafka) SendAccepted(ctx context.Context, order *domain.Order) error {
+    if order.Status != domain.ACCEPTED {
+        return errors.New(fmt.Sprintf("order status not was ACCEPTED, couldn't accepted value %s", order.Status))
+    }
+    return sendToTopic(&ctx, order, order.Status, config.TopicOrderAcceptedEvent())
 }
 
 func (g *OrderSendGatewayKafka) SendShipped(ctx context.Context, order *domain.Order) error {
@@ -130,7 +138,7 @@ func sendMessage(ctx *context.Context, topic string, key string, bodyData interf
 func mapToOrderCreatedEvent(order *domain.Order) *OrderCreatedEvent {
     orderCreatedEvent := OrderCreatedEvent{Uuid: order.Uuid.String(), UserUuid: order.UserUuid.String(),
         RestaurantUuid: order.Restaurant.Uuid.String(), Total: fmt.Sprintf("%.2f", order.Total),
-        DateCreated: order.DateCreated, DateUpdated: order.DateUpdated,
+        DateCreated: order.DateCreated.UTC(), DateUpdated: order.DateUpdated.UTC(),
         Items: func(orderItems *[]domain.OrderItem) []OrderItemEvent {
             orderItemsEvent := make([]OrderItemEvent, 0)
             for _, orderItem := range *orderItems {

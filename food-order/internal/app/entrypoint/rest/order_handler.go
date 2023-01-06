@@ -31,12 +31,15 @@ type OrderHTTPHandler struct {
     getOrdersFromUserUseCase *usecase.GetOrdersFromUser
     getOrderByUuidUseCase    *usecase.GetOrderByUuid
     markOrderAsShipped       *usecase.MarkOrderAsShipped
+    markOrderAsAccepted      *usecase.MarkOrderAsAccepted
 }
 
 func NewOrderHTTPHandler(createOrder *usecase.CreateOrder, getOrdersFromUserUseCase *usecase.GetOrdersFromUser,
-    getOrderByUuidUseCase *usecase.GetOrderByUuid, markOrderAsShipped *usecase.MarkOrderAsShipped) *OrderHTTPHandler {
+        getOrderByUuidUseCase *usecase.GetOrderByUuid, markOrderAsShipped *usecase.MarkOrderAsShipped,
+        markOrderAsAccepted *usecase.MarkOrderAsAccepted) *OrderHTTPHandler {
     return &OrderHTTPHandler{createOrderUseCase: createOrder, getOrdersFromUserUseCase: getOrdersFromUserUseCase,
-        getOrderByUuidUseCase: getOrderByUuidUseCase, markOrderAsShipped: markOrderAsShipped}
+        getOrderByUuidUseCase: getOrderByUuidUseCase, markOrderAsShipped: markOrderAsShipped,
+        markOrderAsAccepted: markOrderAsAccepted}
 }
 
 // CreateOrder godoc
@@ -160,7 +163,39 @@ func (h *OrderHTTPHandler) GetOrderByUuid(c echo.Context) error {
     })
 }
 
-// PatchToShipped godoc
+// PutStatusAccepted godoc
+// @Summary Mark status as accepted of a food order from a user.
+// @Description Mark a food order as accepted by order uuid from a user.
+// @Accept application/json
+// @Consume application/json
+// @Produce application/json
+// @Param userUuid path string true  "User UUID"
+// @Param uuid path string true  "Order UUID"
+// @Success 204
+// @Router /api/v1/{userUuid}/orders/{uuid}/status/accepted [put]
+func (h *OrderHTTPHandler) PutStatusAccepted(c echo.Context) error {
+    uuidString := c.Param("uuid")
+    orderUuid, _ := uuid.Parse(uuidString)
+
+    userUuidString := c.Param("userUuid")
+    userUuid, _ := uuid.Parse(userUuidString)
+
+    r := c.Request()
+
+    err := h.markOrderAsAccepted.Execute(r.Context(), &userUuid, &orderUuid)
+    if err != nil {
+        switch t := err.(type) { //t := err.(type)
+            case *exceptions.OrderNotFoundError:
+                return c.JSON(http.StatusNotFound, utils.NotFound(t.Error()))
+                default:
+                    return c.JSON(http.StatusInternalServerError, utils.NewError(err))
+        }
+    }
+
+    return c.NoContent(204)
+}
+
+// PutStatusShipped godoc
 // @Summary Mark status as shipped of a food order from a user.
 // @Description Mark a food order as shipped by order uuid from a user.
 // @Accept application/json
@@ -169,8 +204,8 @@ func (h *OrderHTTPHandler) GetOrderByUuid(c echo.Context) error {
 // @Param userUuid path string true  "User UUID"
 // @Param uuid path string true  "Order UUID"
 // @Success 204
-// @Router /api/v1/{userUuid}/orders/{uuid} [patch]
-func (h *OrderHTTPHandler) PatchOrder(c echo.Context) error {
+// @Router /api/v1/{userUuid}/orders/{uuid}/status/shipped [put]
+func (h *OrderHTTPHandler) PutStatusShipped(c echo.Context) error {
     uuidString := c.Param("uuid")
     orderUuid, _ := uuid.Parse(uuidString)
 

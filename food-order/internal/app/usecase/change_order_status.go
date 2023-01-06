@@ -4,38 +4,59 @@ import (
     "context"
     "errors"
     "fmt"
+    "strings"
 
     "github.com/cezbatistao/food-platform/food-order/internal/app/domain"
     "github.com/cezbatistao/food-platform/food-order/internal/app/gateway"
     "github.com/cezbatistao/food-platform/food-order/internal/pkg/transaction"
 
+    "github.com/google/uuid"
     "github.com/labstack/gommon/log"
 )
 
-type UpdateOrderAndNotify struct {
+type changeOrderStatus struct {
     orderGateway     gateway.OrderGateway
     orderSendGateway gateway.OrderSendGateway
     transaction      transaction.Transaction
     orderStatusEvent orderStatusEvent
 }
 
-func NewUpdateOrderAndNotify(orderGateway gateway.OrderGateway, orderSendGateway gateway.OrderSendGateway,
-        transaction transaction.Transaction) *UpdateOrderAndNotify {
+func newChangeOrderStatus(orderGateway gateway.OrderGateway, orderSendGateway gateway.OrderSendGateway,
+    transaction transaction.Transaction) *changeOrderStatus {
 
     orderStatusEventDefault    := newOrderStatusEventDefault()
     orderStatusEventDelivered  := newOrderStatusEventDelivered(orderSendGateway, orderStatusEventDefault)
     orderStatusEventShipped    := newOrderStatusEventShipped(orderSendGateway, orderStatusEventDelivered)
-    orderStatusEventCancelled  := newOrderStatusEventCancelled(orderSendGateway, orderStatusEventShipped)
+    orderStatusEventAccepted   := newOrderStatusEventAccepted(orderSendGateway, orderStatusEventShipped)
+    orderStatusEventCancelled  := newOrderStatusEventCancelled(orderSendGateway, orderStatusEventAccepted)
     orderStatusEventProcessing := newOrderStatusEventProcessing(orderSendGateway, orderStatusEventCancelled)
 
-    return &UpdateOrderAndNotify{orderGateway: orderGateway, orderSendGateway: orderSendGateway,
+    return &changeOrderStatus{orderGateway: orderGateway, orderSendGateway: orderSendGateway,
         transaction: transaction, orderStatusEvent: orderStatusEventProcessing}
 }
 
-func (c *UpdateOrderAndNotify) Execute(ctx context.Context, order *domain.Order) error {
+func (c *changeOrderStatus) execute(ctx context.Context, userUuid *uuid.UUID, orderUuid *uuid.UUID,
+        fromOrderStatus domain.OrderStatus, toOrderStatus domain.OrderStatus) error {
+    log.Infof("marking order to %s", strings.ToLower(toOrderStatus.GetOrderStatus()))
+
+    order, err := c.orderGateway.GetByUuid(ctx, userUuid, orderUuid)
+    if err != nil {
+        return err
+    }
+    log.Infof("order to change status: %+v", order)
+
+    if order.Status != fromOrderStatus {
+        errorMessage := fmt.Sprintf("order %s has status different of %s", order.Uuid,
+            fromOrderStatus.GetOrderStatus())
+        log.Error(errorMessage)
+        return errors.New(errorMessage)
+    }
+
+    order.Status = toOrderStatus
+
     log.Infof("order to update: %+v", order)
 
-    err := c.transaction.WithTransaction(ctx, func (ctxTx context.Context) error {
+    err = c.transaction.WithTransaction(ctx, func (ctxTx context.Context) error {
         order, err := c.orderGateway.Update(ctxTx, order)
         if err != nil {
             return err
@@ -94,6 +115,28 @@ func (d *orderStatusEventCancelled) process(ctx context.Context, order *domain.O
 }
 
 func (d *orderStatusEventCancelled) setNext(next orderStatusEvent) {
+    d.next = next
+}
+
+
+type orderStatusEventAccepted struct {
+    orderSendGateway gateway.OrderSendGateway
+    next orderStatusEvent
+}
+
+func newOrderStatusEventAccepted(orderSendGateway gateway.OrderSendGateway, next orderStatusEvent) *orderStatusEventAccepted {
+    return &orderStatusEventAccepted{orderSendGateway: orderSendGateway, next: next}
+}
+
+func (d *orderStatusEventAccepted) process(ctx context.Context, order *domain.Order) error {
+    if order.Status == domain.ACCEPTED {
+        return d.orderSendGateway.SendAccepted(ctx, order)
+    }
+
+    return d.next.process(ctx, order)
+}
+
+func (d *orderStatusEventAccepted) setNext(next orderStatusEvent) {
     d.next = next
 }
 

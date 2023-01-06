@@ -8,19 +8,21 @@ import (
     "github.com/cezbatistao/food-platform/food-order/internal/app/domain"
     "github.com/cezbatistao/food-platform/food-order/internal/app/gateway"
     "github.com/cezbatistao/food-platform/food-order/internal/pkg/exceptions"
+    "github.com/cezbatistao/food-platform/food-order/internal/pkg/transaction"
 
     "github.com/google/uuid"
 )
 
 type ProcessOrderPayment struct {
-    updateOrderAndNotify *UpdateOrderAndNotify
-    orderGateway         gateway.OrderGateway
+    orderGateway     gateway.OrderGateway
+    orderSendGateway gateway.OrderSendGateway
+    transaction      transaction.Transaction
 }
 
-func NewProcessOrderPayment(updateOrderAndNotify *UpdateOrderAndNotify,
-        orderGateway gateway.OrderGateway) *ProcessOrderPayment {
-    return &ProcessOrderPayment{updateOrderAndNotify: updateOrderAndNotify,
-        orderGateway: orderGateway}
+func NewProcessOrderPayment(orderGateway gateway.OrderGateway, orderSendGateway gateway.OrderSendGateway,
+        transaction transaction.Transaction) *ProcessOrderPayment {
+    return &ProcessOrderPayment{orderGateway: orderGateway, orderSendGateway: orderSendGateway,
+        transaction: transaction}
 }
 
 func (c *ProcessOrderPayment) Execute(ctx context.Context, userUuid *uuid.UUID, orderUuid *uuid.UUID,
@@ -46,5 +48,24 @@ func (c *ProcessOrderPayment) Execute(ctx context.Context, userUuid *uuid.UUID, 
     paymentOrder.Uuid = uuid.New()
     order.Payment = *paymentOrder
 
-    return c.updateOrderAndNotify.Execute(ctx, order)
+    err = c.transaction.WithTransaction(ctx, func(ctxTx context.Context) error {
+        order, err = c.orderGateway.Update(ctxTx, order)
+        if err != nil {
+            return err
+        }
+
+        if order.Status == domain.PROCESSING {
+            err = c.orderSendGateway.SendProcessing(ctx, order)
+        } else {
+            err = c.orderSendGateway.SendCancelled(ctx, order)
+        }
+
+        if err != nil {
+            return err
+        }
+
+        return err
+    })
+
+    return err
 }

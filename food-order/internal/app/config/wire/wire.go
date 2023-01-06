@@ -25,7 +25,7 @@ func InitializeOrderHTTPHandler(db *sql.DB) *rest.OrderHTTPHandler {
         usecase.NewCreateOrder,
         usecase.NewGetOrdersFromUser,
         usecase.NewGetOrderByUuid,
-        usecase.NewUpdateOrderAndNotify,
+        usecase.NewMarkOrderAsAccepted,
         usecase.NewMarkOrderAsShipped,
         gateway.NewOrderGateway,
         gateway.NewOrderSendGateway,
@@ -40,7 +40,6 @@ func InitializePaymentListener(db *sql.DB) *listener.PaymentListener {
         wire.Bind(new(gateway.OrderSendGateway), new(*gateway.OrderSendGatewayKafka)),
         transaction.TransactionProviderSet,
         usecase.NewProcessOrderPayment,
-        usecase.NewUpdateOrderAndNotify,
         gateway.NewOrderGateway,
         gateway.NewOrderSendGateway,
     ))
@@ -53,7 +52,6 @@ func InitializeDeliveredListener(db *sql.DB) *listener.DeliveredListener {
         wire.Bind(new(gateway.OrderSendGateway), new(*gateway.OrderSendGatewayKafka)),
         transaction.TransactionProviderSet,
         usecase.NewProcessDeliveredOrder, 
-        usecase.NewUpdateOrderAndNotify,
         gateway.NewOrderGateway,
         gateway.NewOrderSendGateway,
     ))

@@ -19,6 +19,7 @@ type config struct {
     topicOrderCreatedEvent     string
     topicOrderProcessingEvent  string
     topicOrderCancelledEvent   string
+    topicOrderAcceptedEvent    string
     topicOrderShippedEvent     string
     topicOrderDeliveredEvent   string
     topicDeliveredEventGroupId string
@@ -58,6 +59,7 @@ func Load() error {
     viper.SetDefault("TOPIC_ORDER_PROCESSING_EVENT", "order-processing-event")
     viper.SetDefault("TOPIC_ORDER_CANCELLED_EVENT", "order-cancelled-event")
     viper.SetDefault("TOPIC_ORDER_SHIPPED_EVENT", "order-shipped-event")
+    viper.SetDefault("TOPIC_ORDER_ACCEPTED_EVENT", "order-accepted-event")
     viper.SetDefault("TOPIC_ORDER_DELIVERED_EVENT", "order-delivered-event")
     viper.SetDefault("TOPIC_DELIVERED_EVENT_GROUP_ID", "DeliveredOrderGroupId")
     viper.SetDefault("TOPIC_PAYMENT_EVENT", "payment-event")
@@ -78,6 +80,7 @@ func Load() error {
         topicOrderCreatedEvent: viper.GetString("TOPIC_ORDER_CREATED_EVENT"),
         topicOrderProcessingEvent: viper.GetString("TOPIC_ORDER_PROCESSING_EVENT"),
         topicOrderCancelledEvent: viper.GetString("TOPIC_ORDER_CANCELLED_EVENT"),
+        topicOrderAcceptedEvent: viper.GetString("TOPIC_ORDER_ACCEPTED_EVENT"),
         topicOrderShippedEvent: viper.GetString("TOPIC_ORDER_SHIPPED_EVENT"),
         topicOrderDeliveredEvent: viper.GetString("TOPIC_ORDER_DELIVERED_EVENT"),
         topicDeliveredEventGroupId: viper.GetString("TOPIC_DELIVERED_EVENT_GROUP_ID"),
@@ -124,6 +127,10 @@ func TopicOrderProcessingEvent() string {
 
 func TopicOrderCancelledEvent() string {
     return appConfig.topicOrderCancelledEvent
+}
+
+func TopicOrderAcceptedEvent() string {
+    return appConfig.topicOrderAcceptedEvent
 }
 
 func TopicOrderShippedEvent() string {

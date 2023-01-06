@@ -35,6 +35,20 @@ func (m *MockOrderSendGateway) EXPECT() *MockOrderSendGatewayMockRecorder {
 	return m.recorder
 }
 
+// SendAccepted mocks base method.
+func (m *MockOrderSendGateway) SendAccepted(ctx context.Context, order *domain.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendAccepted", ctx, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendAccepted indicates an expected call of SendAccepted.
+func (mr *MockOrderSendGatewayMockRecorder) SendAccepted(ctx, order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccepted", reflect.TypeOf((*MockOrderSendGateway)(nil).SendAccepted), ctx, order)
+}
+
 // SendCancelled mocks base method.
 func (m *MockOrderSendGateway) SendCancelled(ctx context.Context, order *domain.Order) error {
 	m.ctrl.T.Helper()

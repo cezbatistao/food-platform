@@ -57,7 +57,8 @@ func New(db *sql.DB) *echo.Echo {
     e.POST("/api/v1/:userUuid/orders", orderHTTPHandler.CreateOrder)
     e.GET("/api/v1/:userUuid/orders", orderHTTPHandler.GetOrders)
     e.GET("/api/v1/:userUuid/orders/:uuid", orderHTTPHandler.GetOrderByUuid)
-    e.PATCH("/api/v1/:userUuid/orders/:uuid", orderHTTPHandler.PatchOrder)
+    e.PUT("/api/v1/:userUuid/orders/:uuid/status/accepted", orderHTTPHandler.PutStatusAccepted)
+    e.PUT("/api/v1/:userUuid/orders/:uuid/status/shipped", orderHTTPHandler.PutStatusShipped)
 
     return e
 }
