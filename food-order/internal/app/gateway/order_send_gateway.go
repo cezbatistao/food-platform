@@ -19,14 +19,19 @@ type DataEvent struct {
     Data interface{} `json:"data"`
 }
 
-type OrderCreatedEvent struct {
+type OrderEvent struct {
     Uuid           string           `json:"uuid"`
     UserUuid       string           `json:"user_uuid"`
-    RestaurantUuid string           `json:"restaurant_uuid"`
+    Restaurant     RestaurantEvent  `json:"restaurant"`
     Total          string           `json:"total"`
     DateCreated    time.Time        `json:"date_created"`
     DateUpdated    time.Time        `json:"date_updated"`
-    Items          []OrderItemEvent `json:"itens"`
+    Items          []OrderItemEvent `json:"items"`
+}
+
+type RestaurantEvent struct {
+    Uuid string `json:"uuid"`
+    Name string `json:"name"`
 }
 
 type OrderItemEvent struct {
@@ -35,13 +40,6 @@ type OrderItemEvent struct {
     Name         string `json:"name"`
     Amount       int    `json:"amount"`
     UnitValue string    `json:"unit_value"`
-}
-
-type OrderEvent struct {
-    Uuid           string `json:"uuid"`
-    UserUuid       string `json:"user_uuid"`
-    RestaurantUuid string `json:"restaurant_uuid"`
-    PaymentUuid    string `json:"payment_uuid"`
 }
 
 type OrderSendGateway interface {
@@ -66,10 +64,10 @@ func (g *OrderSendGatewayKafka) SendCreated(ctx context.Context, order *domain.O
 
     topic := config.TopicOrderCreatedEvent()
 
-    orderCreatedEvent := mapToOrderCreatedEvent(order)
+    orderEvent := mapToOrderEvent(order)
 
-    log.Infof("send created order %+v to topic %s", orderCreatedEvent, topic)
-    return sendMessage(&ctx, topic, order.Restaurant.Uuid.String(), orderCreatedEvent)
+    log.Infof("send created order %+v to topic %s", orderEvent, topic)
+    return sendMessage(&ctx, topic, orderEvent.Restaurant.Uuid, orderEvent)
 }
 
 func (g *OrderSendGatewayKafka) SendProcessing(ctx context.Context, order *domain.Order) error {
@@ -108,9 +106,9 @@ func sendToTopic(ctx *context.Context, order *domain.Order, orderStatus domain.O
     }
 
     orderEvent := mapToOrderEvent(order)
-    log.Infof("send %s order event: %+v", strings.ToLower(orderStatus.GetOrderStatus()), orderEvent)
+    log.Infof("send %s to topic %s order event: %+v", strings.ToLower(orderStatus.GetOrderStatus()), topic, orderEvent)
 
-    _ = sendMessage(ctx, topic, orderEvent.RestaurantUuid, orderEvent)
+    _ = sendMessage(ctx, topic, orderEvent.Restaurant.Uuid, orderEvent)
 
     return nil
 }
@@ -135,11 +133,11 @@ func sendMessage(ctx *context.Context, topic string, key string, bodyData interf
     return nil
 }
 
-func mapToOrderCreatedEvent(order *domain.Order) *OrderCreatedEvent {
-    orderCreatedEvent := OrderCreatedEvent{Uuid: order.Uuid.String(), UserUuid: order.UserUuid.String(),
-        RestaurantUuid: order.Restaurant.Uuid.String(), Total: fmt.Sprintf("%.2f", order.Total),
-        DateCreated: order.DateCreated.UTC(), DateUpdated: order.DateUpdated.UTC(),
-        Items: func(orderItems *[]domain.OrderItem) []OrderItemEvent {
+func mapToOrderEvent(order *domain.Order) *OrderEvent {
+    orderCreatedEvent := OrderEvent{Uuid: order.Uuid.String(), UserUuid: order.UserUuid.String(),
+        Restaurant: RestaurantEvent{Uuid: order.Restaurant.Uuid.String(), Name: order.Restaurant.Name},
+        Total: fmt.Sprintf("%.2f", order.Total), DateCreated: order.DateCreated.UTC(),
+        DateUpdated: order.DateUpdated.UTC(), Items: func(orderItems *[]domain.OrderItem) []OrderItemEvent {
             orderItemsEvent := make([]OrderItemEvent, 0)
             for _, orderItem := range *orderItems {
                 orderItemsEvent = append(orderItemsEvent, OrderItemEvent{Uuid: orderItem.Uuid.String(),
@@ -151,11 +149,4 @@ func mapToOrderCreatedEvent(order *domain.Order) *OrderCreatedEvent {
     }
 
     return &orderCreatedEvent
-}
-
-func mapToOrderEvent(order *domain.Order) *OrderEvent {
-    orderEvent := OrderEvent{Uuid: order.Uuid.String(), UserUuid: order.UserUuid.String(),
-        RestaurantUuid: order.Restaurant.Uuid.String(), PaymentUuid: order.Payment.Uuid.String()}
-
-    return &orderEvent
 }

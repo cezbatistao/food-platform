@@ -19,7 +19,7 @@ type DataResponse struct {
 type RestaurantResponse struct {
     Uuid  string             `json:"uuid"`
     Name  string             `json:"name"`
-    Items []MenuItemResponse `json:"itens"`
+    Items []MenuItemResponse `json:"items"`
 }
 
 type MenuItemResponse struct {

@@ -10,7 +10,7 @@
     "logo":"https://pbs.twimg.com/profile_images/1333417326704791553/Mm0bj3oN.jpg",
     "description":"Pizza Hut é uma cadeia de restaurantes e franquias especializada em pizzas e massas. Com sede na cidade de Plano, no Texas, a Pizza Hut é a maior cadeia de pizzarias do mundo, com quase 15 mil restaurantes e quiosques em mais de 130 países. Possui 95 restaurantes no Brasil e 91 em Portugal.",
     "address":"Av. Nome da avenida, 123",
-    "itens":[
+    "items":[
       {
         "uuid":"743b55f8-9543-11eb-a8b3-0242ac130003",
         "name":"Pepperoni",
