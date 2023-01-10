@@ -1,10 +1,9 @@
 package com.food.review.usecase
 
-import com.food.restaurant.domain.exception.EntityNotFoundException
+import com.food.review.domain.exception.EntityNotFoundException
 import com.food.review.domain.Commentary
 import com.food.review.domain.OrderItem
 import com.food.review.domain.Review
-import com.food.review.domain.ReviewStatus
 import com.food.review.domain.ReviewStatus.CREATED
 import com.food.review.domain.ReviewStatus.VERIFIED
 import com.food.review.gateway.ReviewGateway

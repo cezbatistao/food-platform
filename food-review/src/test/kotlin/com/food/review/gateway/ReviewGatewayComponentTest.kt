@@ -1,6 +1,6 @@
 package com.food.review.gateway
 
-import com.food.restaurant.domain.exception.EntityNotFoundException
+import com.food.review.domain.exception.EntityNotFoundException
 import com.food.review.domain.ReviewPageable
 import com.food.review.gateway.mongo.entity.OrderItemMongo
 import com.food.review.gateway.mongo.entity.RestaurantMongo

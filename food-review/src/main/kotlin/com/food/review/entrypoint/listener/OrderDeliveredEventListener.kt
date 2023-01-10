@@ -2,6 +2,7 @@ package com.food.review.entrypoint.listener
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.food.review.config.log.LogKey
 import com.food.review.config.log.LogKey.DATA
 import com.food.review.config.log.LogKey.TOPIC
 import com.food.review.entrypoint.listener.mapper.OrderDeliveredEventResourceMapper
@@ -44,10 +45,10 @@ class OrderDeliveredEventListener(
             createReview.execute(order)
         } catch (ex: Exception) {
             logger.error("Error message from {} at {} with {}",
-                topic,
-                partitionId,
-                key,
-                message,
+                kv(TOPIC.toString(), topic),
+                kv(LogKey.PARTITION_ID.toString(), partitionId),
+                kv(LogKey.KEY.toString(), key),
+                kv(LogKey.MESSAGE.toString(), message),
                 ex);
         }
         latch.countDown()
