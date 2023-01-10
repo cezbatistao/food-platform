@@ -1,6 +1,6 @@
 package com.food.review.entrypoint.rest
 
-import com.food.restaurant.domain.exception.EntityNotFoundException
+import com.food.review.domain.exception.EntityNotFoundException
 import com.food.review.entrypoint.rest.json.response.ErrorResponse
 import com.food.review.entrypoint.rest.json.response.error.ErrorDetailResponse
 import javax.validation.ConstraintViolation

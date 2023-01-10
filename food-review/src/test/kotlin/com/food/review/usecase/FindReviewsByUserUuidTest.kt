@@ -1,6 +1,5 @@
 package com.food.review.usecase
 
-import com.food.restaurant.domain.exception.EntityNotFoundException
 import com.food.review.domain.OrderItem
 import com.food.review.domain.Review
 import com.food.review.domain.ReviewPageable
@@ -11,7 +10,6 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import java.util.UUID
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.instancio.Instancio
 import org.instancio.Select

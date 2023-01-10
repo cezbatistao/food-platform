@@ -1,6 +1,6 @@
 package com.food.review.entrypoint.rest
 
-import com.food.restaurant.domain.exception.EntityNotFoundException
+import com.food.review.domain.exception.EntityNotFoundException
 import com.food.review.domain.Commentary
 import com.food.review.domain.Review
 import com.food.review.domain.ReviewPageable

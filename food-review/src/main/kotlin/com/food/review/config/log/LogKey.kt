@@ -6,6 +6,9 @@ import java.util.Locale
 enum class LogKey {
 
     TOPIC,
+    PARTITION_ID,
+    KEY,
+    MESSAGE,
     DATA,
     REVIEW;
 
