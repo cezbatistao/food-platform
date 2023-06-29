@@ -95,4 +95,4 @@ Uninstall
 helm uninstall food-restaurant --namespace default
 ```
 
-test
+test and another test
